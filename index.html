@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Winny's Christian Zone — Premium faith-inspired merchandise. Discover beautifully crafted Christian apparel, jewelry, home decor, and devotional gifts that celebrate your walk with God." />
+  <meta name="keywords" content="Christian merchandise, faith gifts, Christian apparel, cross jewelry, Bible gifts, devotional gifts, Christian store" />
+  <title>Winny's Christian Zone | Faith-Inspired Merchandise</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&family=Sacramento&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Splash Screen -->
+  <div id="splash-screen" class="splash-screen" aria-hidden="true">
+    <div class="splash-logo">
+      <span class="splash-logo-cross"><svg class="cross-icon" viewBox="0 0 20 26" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.5 1C8.5 0.45 8.95 0 9.5 0H10.5C11.05 0 11.5 0.45 11.5 1V7H17.5C18.05 7 18.5 7.45 18.5 8V9C18.5 9.55 18.05 10 17.5 10H11.5V25C11.5 25.55 11.05 26 10.5 26H9.5C8.95 26 8.5 25.55 8.5 25V10H2.5C1.95 10 1.5 9.55 1.5 9V8C1.5 7.45 1.95 7 2.5 7H8.5V1Z"/></svg></span>
+      <div class="splash-logo-text">
+        <span class="splash-logo-name">Winny's</span>
+        <span class="splash-logo-sub">Christian Zone</span>
+      </div>
+    </div>
+  </div>
+  <header class="header" id="header">
+    <div class="header-inner">
+      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="nav-left">
+        <a href="collections.html" class="nav-link has-dropdown" data-dropdown="shop" id="nav-shop">Shop</a>
+        <a href="collections.html" class="nav-link">Collections</a>
+        <a href="#about" class="nav-link">Our Story</a>
+      </nav>
+
+      <a href="index.html" class="logo" id="logo">
+        <span class="logo-cross"><svg class="cross-icon" viewBox="0 0 20 26" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.5 1C8.5 0.45 8.95 0 9.5 0H10.5C11.05 0 11.5 0.45 11.5 1V7H17.5C18.05 7 18.5 7.45 18.5 8V9C18.5 9.55 18.05 10 17.5 10H11.5V25C11.5 25.55 11.05 26 10.5 26H9.5C8.95 26 8.5 25.55 8.5 25V10H2.5C1.95 10 1.5 9.55 1.5 9V8C1.5 7.45 1.95 7 2.5 7H8.5V1Z"/></svg></span>
+        <div class="logo-text">
+          <span class="logo-name">Winny's</span>
+          <span class="logo-sub">Christian Zone</span>
+        </div>
+      </a>
+
+      <nav class="nav-right">
+        <a href="#contact" class="nav-link">Contact</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="icon-btn" aria-label="Search" id="search-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </button>
+        <button class="icon-btn" aria-label="Account" id="account-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
+        <a href="cart.html" class="icon-btn cart-btn" aria-label="Cart" id="cart-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span class="cart-count" id="cart-count">0</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Dropdown Menu -->
+    <div class="dropdown-menu" id="dropdown-shop">
+      <div class="dropdown-inner">
+        <div class="dropdown-col">
+          <h4>Shop by Category</h4>
+          <a href="collections.html?category=apparel">Apparel &amp; Clothing</a>
+          <a href="collections.html?category=jewelry">Jewelry &amp; Accessories</a>
+          <a href="collections.html?category=home">Home D&eacute;cor</a>
+          <a href="collections.html?category=gifts">Books &amp; Devotionals</a>
+          <a href="collections.html?category=gifts">Gift Sets</a>
+        </div>
+        <div class="dropdown-col">
+          <h4>Shop by Occasion</h4>
+          <a href="collections.html">Christmas Gifts</a>
+          <a href="collections.html">Easter Collection</a>
+          <a href="collections.html">Baptism &amp; Confirmation</a>
+          <a href="collections.html">Wedding Blessings</a>
+          <a href="collections.html">Sympathy &amp; Prayer</a>
+        </div>
+        <div class="dropdown-col">
+          <h4>Popular Right Now</h4>
+          <a href="collections.html?sort=new">&#10022; New Arrivals</a>
+          <a href="collections.html?sort=best">Best Sellers</a>
+          <a href="collections.html?search=mug">Scripture Mugs</a>
+          <a href="collections.html?search=journal">Faith Journals</a>
+          <a href="collections.html?search=cross">Cross Necklaces</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Nav -->
+  <nav class="mobile-nav" id="mobile-nav">
+    <button class="mobile-nav-close" id="mobile-nav-close">&#10005;</button>
+    <div class="mobile-nav-logo">
+      <svg class="cross-icon" viewBox="0 0 20 26" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.5 1C8.5 0.45 8.95 0 9.5 0H10.5C11.05 0 11.5 0.45 11.5 1V7H17.5C18.05 7 18.5 7.45 18.5 8V9C18.5 9.55 18.05 10 17.5 10H11.5V25C11.5 25.55 11.05 26 10.5 26H9.5C8.95 26 8.5 25.55 8.5 25V10H2.5C1.95 10 1.5 9.55 1.5 9V8C1.5 7.45 1.95 7 2.5 7H8.5V1Z"/></svg>
+      <span>Winny's Christian Zone</span>
+    </div>
+    <a href="collections.html" class="mobile-nav-link">Shop All</a>
+    <a href="collections.html?category=apparel" class="mobile-nav-link">Apparel</a>
+    <a href="collections.html?category=jewelry" class="mobile-nav-link">Jewelry</a>
+    <a href="collections.html?category=home" class="mobile-nav-link">Home D&eacute;cor</a>
+    <a href="collections.html" class="mobile-nav-link">Collections</a>
+    <a href="cart.html" class="mobile-nav-link">My Cart</a>
+    <a href="#about" class="mobile-nav-link">Our Story</a>
+    <a href="#contact" class="mobile-nav-link">Contact</a>
+  </nav>
+  <div class="mobile-nav-overlay" id="mobile-nav-overlay"></div>
+
+  <!-- Search Overlay -->
+  <div class="search-overlay" id="search-overlay">
+    <button class="search-close" id="search-close">&#10005;</button>
+    <div class="search-inner">
+      <p class="search-label">What are you looking for?</p>
+      <div class="search-input-wrap">
+        <input type="text" class="search-input" placeholder="Search for faith, grace, love..." id="search-input" />
+        <button class="search-submit" id="search-submit-btn">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </button>
+      </div>
+      <div class="search-suggestions">
+        <span>Popular:</span>
+        <button class="search-tag">Cross Necklace</button>
+        <button class="search-tag">Faith Journal</button>
+        <button class="search-tag">Scripture Mug</button>
+        <button class="search-tag">Grace Tee</button>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+      <div class="hero-image-wrap">
+        <img src="images/hero_banner.jpg" alt="Christian merchandise flatlay with Bible, cross necklace, and devotional items" class="hero-image" loading="eager" />
+        <div class="hero-overlay"></div>
+      </div>
+      <div class="hero-content">
+        <p class="hero-eyebrow">New Collection &middot; Autumn 2026</p>
+        <p class="hero-subtitle">Beautifully crafted Christian merchandise that inspires, uplifts, and reminds you of God's love &mdash; every single day.</p>
+        <div class="hero-actions">
+          <a href="collections.html" class="btn btn-primary" id="hero-shop-btn">SHOP THE COLLECTION &rarr;</a>
+          <a href="#about" class="btn btn-ghost" id="hero-story-btn">OUR STORY</a>
+        </div>
+
+        <!-- Trust Features Strip -->
+        <div class="hero-trust">
+          <div class="hero-trust-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            <div class="hero-trust-text">
+              <span>FAITH-FILLED</span>
+              <span>DESIGNS</span>
+            </div>
+          </div>
+          <div class="hero-trust-divider"></div>
+          <div class="hero-trust-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            <div class="hero-trust-text">
+              <span>SECURE</span>
+              <span>PAYMENTS</span>
+            </div>
+          </div>
+          <div class="hero-trust-divider"></div>
+          <div class="hero-trust-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+            <div class="hero-trust-text">
+              <span>SHIPPING</span>
+              <span>ACROSS INDIA</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Hero Bottom Bar -->
+      <div class="hero-bottom-bar">
+        <div class="hero-bottom-verse">
+          <em>&ldquo;I can do all things through Christ who strengthens me.&rdquo;</em>
+          <span class="hero-bottom-ref">&mdash; Philippians 4:13</span>
+        </div>
+        <a href="collections.html" class="hero-bottom-scroll" id="hero-scroll-btn">
+          <span>SCROLL</span>
+          <span class="hero-scroll-arrow">&darr;</span>
+          <span class="hero-scroll-vbar">|</span>
+          <span>DISCOVER MORE</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Marquee / Scrolling Banner -->
+    <div class="marquee-section">
+      <div class="marquee-track">
+        <div class="marquee-content">
+          <span>"I can do all things through Christ who strengthens me." &mdash; Phil. 4:13 &#10022;</span>
+          <span>"The Lord is my shepherd; I shall not want." &mdash; Psalm 23:1 &#10022;</span>
+          <span>"Be still, and know that I am God." &mdash; Psalm 46:10 &#10022;</span>
+          <span>"For God so loved the world that He gave His only Son." &mdash; John 3:16 &#10022;</span>
+          <span>"Trust in the Lord with all your heart." &mdash; Proverbs 3:5 &#10022;</span>
+          <span>"She is clothed with strength and dignity." &mdash; Proverbs 31:25 &#10022;</span>
+          <span>"I can do all things through Christ who strengthens me." &mdash; Phil. 4:13 &#10022;</span>
+          <span>"The Lord is my shepherd; I shall not want." &mdash; Psalm 23:1 &#10022;</span>
+          <span>"Be still, and know that I am God." &mdash; Psalm 46:10 &#10022;</span>
+          <span>"For God so loved the world that He gave His only Son." &mdash; John 3:16 &#10022;</span>
+          <span>"Trust in the Lord with all your heart." &mdash; Proverbs 3:5 &#10022;</span>
+          <span>"She is clothed with strength and dignity." &mdash; Proverbs 31:25 &#10022;</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Collections Section -->
+    <section class="collections" id="collections">
+      <div class="container">
+        <div class="section-header">
+          <p class="section-eyebrow">Shop by Category</p>
+          <h2 class="section-title">Our Collections</h2>
+          <p class="section-desc">Discover faith-inspired pieces for every part of your life</p>
+        </div>
+        <div class="collections-grid">
+          <div class="collection-card large">
+            <div class="collection-image-wrap">
+              <img src="images/category_apparel.jpg" alt="Christian Apparel" class="collection-image" loading="lazy" />
+              <div class="collection-overlay"></div>
+            </div>
+            <div class="collection-content">
+              <p class="collection-tag">Faith Wear</p>
+              <h3 class="collection-name">Apparel &amp;<br/>Clothing</h3>
+              <a href="collections.html?category=apparel" class="collection-link" id="coll-apparel">Explore <span>&rarr;</span></a>
+            </div>
+          </div>
+
+          <div class="collection-card">
+            <div class="collection-image-wrap">
+              <img src="images/category_jewelry.jpg" alt="Christian Jewelry" class="collection-image" loading="lazy" />
+              <div class="collection-overlay"></div>
+            </div>
+            <div class="collection-content">
+              <p class="collection-tag">Wear Your Faith</p>
+              <h3 class="collection-name">Jewelry &amp;<br/>Accessories</h3>
+              <a href="collections.html?category=jewelry" class="collection-link" id="coll-jewelry">Explore <span>&rarr;</span></a>
+            </div>
+          </div>
+
+          <div class="collection-card">
+            <div class="collection-image-wrap">
+              <img src="images/product_mug.jpg" alt="Christian Home Decor" class="collection-image" loading="lazy" />
+              <div class="collection-overlay"></div>
+            </div>
+            <div class="collection-content">
+              <p class="collection-tag">Sacred Spaces</p>
+              <h3 class="collection-name">Home<br/>D&eacute;cor</h3>
+              <a href="collections.html?category=home" class="collection-link" id="coll-homedecor">Explore <span>&rarr;</span></a>
+            </div>
+          </div>
+
+          <div class="collection-card">
+            <div class="collection-image-wrap">
+              <img src="images/product_giftset.jpg" alt="Christian Gift Sets" class="collection-image" loading="lazy" />
+              <div class="collection-overlay"></div>
+            </div>
+            <div class="collection-content">
+              <p class="collection-tag">Bless Someone</p>
+              <h3 class="collection-name">Gift<br/>Sets</h3>
+              <a href="collections.html?category=gifts" class="collection-link" id="coll-gifts">Explore <span>&rarr;</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="featured-products" id="featured">
+      <div class="container">
+        <div class="section-header">
+          <p class="section-eyebrow">Hand-Picked for You</p>
+          <h2 class="section-title">Best Sellers</h2>
+          <p class="section-desc">Our most-loved faith gifts, chosen by our community</p>
+        </div>
+        <div class="tabs-row">
+          <button class="tab-btn active" data-tab="all" id="tab-all">All</button>
+          <button class="tab-btn" data-tab="apparel" id="tab-apparel">Apparel</button>
+          <button class="tab-btn" data-tab="jewelry" id="tab-jewelry">Jewelry</button>
+          <button class="tab-btn" data-tab="home" id="tab-home">Home</button>
+          <button class="tab-btn" data-tab="gifts" id="tab-gifts">Gifts</button>
+        </div>
+
+        <div class="products-grid" id="products-grid">
+          <!-- Products are injected by JS -->
+        </div>
+
+        <div class="section-cta">
+          <a href="collections.html" class="btn btn-outline" id="view-all-btn">View All Products</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scripture Feature Banner -->
+    <section class="scripture-banner">
+      <div class="scripture-banner-inner">
+        <div class="scripture-decor-left">&#10022;</div>
+        <div class="scripture-text-wrap">
+          <p class="scripture-quote">"For God so loved the world, that he gave his only Son, that whoever believes in him should not perish but have eternal life."</p>
+          <p class="scripture-ref">&mdash; John 3:16</p>
+        </div>
+        <div class="scripture-decor-right">&#10022;</div>
+      </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="why-us">
+      <div class="container">
+        <div class="section-header">
+          <p class="section-eyebrow">Our Promise</p>
+          <h2 class="section-title">Crafted with Love &amp; Faith</h2>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">&#128591;</div>
+            <h3 class="feature-title">Prayerfully Curated</h3>
+            <p class="feature-desc">Every product is carefully selected and blessed with intention, chosen to uplift and inspire your faith journey.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">&#10024;</div>
+            <h3 class="feature-title">Premium Quality</h3>
+            <p class="feature-desc">We use only high-quality materials &mdash; from sterling silver jewelry to premium cotton apparel &mdash; because you deserve the best.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">&#127873;</div>
+            <h3 class="feature-title">Gift-Ready Packaging</h3>
+            <p class="feature-desc">Every order arrives beautifully packaged, making it perfect as a thoughtful gift for any occasion or loved one.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">&#128666;</div>
+            <h3 class="feature-title">Fast Shipping &amp; 3-Day Returns</h3>
+            <p class="feature-desc">Enjoy free delivery on bulk orders across India, plus easy 3-day returns if you're not completely blessed.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About / Story Section -->
+    <section class="about-section" id="about">
+      <div class="container">
+        <div class="about-grid">
+          <div class="about-image-side">
+            <div class="about-image-frame">
+              <div class="about-img-placeholder">
+                <div class="about-placeholder-cross">
+                  <svg class="cross-icon" viewBox="0 0 20 26" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.5 1C8.5 0.45 8.95 0 9.5 0H10.5C11.05 0 11.5 0.45 11.5 1V7H17.5C18.05 7 18.5 7.45 18.5 8V9C18.5 9.55 18.05 10 17.5 10H11.5V25C11.5 25.55 11.05 26 10.5 26H9.5C8.95 26 8.5 25.55 8.5 25V10H2.5C1.95 10 1.5 9.55 1.5 9V8C1.5 7.45 1.95 7 2.5 7H8.5V1Z"/></svg>
+                </div>
+                <p class="about-placeholder-name">Winny's<br/>Christian Zone</p>
+                <p class="about-placeholder-verse">"She is clothed with strength and dignity."<br/><em>— Proverbs 31:25</em></p>
+              </div>
+              <div class="about-badge">
+                <span class="badge-cross"><svg class="cross-icon" viewBox="0 0 20 26" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.5 1C8.5 0.45 8.95 0 9.5 0H10.5C11.05 0 11.5 0.45 11.5 1V7H17.5C18.05 7 18.5 7.45 18.5 8V9C18.5 9.55 18.05 10 17.5 10H11.5V25C11.5 25.55 11.05 26 10.5 26H9.5C8.95 26 8.5 25.55 8.5 25V10H2.5C1.95 10 1.5 9.55 1.5 9V8C1.5 7.45 1.95 7 2.5 7H8.5V1Z"/></svg></span>
+                <span class="badge-text">Faith Since 2018</span>
+              </div>
+            </div>
+          </div>
+          <div class="about-content-side">
+            <p class="section-eyebrow">Our Story</p>
+            <h2 class="about-title">Born from Faith,<br />Built with Love</h2>
+            <p class="about-body">Winny's Christian Zone was born from a simple belief &mdash; that faith should be worn, displayed, and gifted with the same beauty and intention as the love that inspires it.</p>
+            <p class="about-body">Founded by Winny, a woman of deep faith and creative spirit, our store began as a small passion project to share the joy of Christian living through thoughtfully designed merchandise. What started as handmade gifts for friends and church community has grown into a beloved destination for Christians everywhere.</p>
+            <blockquote class="about-quote">
+              "I wanted to create a space where faith meets beauty &mdash; where every item you pick up reminds you of how deeply you are loved."
+              <cite>&mdash; Winny, Founder</cite>
+            </blockquote>
+            <a href="#contact" class="btn btn-primary" id="about-learn-more">Get in Touch</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+      <div class="container">
+        <div class="section-header">
+          <p class="section-eyebrow">From Our Community</p>
+          <h2 class="section-title">Words of Blessing</h2>
+        </div>
+        <div class="testimonials-slider" id="testimonials-slider">
+          <div class="testimonials-track" id="testimonials-track">
+            <div class="testimonial-card">
+              <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+              <p class="testimonial-text">"I ordered a cross necklace and a faith journal as a baptism gift &mdash; the packaging was absolutely stunning. My friend was moved to tears. This store is a true blessing!"</p>
+              <div class="testimonial-author">
+                <div class="author-avatar">S</div>
+                <div class="author-info">
+                  <strong>Sarah M.</strong>
+                  <span>Verified Buyer &middot; Mumbai</span>
+                </div>
+              </div>
+            </div>
+            <div class="testimonial-card">
+              <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+              <p class="testimonial-text">"The Grace hoodie is my absolute favourite piece of clothing. It's soft, beautiful, and I get compliments every time I wear it. Thank you, Winny's!"</p>
+              <div class="testimonial-author">
+                <div class="author-avatar">A</div>
+                <div class="author-info">
+                  <strong>Amanda L.</strong>
+                  <span>Verified Buyer &middot; Bengaluru</span>
+                </div>
+              </div>
+            </div>
+            <div class="testimonial-card">
+              <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+              <p class="testimonial-text">"The quality of everything I've ordered is exceptional. The Scripture mugs are beautiful and my morning devotions feel so much more special now. Highly recommend!"</p>
+              <div class="testimonial-author">
+                <div class="author-avatar">R</div>
+                <div class="author-info">
+                  <strong>Rebecca T.</strong>
+                  <span>Verified Buyer &middot; Chennai</span>
+                </div>
+              </div>
+            </div>
+            <div class="testimonial-card">
+              <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+              <p class="testimonial-text">"I've been shopping here for 2 years and gifted from here so many times. Every single person is blessed beyond what they expected. Customer service is excellent too!"</p>
+              <div class="testimonial-author">
+                <div class="author-avatar">D</div>
+                <div class="author-info">
+                  <strong>Diana F.</strong>
+                  <span>Verified Buyer &middot; Hyderabad</span>
+                </div>
+              </div>
+            </div>
+            <div class="testimonial-card">
+              <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+              <p class="testimonial-text">"Got a personalised 'Bless This Home' sign for my new home. It arrived wrapped so beautifully and the quality blew me away. This is my go-to store for Christian gifts!"</p>
+              <div class="testimonial-author">
+                <div class="author-avatar">P</div>
+                <div class="author-info">
+                  <strong>Patricia K.</strong>
+                  <span>Verified Buyer &middot; Delhi</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slider-controls">
+          <button class="slider-btn prev-btn" id="prev-btn" aria-label="Previous testimonial">&larr;</button>
+          <div class="slider-dots" id="slider-dots"></div>
+          <button class="slider-btn next-btn" id="next-btn" aria-label="Next testimonial">&rarr;</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Instagram / Social -->
+    <section class="social-section">
+      <div class="container">
+        <div class="section-header">
+          <p class="section-eyebrow">@winnyschristianzone</p>
+          <h2 class="section-title">Community of Faith</h2>
+          <p class="section-desc">Share your #WinnyFaith moments with us</p>
+        </div>
+        <div class="social-grid">
+          <div class="social-item" style="--delay: 0s">
+            <div class="social-image-wrap">
+              <img src="images/social_faith_tee.jpg" alt="Community faith moment" class="social-image" loading="lazy" />
+              <div class="social-hover"><span>&#9825; 241</span></div>
+            </div>
+          </div>
+          <div class="social-item" style="--delay: 0.1s">
+            <div class="social-image-wrap">
+              <img src="images/category_apparel.jpg" alt="Community faith moment" class="social-image" loading="lazy" />
+              <div class="social-hover"><span>&#9825; 189</span></div>
+            </div>
+          </div>
+          <div class="social-item" style="--delay: 0.2s">
+            <div class="social-image-wrap">
+              <img src="images/category_jewelry.jpg" alt="Community faith moment" class="social-image" loading="lazy" />
+              <div class="social-hover"><span>&#9825; 312</span></div>
+            </div>
+          </div>
+          <div class="social-item" style="--delay: 0.3s">
+            <div class="social-image-wrap">
+              <img src="images/product_journal.jpg" alt="Community faith moment" class="social-image" loading="lazy" />
+              <div class="social-hover"><span>&#9825; 275</span></div>
+            </div>
+          </div>
+          <div class="social-item" style="--delay: 0.4s">
+            <div class="social-image-wrap">
+              <img src="images/product_mug.jpg" alt="Community faith moment" class="social-image" loading="lazy" />
+              <div class="social-hover"><span>&#9825; 198</span></div>
+            </div>
+          </div>
+          <div class="social-item" style="--delay: 0.5s">
+            <div class="social-image-wrap">
+              <img src="images/product_giftset.jpg" alt="Community faith moment" class="social-image" loading="lazy" />
+              <div class="social-hover"><span>&#9825; 354</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="social-follow">
+          <a href="https://instagram.com/winnyschristianzone" target="_blank" rel="noopener noreferrer" class="btn btn-outline-dark" id="instagram-link">Follow on Instagram</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter" id="newsletter">
+      <div class="newsletter-inner">
+        <div class="newsletter-decor">&#10022; &#10022; &#10022;</div>
+        <p class="newsletter-eyebrow">Join Our Community</p>
+        <h2 class="newsletter-title">Get Blessed in Your Inbox</h2>
+        <p class="newsletter-desc">Subscribe for new arrivals, exclusive discounts, weekly scripture inspiration, and more &mdash; delivered straight to you with love.</p>
+        <form class="newsletter-form" id="newsletter-form">
+          <div class="newsletter-input-wrap">
+            <input type="email" class="newsletter-input" placeholder="Enter your email address..." id="newsletter-email" required />
+            <button type="submit" class="newsletter-btn" id="newsletter-submit">Subscribe</button>
+          </div>
+          <p class="newsletter-note"><svg class="cross-icon inline-cross" viewBox="0 0 20 26" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.5 1C8.5 0.45 8.95 0 9.5 0H10.5C11.05 0 11.5 0.45 11.5 1V7H17.5C18.05 7 18.5 7.45 18.5 8V9C18.5 9.55 18.05 10 17.5 10H11.5V25C11.5 25.55 11.05 26 10.5 26H9.5C8.95 26 8.5 25.55 8.5 25V10H2.5C1.95 10 1.5 9.55 1.5 9V8C1.5 7.45 1.95 7 2.5 7H8.5V1Z"/></svg> We respect your privacy and will never spam you. Unsubscribe anytime.</p>
+        </form>
+        <div class="newsletter-success" id="newsletter-success">
+          <span class="success-icon">&#10022;</span>
+          <p>You're in! Welcome to the Winny's family. Check your inbox for a welcome blessing! &#128591;</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" id="contact">
+    <div class="footer-top">
+      <div class="container">
+        <div class="footer-grid">
+
+          <!-- Brand Column -->
+          <div class="footer-brand">
+            <a href="index.html" class="footer-logo" id="footer-logo">
+              <span class="footer-logo-cross"><svg class="cross-icon" viewBox="0 0 20 26" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.5 1C8.5 0.45 8.95 0 9.5 0H10.5C11.05 0 11.5 0.45 11.5 1V7H17.5C18.05 7 18.5 7.45 18.5 8V9C18.5 9.55 18.05 10 17.5 10H11.5V25C11.5 25.55 11.05 26 10.5 26H9.5C8.95 26 8.5 25.55 8.5 25V10H2.5C1.95 10 1.5 9.55 1.5 9V8C1.5 7.45 1.95 7 2.5 7H8.5V1Z"/></svg></span>
+              <span class="footer-logo-vbar"></span>
+              <div class="footer-logo-texts">
+                <span class="footer-logo-name">Winny's</span>
+                <span class="footer-logo-sub">Christian Zone</span>
+              </div>
+            </a>
+            <p class="footer-tagline">Faith-inspired merchandise that uplifts, inspires, and reminds you of God's boundless love every day.</p>
+            <p class="footer-script">More than products,<br/>a higher purpose.</p>
+            <div class="footer-script-rule"></div>
+            <div class="footer-socials">
+              <a href="https://instagram.com/winnyschristianzone" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram" id="footer-instagram">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+              </a>
+              <a href="#" class="social-link" aria-label="Facebook" id="footer-facebook">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+              </a>
+              <a href="#" class="social-link" aria-label="Pinterest" id="footer-pinterest">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+              </a>
+              <a href="#" class="social-link" aria-label="YouTube" id="footer-youtube">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Shop Column -->
+          <div class="footer-col">
+            <h4 class="footer-col-title">Shop</h4>
+            <a href="collections.html?sort=new" class="footer-link">New Arrivals</a>
+            <a href="collections.html?category=apparel" class="footer-link">Apparel &amp; Clothing</a>
+            <a href="collections.html?category=jewelry" class="footer-link">Jewelry &amp; Accessories</a>
+            <a href="collections.html?category=home" class="footer-link">Home D&eacute;cor</a>
+            <a href="collections.html?category=gifts" class="footer-link">Gift Sets</a>
+          </div>
+
+          <!-- Information Column -->
+          <div class="footer-col">
+            <h4 class="footer-col-title">Information</h4>
+            <a href="#about" class="footer-link">Our Story</a>
+            <a href="#" class="footer-link">Shipping &amp; Returns</a>
+            <a href="#" class="footer-link">Size Guide</a>
+            <a href="#" class="footer-link">FAQ</a>
+            <a href="#" class="footer-link">Privacy Policy</a>
+          </div>
+
+          <!-- Contact Column -->
+          <div class="footer-col">
+            <h4 class="footer-col-title">Contact Us</h4>
+            <div class="footer-contact-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <a href="mailto:hello@winnyschristianzone.com" class="footer-contact-link" id="footer-email">hello@winnyschristianzone.com</a>
+            </div>
+            <div class="footer-contact-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>Mon&ndash;Sat, 9am&ndash;6pm IST</span>
+            </div>
+            <div class="footer-contact-hr"></div>
+            <div class="footer-verse-block">
+              <span class="footer-verse-mark">&ldquo;</span>
+              <p class="footer-verse-text">Trust in the Lord<br/>with all your heart.</p>
+              <span class="footer-verse-ref">&mdash; Proverbs 3:5</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+        <div class="footer-bottom-left">
+          <p class="footer-copy">&copy; 2026 Winny's Christian Zone. All rights reserved. Made with <span class="footer-heart">&hearts;</span> &amp; Faith.</p>
+          <p class="footer-motto">&mdash;&nbsp; FAITH &nbsp;/&nbsp; PEOPLE &nbsp;/&nbsp; PURPOSE</p>
+        </div>
+        <div class="footer-bottom-right">
+          <div class="footer-payment">
+            <span class="payment-badge">VISA</span>
+            <span class="payment-badge">MC</span>
+            <span class="payment-badge">AMEX</span>
+            <span class="payment-badge">UPI</span>
+            <span class="payment-badge">PayPal</span>
+          </div>
+          <div class="footer-vdivider" aria-hidden="true"></div>
+          <div class="footer-shopping-wrap">
+            <p class="footer-shopping-note">Shopping with purpose.</p>
+            <div class="footer-shopping-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">
+    <span class="toast-icon">&#10022;</span>
+    <span class="toast-message" id="toast-message">Added to cart!</span>
+  </div>
+
+  <!-- Supabase JS Client & Store Integration Suite -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabaseClient.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

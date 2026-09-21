@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Review your blessed shopping cart at Winny's Christian Zone. Faith-inspired Christian merchandise, apparel, jewelry, and gifts." />
+  <title>Your Cart | Winny's Christian Zone</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&family=Sacramento&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="cart-page">
+
+  <!-- Header / Navigation -->
+  <header class="header" id="header">
+    <div class="header-inner">
+      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="nav-left">
+        <a href="collections.html" class="nav-link has-dropdown" data-dropdown="shop" id="nav-shop">Shop</a>
+        <a href="collections.html" class="nav-link">Collections</a>
+        <a href="index.html#about" class="nav-link">Our Story</a>
+      </nav>
+
+      <a href="index.html" class="logo" id="logo">
+        <span class="logo-cross"><svg class="cross-icon" viewBox="0 0 20 26" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.5 1C8.5 0.45 8.95 0 9.5 0H10.5C11.05 0 11.5 0.45 11.5 1V7H17.5C18.05 7 18.5 7.45 18.5 8V9C18.5 9.55 18.05 10 17.5 10H11.5V25C11.5 25.55 11.05 26 10.5 26H9.5C8.95 26 8.5 25.55 8.5 25V10H2.5C1.95 10 1.5 9.55 1.5 9V8C1.5 7.45 1.95 7 2.5 7H8.5V1Z"/></svg></span>
+        <div class="logo-text">
+          <span class="logo-name">Winny's</span>
+          <span class="logo-sub">Christian Zone</span>
+        </div>
+      </a>
+
+      <nav class="nav-right">
+        <a href="index.html#contact" class="nav-link">Contact</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="icon-btn" aria-label="Search" id="search-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </button>
+        <button class="icon-btn" aria-label="Account" id="account-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
+        <a href="cart.html" class="icon-btn cart-btn active" aria-label="Cart" id="cart-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span class="cart-count" id="cart-count">0</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Dropdown Menu -->
+    <div class="dropdown-menu" id="dropdown-shop">
+      <div class="dropdown-inner">
+        <div class="dropdown-col">
+          <h4>Shop by Category</h4>
+          <a href="collections.html?category=apparel">Apparel &amp; Clothing</a>
+          <a href="collections.html?category=jewelry">Jewelry &amp; Accessories</a>
+          <a href="collections.html?category=home">Home D&eacute;cor</a>
+          <a href="collections.html?category=gifts">Books &amp; Devotionals</a>
+          <a href="collections.html?category=gifts">Gift Sets</a>
+        </div>
+        <div class="dropdown-col">
+          <h4>Shop by Occasion</h4>
+          <a href="collections.html">Christmas Gifts</a>
+          <a href="collections.html">Easter Collection</a>
+          <a href="collections.html">Baptism &amp; Confirmation</a>
+          <a href="collections.html">Wedding Blessings</a>
+          <a href="collections.html">Sympathy &amp; Prayer</a>
+        </div>
+        <div class="dropdown-col">
+          <h4>Popular Right Now</h4>
+          <a href="collections.html?sort=new">&#10022; New Arrivals</a>
+          <a href="collections.html?sort=best">Best Sellers</a>
+          <a href="collections.html?search=mug">Scripture Mugs</a>
+          <a href="collections.html?search=journal">Faith Journals</a>
+          <a href="collections.html?search=cross">Cross Necklaces</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Nav -->
+  <nav class="mobile-nav" id="mobile-nav">
+    <button class="mobile-nav-close" id="mobile-nav-close">&#10005;</button>
+    <div class="mobile-nav-logo">
+      <svg class="cross-icon" viewBox="0 0 20 26" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.5 1C8.5 0.45 8.95 0 9.5 0H10.5C11.05 0 11.5 0.45 11.5 1V7H17.5C18.05 7 18.5 7.45 18.5 8V9C18.5 9.55 18.05 10 17.5 10H11.5V25C11.5 25.55 11.05 26 10.5 26H9.5C8.95 26 8.5 25.55 8.5 25V10H2.5C1.95 10 1.5 9.55 1.5 9V8C1.5 7.45 1.95 7 2.5 7H8.5V1Z"/></svg>
+      <span>Winny's Christian Zone</span>
+    </div>
+    <a href="collections.html" class="mobile-nav-link">Shop All</a>
+    <a href="collections.html?category=apparel" class="mobile-nav-link">Apparel</a>
+    <a href="collections.html?category=jewelry" class="mobile-nav-link">Jewelry</a>
+    <a href="collections.html?category=home" class="mobile-nav-link">Home D&eacute;cor</a>
+    <a href="collections.html" class="mobile-nav-link">Collections</a>
+    <a href="cart.html" class="mobile-nav-link">My Cart</a>
+    <a href="index.html#about" class="mobile-nav-link">Our Story</a>
+    <a href="index.html#contact" class="mobile-nav-link">Contact</a>
+  </nav>
+  <div class="mobile-nav-overlay" id="mobile-nav-overlay"></div>
+
+  <!-- Search Overlay -->
+  <div class="search-overlay" id="search-overlay">
+    <button class="search-close" id="search-close">&#10005;</button>
+    <div class="search-inner">
+      <p class="search-label">What are you looking for?</p>
+      <div class="search-input-wrap">
+        <input type="text" class="search-input" placeholder="Search for faith, grace, love..." id="search-input" />
+        <button class="search-submit" id="search-submit-btn">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </button>
+      </div>
+      <div class="search-suggestions">
+        <span>Popular:</span>
+        <button class="search-tag">Cross Necklace</button>
+        <button class="search-tag">Faith Journal</button>
+        <button class="search-tag">Scripture Mug</button>
+        <button class="search-tag">Grace Tee</button>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <!-- Cart Page Main Section -->
+    <section class="cart-page-section">
+      <div class="container">
+        <!-- Breadcrumbs & Header -->
+        <div class="cart-page-header">
+          <div class="breadcrumbs" style="justify-content: flex-start;">
+            <a href="index.html">Home</a>
+            <span>/</span>
+            <a href="collections.html">Collections</a>
+            <span>/</span>
+            <span>Your Cart</span>
+          </div>
+          <h1 class="cart-page-title">Your Blessed Cart <span id="cart-item-count-title">(0 items)</span></h1>
+        </div>
+
+        <!-- Free Shipping Banner -->
+        <div class="cart-shipping-bar-wrap" id="cart-shipping-bar-wrap">
+          <div class="cart-shipping-text">
+            <span>&#128666;</span>
+            <span id="free-shipping-text">Free delivery on bulk orders</span>
+          </div>
+        </div>
+
+        <!-- Empty Cart View -->
+        <div class="cart-empty-state" id="cart-empty-view" style="display: none;">
+          <div class="cart-empty-cross">
+            <svg class="cross-icon" viewBox="0 0 20 26" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.5 1C8.5 0.45 8.95 0 9.5 0H10.5C11.05 0 11.5 0.45 11.5 1V7H17.5C18.05 7 18.5 7.45 18.5 8V9C18.5 9.55 18.05 10 17.5 10H11.5V25C11.5 25.55 11.05 26 10.5 26H9.5C8.95 26 8.5 25.55 8.5 25V10H2.5C1.95 10 1.5 9.55 1.5 9V8C1.5 7.45 1.95 7 2.5 7H8.5V1Z"/></svg>
+          </div>
+          <h2 class="cart-empty-title">Your Cart is Empty</h2>
+          <p class="cart-empty-desc">You haven't added any faith-inspired items to your cart yet. Discover prayerfully crafted apparel, jewelry, and gifts for your home.</p>
+          <a href="collections.html" class="btn btn-primary">Explore Our Collections &rarr;</a>
+        </div>
+
+        <!-- Active Cart Layout -->
+        <div class="cart-layout" id="cart-active-view">
+          <!-- Left Column: Items Table & Actions -->
+          <div class="cart-main-col">
+            <div class="cart-table-card">
+              <div class="cart-table-header">
+                <span>Product</span>
+                <span>Price</span>
+                <span style="text-align: center;">Quantity</span>
+                <span style="text-align: right;">Total</span>
+                <span></span>
+              </div>
+              <div class="cart-items-list" id="cart-page-items">
+                <!-- Injected by app.js -->
+              </div>
+            </div>
+
+            <div class="cart-actions-bar">
+              <a href="collections.html" class="btn-continue-shopping">&larr; Continue Shopping</a>
+              <button class="btn-clear-cart" id="clear-cart-btn">Clear Cart</button>
+            </div>
+
+            <!-- Optional Prayer / Gift Note -->
+            <div class="cart-note-card">
+              <label for="order-prayer-note">Add an optional gift note or prayer request to this order:</label>
+              <textarea id="order-prayer-note" class="cart-note-input" placeholder="Write your heartfelt blessing, prayer request, or gift message..."></textarea>
+            </div>
+          </div>
+
+          <!-- Right Column: Order Summary Card -->
+          <div class="cart-summary-col">
+            <div class="cart-summary-card">
+              <h2 class="cart-summary-title">Order Summary</h2>
+
+              <div class="cart-summary-row">
+                <span>Subtotal</span>
+                <span id="cart-page-subtotal">₹0</span>
+              </div>
+
+              <div class="cart-summary-row" id="cart-discount-row" style="display: none; color: #2e7d32;">
+                <span>Discount (<span id="cart-discount-code"></span>)</span>
+                <span id="cart-page-discount">-₹0</span>
+              </div>
+
+              <div class="cart-summary-row">
+                <span>Standard Delivery</span>
+                <span id="cart-page-shipping">₹199</span>
+              </div>
+
+              <div class="cart-summary-row total-row">
+                <span>Total Amount</span>
+                <span id="cart-page-total">₹0</span>
+              </div>
+
+
+
+              <!-- Checkout Button -->
+              <button class="btn-checkout-page" id="open-checkout-modal-btn">Proceed to Checkout &#10022;</button>
+
+              <!-- Trust Assurances -->
+              <div class="cart-trust-badges">
+                <div>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>
+                  <span>Hassle-Free 3-Day Returns on All Items</span>
+                </div>
+                <div>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  <span>256-Bit SSL Encrypted Secure Checkout</span>
+                </div>
+                <div>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M16 12l-4-4-4 4M12 16V8"/></svg>
+                  <span>Free Delivery on Bulk Orders Across India</span>
+                </div>
+                <div>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  <span>Prayerfully Blessed &amp; Quality Checked</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scripture Banner -->
+    <section class="scripture-banner">
+      <div class="container">
+        <div class="scripture-banner-inner">
+          <div class="scripture-cross">
+            <svg class="cross-icon" viewBox="0 0 20 26" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.5 1C8.5 0.45 8.95 0 9.5 0H10.5C11.05 0 11.5 0.45 11.5 1V7H17.5C18.05 7 18.5 7.45 18.5 8V9C18.5 9.55 18.05 10 17.5 10H11.5V25C11.5 25.55 11.05 26 10.5 26H9.5C8.95 26 8.5 25.55 8.5 25V10H2.5C1.95 10 1.5 9.55 1.5 9V8C1.5 7.45 1.95 7 2.5 7H8.5V1Z"/></svg>
+          </div>
+          <div class="scripture-quote">
+            <p class="scripture-text">&ldquo;Trust in the Lord with all your heart, and lean not on your own understanding.&rdquo;</p>
+            <p class="scripture-citation">&mdash; Proverbs 3:5</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Checkout Modal -->
+  <div class="checkout-modal-overlay" id="checkout-modal-overlay">
+    <div class="checkout-modal">
+      <div class="checkout-modal-header">
+        <h3>Complete Your Blessed Order</h3>
+        <button class="checkout-modal-close" id="checkout-modal-close">&times;</button>
+      </div>
+      <div class="checkout-modal-body">
+        <form id="checkout-form">
+          <div class="checkout-form-grid">
+            <div class="checkout-form-group full">
+              <label for="checkout-name">Full Name *</label>
+              <input type="text" id="checkout-name" required placeholder="e.g. Grace Thomas" />
+            </div>
+            <div class="checkout-form-group">
+              <label for="checkout-phone">Phone Number *</label>
+              <input type="tel" id="checkout-phone" required placeholder="+91 98765 43210" />
+            </div>
+            <div class="checkout-form-group">
+              <label for="checkout-email">Email Address *</label>
+              <input type="email" id="checkout-email" required placeholder="grace@example.com" />
+            </div>
+            <div class="checkout-form-group full">
+              <label for="checkout-address">Delivery Address *</label>
+              <input type="text" id="checkout-address" required placeholder="Flat / House no, Street name" />
+            </div>
+            <div class="checkout-form-group">
+              <label for="checkout-city">City *</label>
+              <input type="text" id="checkout-city" required placeholder="Hyderabad" />
+            </div>
+            <div class="checkout-form-group">
+              <label for="checkout-pincode">Pincode *</label>
+              <input type="text" id="checkout-pincode" required placeholder="500001" />
+            </div>
+          </div>
+
+          <label style="display: block; font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--dark); margin-bottom: 8px;">Select Payment Method</label>
+          <div class="checkout-payment-opts">
+            <label class="checkout-pay-option selected">
+              <input type="radio" name="payment" value="razorpay" checked />
+              <span><strong>Razorpay Secure</strong> (UPI, Google Pay, PhonePe, Cards, NetBanking)</span>
+            </label>
+            <label class="checkout-pay-option">
+              <input type="radio" name="payment" value="cod" />
+              <span><strong>Cash on Delivery (COD)</strong></span>
+            </label>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 12px; background: var(--bg); border-radius: 6px;">
+            <span style="font-size: 13px; font-weight: 500;">Total Payable:</span>
+            <strong id="modal-total-amount" style="font-size: 18px; color: var(--gold-dark); font-family: var(--font-display);">₹0</strong>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 14px; font-size: 13px;">Place Blessed Order &#10022;</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Order Success Modal -->
+  <div class="checkout-modal-overlay" id="order-success-modal">
+    <div class="checkout-modal" style="text-align: center; padding: 40px 24px;">
+      <div class="order-success-cross" style="color: var(--gold); margin-bottom: 16px; display: flex; justify-content: center;">
+        <svg class="cross-icon" style="width: 42px; height: 54px;" viewBox="0 0 20 26" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.5 1C8.5 0.45 8.95 0 9.5 0H10.5C11.05 0 11.5 0.45 11.5 1V7H17.5C18.05 7 18.5 7.45 18.5 8V9C18.5 9.55 18.05 10 17.5 10H11.5V25C11.5 25.55 11.05 26 10.5 26H9.5C8.95 26 8.5 25.55 8.5 25V10H2.5C1.95 10 1.5 9.55 1.5 9V8C1.5 7.45 1.95 7 2.5 7H8.5V1Z"/></svg>
+      </div>
+      <h2 style="font-family: var(--font-display); font-size: 32px; color: var(--dark); margin-bottom: 8px;">Thank You &amp; God Bless!</h2>
+      <p style="font-size: 15px; color: var(--text-muted); max-width: 440px; margin: 0 auto 20px; line-height: 1.6;">
+        Your order <strong id="order-confirm-id" style="color: var(--dark);">#WCZ-78219</strong> has been received with gratitude. We are prayerfully preparing your items with love.
+      </p>
+      <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3); border-radius: 20px; padding: 6px 18px; font-size: 12px; color: var(--gold-dark); margin-bottom: 28px;">
+        <span>&#128666;</span> Expected delivery in 3&ndash;5 business days
+      </div>
+      <div>
+        <a href="collections.html" class="btn btn-primary">Continue Shopping &rarr;</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer" id="contact">
+    <div class="footer-top">
+      <div class="container">
+        <div class="footer-grid">
+
+          <!-- Brand Column -->
+          <div class="footer-brand">
+            <a href="index.html" class="footer-logo" id="footer-logo">
+              <span class="footer-logo-cross"><svg class="cross-icon" viewBox="0 0 20 26" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.5 1C8.5 0.45 8.95 0 9.5 0H10.5C11.05 0 11.5 0.45 11.5 1V7H17.5C18.05 7 18.5 7.45 18.5 8V9C18.5 9.55 18.05 10 17.5 10H11.5V25C11.5 25.55 11.05 26 10.5 26H9.5C8.95 26 8.5 25.55 8.5 25V10H2.5C1.95 10 1.5 9.55 1.5 9V8C1.5 7.45 1.95 7 2.5 7H8.5V1Z"/></svg></span>
+              <span class="footer-logo-vbar"></span>
+              <div class="footer-logo-texts">
+                <span class="footer-logo-name">Winny's</span>
+                <span class="footer-logo-sub">Christian Zone</span>
+              </div>
+            </a>
+            <p class="footer-tagline">Faith-inspired merchandise that uplifts, inspires, and reminds you of God's boundless love every day.</p>
+            <p class="footer-script">More than products,<br/>a higher purpose.</p>
+            <div class="footer-script-rule"></div>
+            <div class="footer-socials">
+              <a href="https://instagram.com/winnyschristianzone" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram" id="footer-instagram">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+              </a>
+              <a href="#" class="social-link" aria-label="Facebook" id="footer-facebook">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+              </a>
+              <a href="#" class="social-link" aria-label="Pinterest" id="footer-pinterest">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+              </a>
+              <a href="#" class="social-link" aria-label="YouTube" id="footer-youtube">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Shop Column -->
+          <div class="footer-col">
+            <h4 class="footer-col-title">Shop</h4>
+            <a href="collections.html?sort=new" class="footer-link">New Arrivals</a>
+            <a href="collections.html?category=apparel" class="footer-link">Apparel &amp; Clothing</a>
+            <a href="collections.html?category=jewelry" class="footer-link">Jewelry &amp; Accessories</a>
+            <a href="collections.html?category=home" class="footer-link">Home D&eacute;cor</a>
+            <a href="collections.html?category=gifts" class="footer-link">Gift Sets</a>
+          </div>
+
+          <!-- Information Column -->
+          <div class="footer-col">
+            <h4 class="footer-col-title">Information</h4>
+            <a href="index.html#about" class="footer-link">Our Story</a>
+            <a href="#" class="footer-link">Shipping &amp; Returns</a>
+            <a href="#" class="footer-link">Size Guide</a>
+            <a href="#" class="footer-link">FAQ</a>
+            <a href="#" class="footer-link">Privacy Policy</a>
+          </div>
+
+          <!-- Contact Column -->
+          <div class="footer-col">
+            <h4 class="footer-col-title">Contact Us</h4>
+            <div class="footer-contact-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <a href="mailto:hello@winnyschristianzone.com" class="footer-contact-link" id="footer-email">hello@winnyschristianzone.com</a>
+            </div>
+            <div class="footer-contact-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>Mon&ndash;Sat, 9am&ndash;6pm IST</span>
+            </div>
+            <div class="footer-contact-hr"></div>
+            <div class="footer-verse-block">
+              <span class="footer-verse-mark">&ldquo;</span>
+              <p class="footer-verse-text">Trust in the Lord<br/>with all your heart.</p>
+              <span class="footer-verse-ref">&mdash; Proverbs 3:5</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+        <div class="footer-bottom-left">
+          <p class="footer-copy">&copy; 2026 Winny's Christian Zone. All rights reserved. Made with <span class="footer-heart">&hearts;</span> &amp; Faith.</p>
+          <p class="footer-motto">&mdash;&nbsp; FAITH &nbsp;/&nbsp; PEOPLE &nbsp;/&nbsp; PURPOSE</p>
+        </div>
+        <div class="footer-bottom-right">
+          <div class="footer-payment">
+            <span class="payment-badge">VISA</span>
+            <span class="payment-badge">MC</span>
+            <span class="payment-badge">AMEX</span>
+            <span class="payment-badge">UPI</span>
+            <span class="payment-badge">PayPal</span>
+          </div>
+          <div class="footer-vdivider" aria-hidden="true"></div>
+          <div class="footer-shopping-wrap">
+            <p class="footer-shopping-note">Shopping with purpose.</p>
+            <div class="footer-shopping-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">
+    <span class="toast-icon"><svg class="cross-icon inline-cross" viewBox="0 0 20 26" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.5 1C8.5 0.45 8.95 0 9.5 0H10.5C11.05 0 11.5 0.45 11.5 1V7H17.5C18.05 7 18.5 7.45 18.5 8V9C18.5 9.55 18.05 10 17.5 10H11.5V25C11.5 25.55 11.05 26 10.5 26H9.5C8.95 26 8.5 25.55 8.5 25V10H2.5C1.95 10 1.5 9.55 1.5 9V8C1.5 7.45 1.95 7 2.5 7H8.5V1Z"/></svg></span>
+    <span class="toast-message" id="toast-message">Item added to cart!</span>
+  </div>
+
+  <!-- Supabase JS Client & Store Integration Suite -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabaseClient.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
