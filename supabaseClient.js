@@ -548,42 +548,6 @@ function injectAuthModalAndWidgets() {
 
           <button type="submit" class="wcz-btn-submit" id="wcz-submit-btn">Sign In &#10022;</button>
         </form>
-
-        <div class="wcz-auth-footer">
-          <button type="button" class="wcz-link-settings" id="wcz-open-supabase-settings">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-1px;margin-right:4px;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-            Supabase Project Settings
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- SUPABASE SETTINGS DRAWER / MODAL -->
-    <div class="wcz-modal-backdrop" id="wcz-settings-modal" aria-hidden="true">
-      <div class="wcz-auth-dialog">
-        <button class="wcz-modal-close" id="wcz-settings-close" aria-label="Close settings">&times;</button>
-        <div class="wcz-auth-header">
-          <h2 class="wcz-auth-title">Supabase Database Connection</h2>
-          <p class="wcz-auth-subtitle">Link your Supabase PostgreSQL project with Winny's Christian Zone.</p>
-        </div>
-        <form id="wcz-settings-form">
-          <div class="wcz-form-group">
-            <label for="wcz-setting-url">Supabase Project URL</label>
-            <input type="url" id="wcz-setting-url" placeholder="https://your-project.supabase.co" class="wcz-input" value="${WCZ_SUPABASE_CONFIG.url}" />
-          </div>
-          <div class="wcz-form-group">
-            <label for="wcz-setting-key">Supabase Anon Public API Key</label>
-            <input type="password" id="wcz-setting-key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." class="wcz-input" value="${WCZ_SUPABASE_CONFIG.anonKey}" />
-          </div>
-          <div class="wcz-form-group">
-            <label for="wcz-setting-rzp">Razorpay Key ID (Optional)</label>
-            <input type="text" id="wcz-setting-rzp" placeholder="rzp_test_..." class="wcz-input" value="${localStorage.getItem('wcz_razorpay_key_id') || ''}" />
-          </div>
-          <div style="font-size: 11.5px; color: var(--text-muted); line-height: 1.5; margin-bottom: 15px; background: rgba(212,175,55,0.08); padding: 10px 12px; border-radius: 6px; border: 1px solid rgba(212,175,55,0.2);">
-            <strong>Tip:</strong> Copy these from your Supabase Dashboard &rarr; <em>Project Settings &rarr; API</em>.<br/>Run <code>supabase_schema.sql</code> in the Supabase SQL Editor to seed the 16 tables.
-          </div>
-          <button type="submit" class="wcz-btn-submit">Save Connection &amp; Reload</button>
-        </form>
       </div>
     </div>
   `;
@@ -670,40 +634,7 @@ function bindAuthEvents() {
     });
   }
 
-  // Supabase settings modal events
-  const settingsModal = document.getElementById('wcz-settings-modal');
-  const openSettingsBtn = document.getElementById('wcz-open-supabase-settings');
-  const closeSettingsBtn = document.getElementById('wcz-settings-close');
-  const settingsForm = document.getElementById('wcz-settings-form');
 
-  if (openSettingsBtn) {
-    openSettingsBtn.addEventListener('click', () => {
-      closeAuthModal();
-      settingsModal.classList.add('active');
-    });
-  }
-
-  if (closeSettingsBtn) {
-    closeSettingsBtn.addEventListener('click', () => {
-      settingsModal.classList.remove('active');
-    });
-  }
-
-  if (settingsForm) {
-    settingsForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const url = document.getElementById('wcz-setting-url').value.trim();
-      const key = document.getElementById('wcz-setting-key').value.trim();
-      const rzp = document.getElementById('wcz-setting-rzp').value.trim();
-
-      if (url) localStorage.setItem('wcz_supabase_url', url);
-      if (key) localStorage.setItem('wcz_supabase_anon_key', key);
-      if (rzp) localStorage.setItem('wcz_razorpay_key_id', rzp);
-
-      showToast('Settings saved! Reloading connection...');
-      setTimeout(() => window.location.reload(), 1000);
-    });
-  }
 }
 
 function openAuthModal() {
@@ -847,9 +778,6 @@ function showUserAccountMenu(anchorEl) {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           <span>Sign Out</span>
         </button>
-        <button class="wcz-config-btn" id="popover-settings-btn" title="Store System Configuration" aria-label="System Settings">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        </button>
       </div>
     </div>
   `;
@@ -870,11 +798,7 @@ function showUserAccountMenu(anchorEl) {
     signOutUser();
   });
 
-  popover.querySelector('#popover-settings-btn').addEventListener('click', (e) => {
-    e.preventDefault();
-    popover.remove();
-    document.getElementById('wcz-settings-modal').classList.add('active');
-  });
+
 
   const conciergeLink = popover.querySelector('#wcz-concierge-link');
   if (conciergeLink) {
