@@ -324,23 +324,42 @@ ul { list-style: none; }
 .nav-link:hover::after { width: 100%; }
 
 /* Header Actions */
-.header-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.header-actions { 
+  display: flex; 
+  align-items: center; 
+  gap: 12px; 
+  flex-shrink: 0; 
+}
 
 .icon-btn {
-  width: 40px;
+  min-width: 40px;
   height: 40px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-full);
   color: var(--text);
   transition: all var(--transition);
   position: relative;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: none;
 }
 
 .icon-btn:hover {
   color: var(--gold-dark);
   background: rgba(201, 168, 76, 0.1);
+}
+
+.icon-btn.has-user-pill {
+  min-width: auto;
+  width: auto !important;
+  height: auto !important;
+  padding: 0 !important;
+  border-radius: 9999px !important;
+  background: transparent !important;
 }
 
 .cart-count {
@@ -4294,167 +4313,367 @@ html.is-mobile .product-quick-add {
   text-decoration: underline;
 }
 
-/* User Pill in Header */
+/* ==============================================================================
+   LUXURY USER PILL & BESPOKE CUSTOMER POPOVER
+   ============================================================================== */
+
+/* User Capsule in Navigation Header */
 .auth-user-pill {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--gold-dark, #A8862A);
-  background: rgba(201, 168, 76, 0.12);
-  border: 1px solid rgba(201, 168, 76, 0.25);
-  padding: 4px 10px;
-  border-radius: 20px;
-  transition: all 0.2s ease;
+  gap: 8px;
+  height: 36px;
+  padding: 3px 12px 3px 5px;
+  border-radius: 9999px;
+  background: rgba(253, 251, 247, 0.95);
+  border: 1px solid rgba(212, 175, 55, 0.38);
+  box-shadow: 0 2px 8px rgba(28, 25, 23, 0.05), 0 0 0 1px rgba(255, 255, 255, 0.85) inset;
+  color: var(--dark, #1C1917);
+  font-family: var(--font-body, system-ui, -apple-system, sans-serif);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
 }
 
 .auth-user-pill:hover {
-  background: rgba(201, 168, 76, 0.2);
-}
-
-/* User Popover */
-.wcz-user-popover {
-  position: absolute;
   background: #FFFFFF;
-  border: 1px solid var(--border-strong, #E2D9CC);
-  border-radius: 12px;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.15);
-  width: 220px;
-  z-index: 10001;
-  overflow: hidden;
-  animation: fadeInDown 0.2s ease;
+  border-color: rgba(212, 175, 55, 0.7);
+  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.22), 0 0 0 1px rgba(255, 255, 255, 1) inset;
+  transform: translateY(-1px);
 }
 
-@keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.popover-header {
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--border, #ECE5D8);
-  background: #FAF8F5;
-}
-
-.popover-header strong {
-  display: block;
-  font-size: 13.5px;
-  color: var(--dark, #1C1917);
-}
-
-.popover-email {
-  font-size: 11.5px;
-  color: var(--text-muted, #7A7265);
-  word-break: break-all;
-}
-
-.popover-links {
-  padding: 6px 0;
-}
-
-.popover-link {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 16px;
-  font-size: 12.5px;
-  color: var(--dark, #1C1917);
-  text-decoration: none;
-  background: none;
-  border: none;
-  width: 100%;
-  text-align: left;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.popover-link:hover {
-  background: #FAF8F5;
-  color: var(--gold-dark, #A8862A);
-}
-
-.popover-logout {
-  color: #D32F2F !important;
-  border-top: 1px solid var(--border, #ECE5D8);
-  margin-top: 4px;
-}
-
-.popover-logout:hover {
-  background: rgba(211, 47, 47, 0.05) !important;
-}
-
-/* ==============================================================================
-   FLOATING WHATSAPP BUTTON
-   ============================================================================== */
-.wcz-whatsapp-float {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  width: 54px;
-  height: 54px;
-  background: #25D366;
+.auth-avatar-circle {
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4);
-  cursor: pointer;
-  z-index: 999;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.wcz-whatsapp-float:hover {
-  transform: scale(1.08) translateY(-2px);
-  box-shadow: 0 12px 28px rgba(37, 211, 102, 0.5);
-}
-
-.wcz-whatsapp-pulse {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: #25D366;
-  opacity: 0.5;
-  animation: waPulse 2.2s infinite;
-  z-index: -1;
-}
-
-@keyframes waPulse {
-  0% { transform: scale(1); opacity: 0.5; }
-  70% { transform: scale(1.4); opacity: 0; }
-  100% { transform: scale(1.4); opacity: 0; }
-}
-
-.wcz-whatsapp-tooltip {
-  position: absolute;
-  right: 64px;
-  background: var(--dark, #1C1917);
+  background: linear-gradient(135deg, #D4AF37 0%, #A8862A 100%);
   color: #FFFFFF;
+  font-weight: 600;
   font-size: 11.5px;
-  font-weight: 500;
-  padding: 6px 12px;
-  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
+.auth-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.auth-avatar-txt {
+  font-family: var(--font-display, serif);
+  line-height: 1;
+}
+
+.auth-user-name {
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
-  pointer-events: none;
-  opacity: 0;
-  transform: translateX(10px);
-  transition: all 0.25s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-weight: 500;
+  color: var(--dark, #1C1917);
 }
 
-.wcz-whatsapp-float:hover .wcz-whatsapp-tooltip {
+.auth-pill-chevron {
+  color: var(--gold-dark, #A8862A);
+  opacity: 0.7;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  flex-shrink: 0;
+}
+
+.auth-user-pill:hover .auth-pill-chevron {
+  transform: translateY(1px);
   opacity: 1;
-  transform: translateX(0);
 }
 
-@media (max-width: 768px) {
-  .wcz-whatsapp-float {
-    bottom: 18px;
-    right: 18px;
-    width: 48px;
-    height: 48px;
+/* Luxury Profile Popover Card */
+.wcz-user-popover {
+  position: absolute;
+  width: 310px;
+  max-width: calc(100vw - 28px);
+  z-index: 10001;
+  animation: luxuryPopoverIn 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: top right;
+}
+
+@keyframes luxuryPopoverIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.97);
   }
-  .wcz-whatsapp-tooltip {
-    display: none;
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
+}
+
+.wcz-popover-card {
+  background: #FAF8F5;
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  border-radius: 18px;
+  box-shadow: 0 20px 48px -10px rgba(28, 25, 23, 0.16), 0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+  overflow: hidden;
+}
+
+/* Hero / Profile Header */
+.wcz-popover-hero {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 18px 16px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FAF7F2 100%);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+.wcz-popover-avatar-wrap {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.wcz-popover-avatar-img,
+.wcz-popover-avatar-txt {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--gold, #D4AF37);
+  box-shadow: 0 3px 10px rgba(212, 175, 55, 0.22);
+}
+
+.wcz-popover-avatar-img {
+  object-fit: cover;
+}
+
+.wcz-popover-avatar-txt {
+  background: linear-gradient(135deg, #D4AF37 0%, #9F7817 100%);
+  color: #FFFFFF;
+  font-family: var(--font-display, serif);
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.wcz-popover-badge-icon {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 17px;
+  height: 17px;
+  background: #D4AF37;
+  color: #FFFFFF;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #FFFFFF;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.wcz-popover-profile-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.wcz-popover-name {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--dark, #1C1917);
+  margin: 0 0 2px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wcz-popover-email {
+  display: block;
+  font-size: 11.5px;
+  color: var(--text-muted, #7A7265);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 5px;
+}
+
+.wcz-popover-patron-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #8F6F16;
+  background: rgba(212, 175, 55, 0.12);
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  padding: 1.5px 8px;
+  border-radius: 9999px;
+}
+
+/* Assurance Strip */
+.wcz-popover-assurance {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(212, 175, 55, 0.06);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.12);
+  font-size: 11px;
+  font-weight: 500;
+  color: #7A6946;
+}
+
+.wcz-assurance-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.wcz-assurance-item svg {
+  color: var(--gold-dark, #A8862A);
+  flex-shrink: 0;
+}
+
+.wcz-assurance-sep {
+  color: rgba(212, 175, 55, 0.5);
+  font-size: 12px;
+}
+
+/* Curated Menu Rows */
+.wcz-popover-nav {
+  padding: 8px 10px;
+}
+
+.wcz-popover-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 10px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--dark, #1C1917);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.wcz-popover-item:hover {
+  background: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(28, 25, 23, 0.04), 0 0 0 1px rgba(212, 175, 55, 0.18);
+  transform: translateX(2px);
+}
+
+.wcz-item-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #FFFFFF;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  color: var(--gold-dark, #A8862A);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.wcz-popover-item:hover .wcz-item-icon {
+  background: #FAF6ED;
+  border-color: rgba(212, 175, 55, 0.4);
+  color: var(--gold, #D4AF37);
+}
+
+.wcz-item-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.wcz-item-title {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--dark, #1C1917);
+  line-height: 1.3;
+}
+
+.wcz-item-sub {
+  font-size: 10.5px;
+  color: var(--text-muted, #7A7265);
+  line-height: 1.2;
+}
+
+.wcz-item-arrow {
+  color: #B3A898;
+  transition: transform 0.2s ease, color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.wcz-popover-item:hover .wcz-item-arrow {
+  color: var(--gold-dark, #A8862A);
+  transform: translateX(2px);
+}
+
+/* Refined Popover Footer */
+.wcz-popover-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px 12px;
+  border-top: 1px solid rgba(212, 175, 55, 0.14);
+  background: #F8F5EE;
+}
+
+.wcz-signout-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #7A7265;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.wcz-signout-btn:hover {
+  color: #9E2A2B;
+  background: rgba(158, 42, 43, 0.08);
+}
+
+.wcz-config-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: #9C9384;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.wcz-config-btn:hover {
+  color: var(--gold-dark, #A8862A);
+  background: #FFFFFF;
+  border-color: rgba(212, 175, 55, 0.25);
 }

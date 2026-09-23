@@ -720,11 +720,29 @@ function updateAuthUI() {
   const accountBtns = document.querySelectorAll('.nav-action[aria-label="Account"], #account-btn');
   accountBtns.forEach(btn => {
     if (currentUser) {
-      const name = currentUser.user_metadata?.full_name || currentUser.email.split('@')[0];
-      btn.innerHTML = `<span class="auth-user-pill"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-1px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> ${name.split(' ')[0]}</span>`;
+      const meta = currentUser.user_metadata || {};
+      const fullName = meta.full_name || meta.name || (currentUser.email ? currentUser.email.split('@')[0] : 'Patron');
+      const firstName = fullName.trim().split(' ')[0] || 'Friend';
+      const avatarUrl = meta.avatar_url || meta.picture || null;
+      const initial = (firstName[0] || 'W').toUpperCase();
+
+      btn.classList.add('has-user-pill');
+      btn.innerHTML = `
+        <span class="auth-user-pill" aria-label="Account menu for ${firstName}">
+          <span class="auth-avatar-circle">
+            ${avatarUrl 
+              ? `<img src="${avatarUrl}" alt="${firstName}" class="auth-avatar-img" referrerpolicy="no-referrer" />`
+              : `<span class="auth-avatar-txt">${initial}</span>`
+            }
+          </span>
+          <span class="auth-user-name">${firstName}</span>
+          <svg class="auth-pill-chevron" width="9" height="5" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1L5 5L9 1"/></svg>
+        </span>
+      `;
       btn.title = `Signed in as ${currentUser.email}`;
     } else {
-      btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
+      btn.classList.remove('has-user-pill');
+      btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
       btn.title = 'Account / Sign In';
     }
   });
@@ -738,39 +756,111 @@ function showUserAccountMenu(anchorEl) {
     return;
   }
 
-  const name = currentUser?.user_metadata?.full_name || 'Faithful Member';
-  const email = currentUser?.email || 'winnyschristainzone@gmail.com';
+  const meta = currentUser?.user_metadata || {};
+  const fullName = meta.full_name || meta.name || (currentUser?.email ? currentUser.email.split('@')[0] : 'Faithful Patron');
+  const email = currentUser?.email || 'Customer';
+  const avatarUrl = meta.avatar_url || meta.picture || null;
+  const initial = (fullName.trim()[0] || 'W').toUpperCase();
 
   const popover = document.createElement('div');
   popover.id = 'wcz-user-popover';
   popover.className = 'wcz-user-popover';
   popover.innerHTML = `
-    <div class="popover-header">
-      <strong>${name}</strong>
-      <span class="popover-email">${email}</span>
-    </div>
-    <div class="popover-links">
-      <a href="cart.html" class="popover-link">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-        My Cart &amp; Orders
-      </a>
-      <a href="#" class="popover-link" id="popover-settings-btn">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        Database Settings
-      </a>
-      <button class="popover-link popover-logout" id="popover-logout-btn">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        Sign Out
-      </button>
+    <div class="wcz-popover-card">
+      <!-- Header with Gold Monogram & Patron Badge -->
+      <div class="wcz-popover-hero">
+        <div class="wcz-popover-avatar-wrap">
+          ${avatarUrl 
+            ? `<img src="${avatarUrl}" alt="${fullName}" class="wcz-popover-avatar-img" referrerpolicy="no-referrer" />`
+            : `<span class="wcz-popover-avatar-txt">${initial}</span>`
+          }
+          <span class="wcz-popover-badge-icon" title="Verified Customer">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </span>
+        </div>
+        <div class="wcz-popover-profile-meta">
+          <div class="wcz-popover-name-row">
+            <h3 class="wcz-popover-name">${fullName}</h3>
+          </div>
+          <span class="wcz-popover-email">${email}</span>
+          <div class="wcz-popover-patron-tag">
+            <svg class="cross-icon inline-cross" viewBox="0 0 20 26" fill="currentColor" style="width:9px; height:12px; margin-right:3px;"><path d="M8.5 1C8.5 0.45 8.95 0 9.5 0H10.5C11.05 0 11.5 0.45 11.5 1V7H17.5C18.05 7 18.5 7.45 18.5 8V9C18.5 9.55 18.05 10 17.5 10H11.5V25C11.5 25.55 11.05 26 10.5 26H9.5C8.95 26 8.5 25.55 8.5 25V10H2.5C1.95 10 1.5 9.55 1.5 9V8C1.5 7.45 1.95 7 2.5 7H8.5V1Z"/></svg>
+            Preferred Member
+          </div>
+        </div>
+      </div>
+
+      <!-- Assurance Strip -->
+      <div class="wcz-popover-assurance">
+        <div class="wcz-assurance-item">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>3-Day Returns Guarantee</span>
+        </div>
+        <div class="wcz-assurance-sep">&bull;</div>
+        <div class="wcz-assurance-item">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>Priority Care</span>
+        </div>
+      </div>
+
+      <!-- Curated Customer Navigation -->
+      <div class="wcz-popover-nav">
+        <a href="cart.html" class="wcz-popover-item">
+          <span class="wcz-item-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          </span>
+          <div class="wcz-item-text">
+            <span class="wcz-item-title">My Orders &amp; Bag</span>
+            <span class="wcz-item-sub">Track purchases &amp; shipping</span>
+          </div>
+          <svg class="wcz-item-arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+
+        <a href="collections.html" class="wcz-popover-item">
+          <span class="wcz-item-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </span>
+          <div class="wcz-item-text">
+            <span class="wcz-item-title">Saved Blessings &amp; Catalog</span>
+            <span class="wcz-item-sub">Explore Christian gifts &amp; jewelry</span>
+          </div>
+          <svg class="wcz-item-arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+
+        <a href="#contact" class="wcz-popover-item" id="wcz-concierge-link">
+          <span class="wcz-item-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          </span>
+          <div class="wcz-item-text">
+            <span class="wcz-item-title">Prayer &amp; Concierge Care</span>
+            <span class="wcz-item-sub">Connect with our support family</span>
+          </div>
+          <svg class="wcz-item-arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+
+      <!-- Refined Footer -->
+      <div class="wcz-popover-footer">
+        <button class="wcz-signout-btn" id="popover-logout-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span>Sign Out</span>
+        </button>
+        <button class="wcz-config-btn" id="popover-settings-btn" title="Store System Configuration" aria-label="System Settings">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+      </div>
     </div>
   `;
 
   document.body.appendChild(popover);
 
-  // Position popover below anchor
+  // Position popover gracefully aligned with right margin
   const rect = anchorEl.getBoundingClientRect();
-  popover.style.top = `${rect.bottom + window.scrollY + 8}px`;
-  popover.style.right = `${window.innerWidth - rect.right}px`;
+  popover.style.top = `${rect.bottom + window.scrollY + 10}px`;
+  
+  // Keep safely inside viewport
+  const rightOffset = Math.max(16, window.innerWidth - rect.right);
+  popover.style.right = `${rightOffset}px`;
 
   // Bind popover events
   popover.querySelector('#popover-logout-btn').addEventListener('click', () => {
@@ -784,10 +874,17 @@ function showUserAccountMenu(anchorEl) {
     document.getElementById('wcz-settings-modal').classList.add('active');
   });
 
+  const conciergeLink = popover.querySelector('#wcz-concierge-link');
+  if (conciergeLink) {
+    conciergeLink.addEventListener('click', () => {
+      popover.remove();
+    });
+  }
+
   // Close on outside click
   setTimeout(() => {
     window.addEventListener('click', function closeMenu(e) {
-      if (!popover.contains(e.target) && e.target !== anchorEl) {
+      if (!popover.contains(e.target) && !anchorEl.contains(e.target)) {
         popover.remove();
         window.removeEventListener('click', closeMenu);
       }
