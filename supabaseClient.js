@@ -724,24 +724,26 @@ function updateAuthUI() {
       const fullName = meta.full_name || meta.name || (currentUser.email ? currentUser.email.split('@')[0] : 'Patron');
       const firstName = fullName.trim().split(' ')[0] || 'Friend';
       const avatarUrl = meta.avatar_url || meta.picture || null;
-      const initial = (firstName[0] || 'W').toUpperCase();
 
-      btn.classList.add('has-user-pill');
-      btn.innerHTML = `
-        <span class="auth-user-pill" aria-label="Account menu for ${firstName}">
-          <span class="auth-avatar-circle">
-            ${avatarUrl 
-              ? `<img src="${avatarUrl}" alt="${firstName}" class="auth-avatar-img" referrerpolicy="no-referrer" />`
-              : `<span class="auth-avatar-txt">${initial}</span>`
-            }
-          </span>
-          <span class="auth-user-name">${firstName}</span>
-          <svg class="auth-pill-chevron" width="9" height="5" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1L5 5L9 1"/></svg>
-        </span>
-      `;
-      btn.title = `Signed in as ${currentUser.email}`;
-    } else {
       btn.classList.remove('has-user-pill');
+      btn.classList.add('has-user-avatar');
+
+      if (avatarUrl) {
+        btn.innerHTML = `
+          <span class="auth-avatar-circle auth-avatar-btn" aria-label="Account menu for ${firstName}">
+            <img src="${avatarUrl}" alt="${firstName}" class="auth-avatar-img" referrerpolicy="no-referrer" />
+          </span>
+        `;
+      } else {
+        btn.innerHTML = `
+          <span class="auth-avatar-circle auth-avatar-btn auth-avatar-default" aria-label="Account menu for ${firstName}">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </span>
+        `;
+      }
+      btn.title = `Signed in as ${fullName} (${currentUser.email}) - Click to view account`;
+    } else {
+      btn.classList.remove('has-user-pill', 'has-user-avatar');
       btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
       btn.title = 'Account / Sign In';
     }
