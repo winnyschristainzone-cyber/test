@@ -4342,82 +4342,78 @@ html.is-mobile .product-quick-add {
    LUXURY USER PILL & BESPOKE CUSTOMER POPOVER
    ============================================================================== */
 
-/* User Capsule in Navigation Header */
-.auth-user-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  height: 36px;
-  padding: 3px 12px 3px 5px;
-  border-radius: 9999px;
-  background: rgba(253, 251, 247, 0.95);
-  border: 1px solid rgba(212, 175, 55, 0.38);
-  box-shadow: 0 2px 8px rgba(28, 25, 23, 0.05), 0 0 0 1px rgba(255, 255, 255, 0.85) inset;
-  color: var(--dark, #1C1917);
-  font-family: var(--font-body, system-ui, -apple-system, sans-serif);
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-  cursor: pointer;
-  text-decoration: none;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  user-select: none;
+/* User Icon Button in Navigation Header (Strict Circle Only) */
+#account-btn,
+.icon-btn.has-user-avatar,
+.icon-btn.has-user-pill {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  max-width: 40px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
-.auth-user-pill:hover {
-  background: #FFFFFF;
-  border-color: rgba(212, 175, 55, 0.7);
-  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.22), 0 0 0 1px rgba(255, 255, 255, 1) inset;
-  transform: translateY(-1px);
+.auth-user-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.auth-user-name,
+.auth-pill-chevron {
+  display: none !important;
 }
 
 .auth-avatar-circle {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #D4AF37 0%, #A8862A 100%);
-  color: #FFFFFF;
-  font-weight: 600;
-  font-size: 11.5px;
-  overflow: hidden;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1.5px solid var(--gold, #C9A84C);
+  background: #FFFFFF;
+  overflow: hidden !important;
   flex-shrink: 0;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 1px 4px rgba(28, 25, 23, 0.08);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.icon-btn:hover .auth-avatar-circle {
+  transform: scale(1.06);
+  border-color: var(--gold-dark, #A8862A);
+  box-shadow: 0 2px 8px rgba(201, 168, 76, 0.35);
 }
 
 .auth-avatar-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  display: block !important;
 }
 
 .auth-avatar-txt {
   font-family: var(--font-display, serif);
-  line-height: 1;
-}
-
-.auth-user-name {
-  max-width: 100px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-weight: 500;
-  color: var(--dark, #1C1917);
-}
-
-.auth-pill-chevron {
+  font-size: 13px;
+  font-weight: 600;
   color: var(--gold-dark, #A8862A);
-  opacity: 0.7;
-  transition: transform 0.2s ease, opacity 0.2s ease;
-  flex-shrink: 0;
-}
-
-.auth-user-pill:hover .auth-pill-chevron {
-  transform: translateY(1px);
-  opacity: 1;
+  line-height: 1;
 }
 
 /* Luxury Profile Popover Card */
