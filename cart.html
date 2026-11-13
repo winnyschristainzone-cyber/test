@@ -177,10 +177,71 @@
               <button class="btn-clear-cart" id="clear-cart-btn">Clear Cart</button>
             </div>
 
-            <!-- Optional Prayer / Gift Note -->
-            <div class="cart-note-card">
-              <label for="order-prayer-note">Add an optional gift note or prayer request to this order:</label>
-              <textarea id="order-prayer-note" class="cart-note-input" placeholder="Write your heartfelt blessing, prayer request, or gift message..."></textarea>
+            <!-- Blessed Gift & Recipient WhatsApp Notification Card -->
+            <div class="cart-gift-card" id="cart-gift-card">
+              <div class="gift-card-header">
+                <div class="gift-card-icon-wrap">
+                  <span class="gift-emoji">🎁</span>
+                </div>
+                <div class="gift-card-intro">
+                  <div class="gift-toggle-row">
+                    <label class="gift-switch-label" for="is-gift-order">
+                      <input type="checkbox" id="is-gift-order" class="gift-switch-input" />
+                      <span class="gift-switch-custom"></span>
+                      <span class="gift-switch-title">This order is a Gift for someone special</span>
+                    </label>
+                  </div>
+                  <p class="gift-card-sub">Add optional prayerful gift packaging &amp; notify the recipient with a surprise blessing text via WhatsApp!</p>
+                </div>
+              </div>
+
+              <!-- Gift Recipient Fields (Smooth Collapsible) -->
+              <div class="gift-fields-panel" id="gift-fields-panel" style="display: none;">
+                <div class="gift-fields-grid">
+                  <div class="gift-field-group">
+                    <label for="gift-recipient-name">Recipient's Full Name <span class="req-star">*</span></label>
+                    <input type="text" id="gift-recipient-name" class="gift-text-input" placeholder="e.g. Rachel Mathew" />
+                  </div>
+
+                  <div class="gift-field-group">
+                    <label for="gift-recipient-whatsapp">Recipient's WhatsApp Number <span class="req-star">*</span> <span class="gift-wa-pill">WhatsApp</span></label>
+                    <div class="gift-phone-wrap">
+                      <span class="gift-phone-flag">🇮🇳 +91</span>
+                      <input type="tel" id="gift-recipient-whatsapp" class="gift-text-input gift-phone-input" placeholder="98765 43210" maxlength="10" />
+                    </div>
+                    <span class="gift-field-tip">📱 We'll send them a blessed notification on WhatsApp when their gift is prepared!</span>
+                  </div>
+
+                  <div class="gift-field-group full">
+                    <div class="gift-note-top">
+                      <label for="order-prayer-note">Personal Blessing or Prayer Message</label>
+                      <span class="gift-suggestions-hint">Tap a blessing to add:</span>
+                    </div>
+                    <div class="gift-chips-row">
+                      <button type="button" class="gift-chip-btn" data-blessing="May the Lord bless you and keep you; may His face shine upon you! (Num 6:24) ✦">Numbers 6:24 Blessing</button>
+                      <button type="button" class="gift-chip-btn" data-blessing="Wishing you a blessed, joy-filled birthday in Christ! May His grace overflow. ✦">Birthday Blessing</button>
+                      <button type="button" class="gift-chip-btn" data-blessing="Praying for God's boundless peace, joy, and protection over you today! ✦">Peace &amp; Strength</button>
+                    </div>
+                    <textarea id="order-prayer-note" class="gift-note-textarea" placeholder="Write your heartfelt blessing, scripture verse, or gift message..."></textarea>
+                  </div>
+                </div>
+
+                <!-- Interactive WhatsApp Blessing Preview Bubble -->
+                <div class="gift-wa-preview-card">
+                  <div class="wa-preview-bar">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="#25D366"><path d="M20.52 3.48A11.93 11.93 0 0 0 12.04 0C5.46 0 .1 5.36.1 11.94c0 2.1.55 4.15 1.6 5.96L0 24l6.27-1.64a11.9 11.9 0 0 0 5.77 1.48h.01c6.57 0 11.93-5.36 11.93-11.94 0-3.19-1.24-6.19-3.46-8.42z"/></svg>
+                    <span>Recipient's WhatsApp Notification Preview</span>
+                  </div>
+                  <div class="wa-preview-bubble">
+                    <p class="wa-bubble-msg">
+                      ✝️ <strong>Winny's Christian Zone — A Blessed Gift For You!</strong><br/><br/>
+                      Hello <strong id="wa-preview-name" style="color: #128C7E;">[Recipient Name]</strong>! Someone who loves you has prayerfully sent you a Christian faith gift with love.<br/><br/>
+                      <em id="wa-preview-note-text" style="color: #333;">&ldquo;May the Lord bless you and keep you!&rdquo;</em><br/><br/>
+                      <span style="font-size: 11px; color: #667781;">📦 Track order updates &amp; devotional items at winnyschristianzone.com</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -291,15 +352,11 @@
             </div>
           </div>
 
-          <label style="display: block; font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--dark); margin-bottom: 8px;">Select Payment Method</label>
+          <label style="display: block; font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--dark); margin-bottom: 8px;">Payment Method</label>
           <div class="checkout-payment-opts">
-            <label class="checkout-pay-option selected">
+            <label class="checkout-pay-option selected" style="cursor: default;">
               <input type="radio" name="payment" value="razorpay" checked />
-              <span><strong>Razorpay Secure</strong> (UPI, Google Pay, PhonePe, Cards, NetBanking)</span>
-            </label>
-            <label class="checkout-pay-option">
-              <input type="radio" name="payment" value="cod" />
-              <span><strong>Cash on Delivery (COD)</strong></span>
+              <span><strong>Razorpay Secure Online</strong> (UPI, Google Pay, PhonePe, Cards, NetBanking)</span>
             </label>
           </div>
 
@@ -308,28 +365,136 @@
             <strong id="modal-total-amount" style="font-size: 18px; color: var(--gold-dark); font-family: var(--font-display);">₹0</strong>
           </div>
 
-          <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 14px; font-size: 13px;">Place Blessed Order &#10022;</button>
+          <button type="submit" class="btn btn-primary btn-submit-order" id="btn-place-order" style="width: 100%; justify-content: center; padding: 15px; font-size: 14px; font-weight: 600;">
+            <span class="btn-spinner" id="pay-btn-spinner" style="display: none;"></span>
+            <span id="pay-btn-text">Place Blessed Order &#10022;</span>
+          </button>
         </form>
       </div>
     </div>
   </div>
 
-  <!-- Order Success Modal -->
+  <!-- Order Processing Modal Overlay -->
+  <div class="checkout-modal-overlay" id="order-processing-modal">
+    <div class="processing-card">
+      <div class="processing-cross-wrap">
+        <svg class="cross-icon processing-cross-icon" viewBox="0 0 20 26" fill="currentColor"><path d="M8.5 1C8.5 0.45 8.95 0 9.5 0H10.5C11.05 0 11.5 0.45 11.5 1V7H17.5C18.05 7 18.5 7.45 18.5 8V9C18.5 9.55 18.05 10 17.5 10H11.5V25C11.5 25.55 11.05 26 10.5 26H9.5C8.95 26 8.5 25.55 8.5 25V10H2.5C1.95 10 1.5 9.55 1.5 9V8C1.5 7.45 1.95 7 2.5 7H8.5V1Z"/></svg>
+        <div class="processing-ring"></div>
+      </div>
+      <h3 class="processing-title" id="processing-status-title">Securing Your Blessed Order</h3>
+      <p class="processing-sub" id="processing-status-sub">Connecting securely to payment gateway...</p>
+      
+      <div class="processing-steps">
+        <div class="proc-step active" id="proc-step-1">
+          <span class="proc-step-num">1</span>
+          <span>Verifying order &amp; items</span>
+        </div>
+        <div class="proc-step" id="proc-step-2">
+          <span class="proc-step-num">2</span>
+          <span>Processing payment safely</span>
+        </div>
+        <div class="proc-step" id="proc-step-3">
+          <span class="proc-step-num">3</span>
+          <span>Confirming order &amp; blessings</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grand Order Success / Confirmation Modal -->
   <div class="checkout-modal-overlay" id="order-success-modal">
-    <div class="checkout-modal" style="text-align: center; padding: 40px 24px;">
-      <div class="order-success-cross" style="color: var(--gold); margin-bottom: 16px; display: flex; justify-content: center;">
-        <svg class="cross-icon" style="width: 42px; height: 54px;" viewBox="0 0 20 26" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.5 1C8.5 0.45 8.95 0 9.5 0H10.5C11.05 0 11.5 0.45 11.5 1V7H17.5C18.05 7 18.5 7.45 18.5 8V9C18.5 9.55 18.05 10 17.5 10H11.5V25C11.5 25.55 11.05 26 10.5 26H9.5C8.95 26 8.5 25.55 8.5 25V10H2.5C1.95 10 1.5 9.55 1.5 9V8C1.5 7.45 1.95 7 2.5 7H8.5V1Z"/></svg>
+    <div class="checkout-modal order-confirmation-modal">
+      <div class="order-confirm-hero">
+        <div class="order-confirm-badge-wrap">
+          <div class="order-confirm-cross">
+            <svg class="cross-icon" viewBox="0 0 20 26" fill="currentColor"><path d="M8.5 1C8.5 0.45 8.95 0 9.5 0H10.5C11.05 0 11.5 0.45 11.5 1V7H17.5C18.05 7 18.5 7.45 18.5 8V9C18.5 9.55 18.05 10 17.5 10H11.5V25C11.5 25.55 11.05 26 10.5 26H9.5C8.95 26 8.5 25.55 8.5 25V10H2.5C1.95 10 1.5 9.55 1.5 9V8C1.5 7.45 1.95 7 2.5 7H8.5V1Z"/></svg>
+          </div>
+          <span class="order-confirm-check">&#10003;</span>
+        </div>
+        <h2 class="order-confirm-title">Thank You &amp; God Bless!</h2>
+        <p class="order-confirm-subtitle">Your order has been received with gratitude. We are prayerfully preparing your items with love.</p>
+        
+        <div class="order-pill-row">
+          <div class="order-ref-pill">
+            <span class="pill-label">Order Ref:</span>
+            <strong id="order-confirm-id">#WCZ-78219</strong>
+            <button type="button" class="btn-copy-id" id="btn-copy-order-id" title="Copy Order ID">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
+          </div>
+          <div class="order-delivery-pill">
+            <span>&#128666;</span> Expected delivery in 3&ndash;5 business days
+          </div>
+        </div>
       </div>
-      <h2 style="font-family: var(--font-display); font-size: 32px; color: var(--dark); margin-bottom: 8px;">Thank You &amp; God Bless!</h2>
-      <p style="font-size: 15px; color: var(--text-muted); max-width: 440px; margin: 0 auto 20px; line-height: 1.6;">
-        Your order <strong id="order-confirm-id" style="color: var(--dark);">#WCZ-78219</strong> has been received with gratitude. We are prayerfully preparing your items with love.
-      </p>
-      <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3); border-radius: 20px; padding: 6px 18px; font-size: 12px; color: var(--gold-dark); margin-bottom: 28px;">
-        <span>&#128666;</span> Expected delivery in 3&ndash;5 business days
+
+      <!-- Gift Recipient Strip (Shown if user chose Gift) -->
+      <div class="order-gift-banner" id="order-confirm-gift-banner" style="display: none;">
+        <div class="order-gift-banner-top">
+          <span class="gift-banner-tag">🎁 Blessed Gift Order</span>
+          <span class="gift-banner-for">For: <strong id="order-confirm-gift-name">Rachel Mathew</strong></span>
+        </div>
+        <p class="order-gift-banner-note" id="order-confirm-gift-note">&ldquo;May the Lord bless you and keep you!&rdquo;</p>
+        <div class="order-gift-banner-actions">
+          <a href="#" target="_blank" class="btn-wa-gift-action" id="order-send-recipient-wa-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.48A11.93 11.93 0 0 0 12.04 0C5.46 0 .1 5.36.1 11.94c0 2.1.55 4.15 1.6 5.96L0 24l6.27-1.64a11.9 11.9 0 0 0 5.77 1.48h.01c6.57 0 11.93-5.36 11.93-11.94 0-3.19-1.24-6.19-3.46-8.42z"/></svg>
+            <span>Send Gift Blessing to Recipient on WhatsApp 🎁</span>
+          </a>
+        </div>
       </div>
-      <div>
-        <a href="collections.html" class="btn btn-primary">Continue Shopping &rarr;</a>
+
+      <!-- Order Receipt Card -->
+      <div class="order-receipt-card">
+        <div class="receipt-header">
+          <h4>Order &amp; Payment Summary</h4>
+          <span class="receipt-status-badge" id="order-confirm-status">Paid &bull; Verified</span>
+        </div>
+        
+        <div class="receipt-grid">
+          <div class="receipt-col">
+            <span class="receipt-label">Payment Method</span>
+            <strong id="order-confirm-method">Razorpay Secure</strong>
+          </div>
+          <div class="receipt-col">
+            <span class="receipt-label">Transaction Ref</span>
+            <strong id="order-confirm-txnid">pay_sim_92819</strong>
+          </div>
+          <div class="receipt-col">
+            <span class="receipt-label">Total Amount</span>
+            <strong id="order-confirm-amount" style="color: var(--gold-dark); font-size: 16px;">₹0</strong>
+          </div>
+          <div class="receipt-col full">
+            <span class="receipt-label">Delivery Address</span>
+            <span id="order-confirm-address" class="receipt-addr">Flat 402, Hyderabad</span>
+          </div>
+        </div>
+
+        <!-- Items Ordered List -->
+        <div class="receipt-items-wrap">
+          <span class="receipt-label">Items Purchased</span>
+          <div class="receipt-items-list" id="order-confirm-items">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
       </div>
+
+      <!-- Post-Order Actions -->
+      <div class="order-confirm-actions">
+        <button type="button" class="btn btn-secondary" id="btn-print-receipt">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Print Receipt
+        </button>
+
+        <a href="#" target="_blank" class="btn btn-whatsapp-direct" id="order-confirm-buyer-wa-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.48A11.93 11.93 0 0 0 12.04 0C5.46 0 .1 5.36.1 11.94c0 2.1.55 4.15 1.6 5.96L0 24l6.27-1.64a11.9 11.9 0 0 0 5.77 1.48h.01c6.57 0 11.93-5.36 11.93-11.94 0-3.19-1.24-6.19-3.46-8.42z"/></svg>
+          Receipt to WhatsApp
+        </a>
+
+        <a href="collections.html" class="btn btn-primary" id="btn-order-continue">
+          Continue Shopping &rarr;
+        </a>
+      </div>
+
     </div>
   </div>
 

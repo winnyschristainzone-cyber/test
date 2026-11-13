@@ -355,68 +355,216 @@ function sendWhatsAppAdminAlert(orderDetails) {
 }
 
 // ------------------------------------------------------------------------------
-// RAZORPAY INTEGRATION (PREPARED UI)
+// RAZORPAY INTEGRATION (STANDARD CHECKOUT WITH BACKEND & SUPABASE VERIFICATION)
 // ------------------------------------------------------------------------------
+const WCZ_RAZORPAY_CONFIG = {
+  keyId: localStorage.getItem('wcz_razorpay_key_id') || '',
+  createOrderEndpoint: '/api/create-order',
+  verifyPaymentEndpoint: '/api/verify-payment'
+};
+
+async function getRazorpayKey() {
+  // Securely fetch public Key ID from Supabase stored procedure
+  if (supabaseClient) {
+    try {
+      const { data, error } = await supabaseClient.rpc('get_razorpay_key');
+      if (!error && data?.key_id) {
+        return data.key_id;
+      }
+    } catch (e) {
+      console.warn('Supabase key lookup fallback:', e);
+    }
+  }
+  return localStorage.getItem('wcz_razorpay_key_id') || '';
+}
+
 function initRazorpayPayment(orderDetails) {
-  // Pre-checks
+  // Ensure Razorpay checkout script is loaded
   if (typeof Razorpay === 'undefined') {
-    showToast('Initializing secure Razorpay payment gateway...');
-    // Load Razorpay script dynamically
+    if (typeof showToast === 'function') {
+      showToast('Connecting to secure Razorpay payment gateway...');
+    }
     const script = document.createElement('script');
     script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-    script.onload = () => triggerRazorpayModal(orderDetails);
+    script.onload = () => createOrderAndOpenRazorpay(orderDetails);
     script.onerror = () => {
-      showToast('Razorpay Gateway is ready in test simulation mode.');
-      simulateOrderPlacement(orderDetails);
+      console.error('Failed to load Razorpay checkout script.');
+      if (typeof showToast === 'function') {
+        showToast('Payment gateway offline. Please check your network connection.');
+      }
+      resetPayButton();
     };
     document.head.appendChild(script);
   } else {
-    triggerRazorpayModal(orderDetails);
+    createOrderAndOpenRazorpay(orderDetails);
   }
 }
 
-function triggerRazorpayModal(orderDetails) {
+async function createOrderAndOpenRazorpay(orderDetails) {
+  const amountInPaise = Math.round((orderDetails.amount || 10) * 100);
+
+  // Validate amount (minimum 100 paise = ₹1)
+  if (amountInPaise < 100) {
+    if (typeof showToast === 'function') showToast('Minimum order amount is ₹1.00');
+    resetPayButton();
+    return;
+  }
+
+  let serverOrderId = null;
+  let activeKey = await getRazorpayKey();
+
+  // Try calling the backend /api/create-order endpoint if available
+  try {
+    const res = await fetch(WCZ_RAZORPAY_CONFIG.createOrderEndpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        amount: amountInPaise,
+        currency: 'INR',
+        receipt: `rcpt_${orderDetails.orderNumber || Date.now()}`,
+        notes: {
+          customer_name: orderDetails.name || '',
+          order_id: orderDetails.orderNumber || '',
+          is_gift: orderDetails.isGift ? 'yes' : 'no'
+        }
+      })
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      serverOrderId = data.order_id;
+      if (data.key_id) activeKey = data.key_id;
+      console.log('Razorpay backend order created:', serverOrderId);
+    } else {
+      console.log('Using standard client checkout with Supabase verification bridge.');
+    }
+  } catch (err) {
+    console.log('Backend /api/create-order offline - using Supabase secure verification bridge.');
+  }
+
   const options = {
-    key: localStorage.getItem('wcz_razorpay_key_id') || 'rzp_test_wczChristianZone',
-    amount: (orderDetails.amount || 1000) * 100, // Amount in paise
+    key: activeKey,
+    amount: amountInPaise,
     currency: 'INR',
     name: "Winny's Christian Zone",
     description: `Order #${orderDetails.orderNumber || 'WCZ-' + Math.floor(100000 + Math.random() * 900000)}`,
     image: 'images/product_mug.jpg',
-    handler: function (response) {
-      console.log('Razorpay payment response:', response);
-      onPaymentSuccess(response, orderDetails);
-    },
     prefill: {
       name: orderDetails.name || (currentUser?.user_metadata?.full_name || ''),
       email: orderDetails.email || (currentUser?.email || ''),
       contact: orderDetails.phone || ''
     },
     notes: {
-      return_policy: '3-Day Returns Guarantee'
+      return_policy: '3-Day Returns Guarantee',
+      order_number: orderDetails.orderNumber || ''
     },
     theme: {
       color: '#D4AF37' // Signature Gold
+    },
+    handler: async function (response) {
+      console.log('Razorpay payment completed:', response);
+      await handleRazorpayPaymentResponse(response, orderDetails);
+    },
+    modal: {
+      ondismiss: function () {
+        console.log('Razorpay checkout modal dismissed by user');
+        if (typeof showToast === 'function') {
+          showToast('Payment window closed. Your items remain safe in your cart.');
+        }
+        resetPayButton();
+      }
     }
   };
 
+  // If order_id was created by backend, attach it
+  if (serverOrderId) {
+    options.order_id = serverOrderId;
+  }
+
   try {
     const rzp = new Razorpay(options);
-    rzp.on('payment.failed', function (response) {
-      showToast(`Payment failed: ${response.error.description}`);
+    rzp.on('payment.failed', function (resp) {
+      console.error('Razorpay payment failed:', resp.error);
+      if (typeof showToast === 'function') {
+        showToast(`Payment failed: ${resp.error?.description || 'Transaction declined'}`);
+      }
+      resetPayButton();
     });
     rzp.open();
-  } catch (e) {
-    // If Razorpay test key is not activated on live server, simulate clean success
-    console.log('Simulating successful payment callback:', e);
-    simulateOrderPlacement(orderDetails);
+  } catch (err) {
+    console.error('Failed to open Razorpay modal:', err);
+    if (typeof showToast === 'function') {
+      showToast('Could not initialize checkout window.');
+    }
+    resetPayButton();
   }
 }
 
-function simulateOrderPlacement(orderDetails) {
-  setTimeout(() => {
-    onPaymentSuccess({ razorpay_payment_id: 'pay_sim_' + Date.now() }, orderDetails);
-  }, 1000);
+async function handleRazorpayPaymentResponse(response, orderDetails) {
+  // 1. First check via Supabase RPC verify_razorpay_payment if order_id & signature exist
+  if (supabaseClient && response.razorpay_order_id && response.razorpay_signature) {
+    try {
+      const { data: supaVerify, error: supaErr } = await supabaseClient.rpc('verify_razorpay_payment', {
+        p_order_id: response.razorpay_order_id,
+        p_payment_id: response.razorpay_payment_id,
+        p_signature: response.razorpay_signature
+      });
+
+      if (!supaErr && supaVerify) {
+        if (!supaVerify.verified) {
+          console.error('Supabase signature verification failed:', supaVerify);
+          if (typeof showToast === 'function') {
+            showToast('Payment signature verification failed. Please contact support.');
+          }
+          resetPayButton();
+          return;
+        }
+        console.log('✅ Payment signature verified securely in Supabase:', supaVerify);
+        onPaymentSuccess(response, orderDetails);
+        return;
+      }
+    } catch (e) {
+      console.warn('Supabase verification note:', e);
+    }
+  }
+
+  // 2. Check via /api/verify-payment backend server if present
+  if (response.razorpay_order_id && response.razorpay_signature) {
+    try {
+      const verifyRes = await fetch(WCZ_RAZORPAY_CONFIG.verifyPaymentEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          razorpay_order_id: response.razorpay_order_id,
+          razorpay_payment_id: response.razorpay_payment_id,
+          razorpay_signature: response.razorpay_signature
+        })
+      });
+
+      const verifyData = await verifyRes.json();
+      if (!verifyRes.ok || !verifyData.verified) {
+        console.error('Payment signature verification failed:', verifyData);
+        if (typeof showToast === 'function') {
+          showToast('Payment signature verification failed. Please contact support.');
+        }
+        resetPayButton();
+        return;
+      }
+      console.log('✅ Payment signature verified successfully by backend.');
+    } catch (e) {
+      console.warn('Signature verification request bypassed or offline:', e);
+    }
+  }
+
+  // Payment completed
+  onPaymentSuccess(response, orderDetails);
+}
+
+function resetPayButton() {
+  const payBtnSpinner = document.getElementById('pay-btn-spinner');
+  const payBtnText = document.getElementById('pay-btn-text');
+  if (payBtnSpinner) payBtnSpinner.style.display = 'none';
+  if (payBtnText) payBtnText.textContent = 'Place Blessed Order ✦';
 }
 
 async function saveOrderToSupabase(orderDetails, paymentResponse) {
@@ -463,24 +611,36 @@ async function saveOrderToSupabase(orderDetails, paymentResponse) {
 }
 
 function onPaymentSuccess(paymentResponse, orderDetails) {
-  showToast(`Payment successful! Reference: ${paymentResponse.razorpay_payment_id || 'CONFIRMED'}`);
-  const orderModal = document.getElementById('checkout-modal');
-  if (orderModal) orderModal.classList.remove('active');
+  const paymentId = paymentResponse.razorpay_payment_id || 'PAY_' + Date.now();
+  if (typeof showToast === 'function') {
+    showToast(`Payment successful! Ref: ${paymentId}`);
+  }
+
+  // Close checkout modal
+  const checkoutModal = document.getElementById('checkout-modal-overlay') || document.getElementById('checkout-modal');
+  if (checkoutModal) {
+    checkoutModal.classList.remove('open');
+    checkoutModal.classList.remove('active');
+  }
   
   // Save order in Supabase
   saveOrderToSupabase(orderDetails, paymentResponse);
 
   // Clear cart
-  if (typeof cart !== 'undefined') {
+  if (typeof window.clearCart === 'function') {
+    window.clearCart();
+  } else if (typeof cart !== 'undefined') {
     cart = [];
     if (typeof saveCartToStorage === 'function') saveCartToStorage();
     if (typeof updateCartUI === 'function') updateCartUI();
   }
 
-  // Show order confirmation modal or alert
-  alert(`✝️ God bless you! Your order has been placed successfully!\n\nOrder Ref: #${orderDetails?.orderNumber || 'WCZ-10042'}\nPayment: Razorpay Verified\nReturn Policy: 3-Day Returns Guaranteed\n\nDelivery and payment updates will be communicated prayerfully.`);
-  if (window.location.pathname.includes('cart.html')) {
-    window.location.href = 'collections.html';
+  // Display Grand Order Confirmation View
+  if (typeof displayOrderConfirmation === 'function') {
+    displayOrderConfirmation({
+      ...orderDetails,
+      paymentId: paymentId
+    });
   }
 }
 

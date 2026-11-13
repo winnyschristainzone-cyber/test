@@ -301,6 +301,7 @@ DeviceManager.init();
 document.addEventListener('DOMContentLoaded', () => {
   DeviceManager.detect();
   initSplashScreen();
+  loadWishlistFromStorage();
   initHeader();
   initMobileNav();
   initSearch();
@@ -308,6 +309,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initProducts();
   initTabs();
   initCart();
+  initCartDrawer();
   initTestimonials();
   initNewsletter();
   initScrollAnimations();
@@ -630,6 +632,12 @@ function renderProducts(tab) {
     // Trigger animation
     setTimeout(() => card.classList.add('visible'), 40 + (i % 8) * 50);
 
+    // Card click -> Open Quick View Modal
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.product-wishlist') || e.target.closest('.product-quick-add')) return;
+      openQuickView(product.id);
+    });
+
     // Wishlist toggle
     const wishBtn = card.querySelector('.product-wishlist');
     wishBtn.addEventListener('click', (e) => {
@@ -660,18 +668,40 @@ function getCategoryLabel(cat) {
   return labels[cat] || cat;
 }
 
-function toggleWishlist(id, btn) {
-  const product = PRODUCTS.find(p => p.id === id);
-  if (!product) return;
-  product.liked = !product.liked;
-  btn.innerHTML = product.liked ? '&#10084;' : '&#9825;';
-  btn.classList.toggle('liked', product.liked);
-  showToast(product.liked ? `Added to wishlist &#10084;` : `Removed from wishlist`);
+// ------------------------------------------------------------------------------
+// WISHLIST WITH LOCALSTORAGE PERSISTENCE
+// ------------------------------------------------------------------------------
+function loadWishlistFromStorage() {
+  try {
+    const saved = localStorage.getItem('wcz_wishlist');
+    if (saved) {
+      const ids = JSON.parse(saved);
+      PRODUCTS.forEach(p => {
+        p.liked = ids.includes(String(p.id));
+      });
+    }
+  } catch (e) {}
 }
 
-// ============================================
-// CART
-// ============================================
+function saveWishlistToStorage() {
+  try {
+    const ids = PRODUCTS.filter(p => p.liked).map(p => String(p.id));
+    localStorage.setItem('wcz_wishlist', JSON.stringify(ids));
+  } catch (e) {}
+}
+
+function toggleWishlist(id, btn) {
+  const product = PRODUCTS.find(p => String(p.id) === String(id));
+  if (!product) return;
+  product.liked = !product.liked;
+  saveWishlistToStorage();
+  if (btn) {
+    btn.innerHTML = product.liked ? '&#10084;' : '&#9825;';
+    btn.classList.toggle('liked', product.liked);
+  }
+  showToast(product.liked ? `Saved "${product.name}" to wishlist &#10084;` : `Removed from wishlist`);
+}
+
 // ============================================
 // CART — FULL PAGE & PERSISTENCE
 // ============================================
@@ -736,12 +766,53 @@ function initCart() {
       });
     }
 
+    // --------------------------------------------------------------------------
+    // GIFT BLESSING & WHATSAPP NOTIFICATION CONTROLS
+    // --------------------------------------------------------------------------
+    const giftCheckbox = document.getElementById('is-gift-order');
+    const giftPanel = document.getElementById('gift-fields-panel');
+    const giftNameInput = document.getElementById('gift-recipient-name');
+    const giftWaInput = document.getElementById('gift-recipient-whatsapp');
+    const giftNoteInput = document.getElementById('order-prayer-note');
+    const previewName = document.getElementById('wa-preview-name');
+    const previewNote = document.getElementById('wa-preview-note-text');
+
+    if (giftCheckbox && giftPanel) {
+      giftCheckbox.addEventListener('change', () => {
+        giftPanel.style.display = giftCheckbox.checked ? 'block' : 'none';
+      });
+    }
+
+    function updateGiftPreview() {
+      if (previewName && giftNameInput) {
+        previewName.textContent = giftNameInput.value.trim() || '[Recipient Name]';
+      }
+      if (previewNote && giftNoteInput) {
+        const note = giftNoteInput.value.trim();
+        previewNote.textContent = note ? `“${note}”` : '“May the Lord bless you and keep you!”';
+      }
+    }
+
+    if (giftNameInput) giftNameInput.addEventListener('input', updateGiftPreview);
+    if (giftNoteInput) giftNoteInput.addEventListener('input', updateGiftPreview);
+
+    // Quick blessing chip buttons
+    document.querySelectorAll('.gift-chip-btn').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const text = chip.dataset.blessing;
+        if (giftNoteInput) {
+          giftNoteInput.value = text;
+          updateGiftPreview();
+          giftNoteInput.focus();
+        }
+      });
+    });
+
     // Checkout modal open & close
     const openModalBtn = document.getElementById('open-checkout-modal-btn');
     const checkoutModal = document.getElementById('checkout-modal-overlay');
     const closeModalBtn = document.getElementById('checkout-modal-close');
     const checkoutForm = document.getElementById('checkout-form');
-    const successModal = document.getElementById('order-success-modal');
 
     if (openModalBtn && checkoutModal) {
       openModalBtn.addEventListener('click', () => {
@@ -777,62 +848,137 @@ function initCart() {
       });
     });
 
-    // Form submit / Place Order with Razorpay or COD
+    // --------------------------------------------------------------------------
+    // CHECKOUT SUBMISSION & POST-PAYMENT PROCESSING FLOW
+    // --------------------------------------------------------------------------
     if (checkoutForm) {
       checkoutForm.addEventListener('submit', (e) => {
         e.preventDefault();
 
-        const customerName = document.getElementById('checkout-name')?.value || '';
-        const customerPhone = document.getElementById('checkout-phone')?.value || '';
-        const customerEmail = document.getElementById('checkout-email')?.value || '';
-        const customerAddress = document.getElementById('checkout-address')?.value || '';
+        const customerName = document.getElementById('checkout-name')?.value.trim() || '';
+        const customerPhone = document.getElementById('checkout-phone')?.value.trim() || '';
+        const customerEmail = document.getElementById('checkout-email')?.value.trim() || '';
+        const customerAddress = document.getElementById('checkout-address')?.value.trim() || '';
+        const customerCity = document.getElementById('checkout-city')?.value.trim() || '';
+        const customerPincode = document.getElementById('checkout-pincode')?.value.trim() || '';
         const selectedPayOpt = document.querySelector('input[name="payment"]:checked')?.value || 'razorpay';
 
-        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-        const orderId = 'WCZ-' + Math.floor(10000 + Math.random() * 90000);
+        const isGift = document.getElementById('is-gift-order')?.checked || false;
+        const giftRecipientName = document.getElementById('gift-recipient-name')?.value.trim() || '';
+        const giftRecipientWhatsApp = document.getElementById('gift-recipient-whatsapp')?.value.trim() || '';
+        const prayerNote = document.getElementById('order-prayer-note')?.value.trim() || '';
 
-        const orderDetails = {
-          amount: subtotal,
-          orderNumber: orderId,
-          name: customerName,
-          phone: customerPhone,
-          email: customerEmail,
-          address: customerAddress,
-          items: [...cart]
-        };
-
-        if (selectedPayOpt === 'razorpay') {
-          checkoutModal.classList.remove('open');
-          if (typeof initRazorpayPayment === 'function') {
-            initRazorpayPayment(orderDetails);
-          }
+        // Validate gift fields if enabled
+        if (isGift && !giftRecipientName) {
+          showToast('Please enter the recipient’s name for the gift.');
+          document.getElementById('gift-recipient-name')?.focus();
+          return;
+        }
+        if (isGift && (!giftRecipientWhatsApp || giftRecipientWhatsApp.length < 10)) {
+          showToast('Please enter a valid 10-digit WhatsApp number for the recipient.');
+          document.getElementById('gift-recipient-whatsapp')?.focus();
           return;
         }
 
-        // Cash on Delivery
+        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+        const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+        const isBulk = totalQty >= 5 || subtotal >= 2000;
+        const shipping = isBulk ? 0 : 199;
+        let discount = 0;
+        if (appliedDiscount > 0) {
+          discount = appliedDiscount < 1 ? Math.round(subtotal * appliedDiscount) : Math.min(subtotal, appliedDiscount);
+        }
+        const grandTotal = Math.max(0, subtotal - discount + shipping);
+        const orderId = 'WCZ-' + Math.floor(10000 + Math.random() * 90000);
+        const orderDate = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+
+        const orderDetails = {
+          orderNumber: orderId,
+          amount: grandTotal,
+          subtotal: subtotal,
+          discount: discount,
+          shipping: shipping,
+          name: customerName,
+          phone: customerPhone,
+          email: customerEmail,
+          address: `${customerAddress}, ${customerCity} - ${customerPincode}`,
+          paymentMethod: 'Razorpay Secure Online',
+          isGift: isGift,
+          giftRecipientName: giftRecipientName,
+          giftRecipientWhatsApp: giftRecipientWhatsApp,
+          prayerNote: prayerNote,
+          items: [...cart],
+          date: orderDate
+        };
+
+        // Close checkout form modal
         checkoutModal.classList.remove('open');
-        const confirmIdEl = document.getElementById('order-confirm-id');
-        if (confirmIdEl) confirmIdEl.textContent = '#' + orderId;
 
-        // Log order to Supabase
-        if (typeof saveOrderToSupabase === 'function') {
-          saveOrderToSupabase(orderDetails, null);
+        // Trigger button spinner
+        const payBtnSpinner = document.getElementById('pay-btn-spinner');
+        const payBtnText = document.getElementById('pay-btn-text');
+        if (payBtnSpinner) payBtnSpinner.style.display = 'inline-block';
+        if (payBtnText) payBtnText.textContent = 'Securing Order...';
+
+        // Check if Razorpay flow is available in supabaseClient.js
+        if (typeof initRazorpayPayment === 'function') {
+          initRazorpayPayment(orderDetails);
+          return;
         }
 
-        cart = [];
-        appliedDiscount = 0;
-        appliedDiscountCode = '';
-        saveCartToStorage();
-        updateCartUI();
+        // Fallback animated processing modal
+        const procModal = document.getElementById('order-processing-modal');
+        if (procModal) procModal.classList.add('open');
 
-        if (successModal) {
-          successModal.classList.add('open');
-        }
+        const step1 = document.getElementById('proc-step-1');
+        const step2 = document.getElementById('proc-step-2');
+        const step3 = document.getElementById('proc-step-3');
+        const procTitle = document.getElementById('processing-status-title');
+        const procSub = document.getElementById('processing-status-sub');
+
+        // Simulate secure verification stages
+        setTimeout(() => {
+          if (step1) step1.className = 'proc-step completed';
+          if (step2) step2.className = 'proc-step active';
+          if (procTitle) procTitle.textContent = 'Authorizing Blessed Payment';
+          if (procSub) procSub.textContent = 'Verifying bank security & encryption...';
+        }, 450);
+
+        setTimeout(() => {
+          if (step2) step2.className = 'proc-step completed';
+          if (step3) step3.className = 'proc-step active';
+          if (procTitle) procTitle.textContent = 'Order Confirmed & Blessed!';
+          if (procSub) procSub.textContent = 'Preparing your receipt & dispatch details...';
+        }, 950);
+
+        setTimeout(() => {
+          if (step3) step3.className = 'proc-step completed';
+          if (procModal) procModal.classList.remove('open');
+
+          // Reset button state
+          if (payBtnSpinner) payBtnSpinner.style.display = 'none';
+          if (payBtnText) payBtnText.textContent = 'Place Blessed Order ✦';
+
+          // Launch Grand Order Confirmation View
+          displayOrderConfirmation(orderDetails);
+
+          // Save order to Supabase in background
+          if (typeof saveOrderToSupabase === 'function') {
+            saveOrderToSupabase(orderDetails, { razorpay_payment_id: 'pay_sim_' + Date.now() });
+          }
+
+          // Clear cart
+          cart = [];
+          appliedDiscount = 0;
+          appliedDiscountCode = '';
+          saveCartToStorage();
+          updateCartUI();
+        }, 1400);
       });
     }
   }
 
-  // Ensure cart button always routes to cart.html
+  // Ensure cart button routes smoothly
   const cartBtn = document.getElementById('cart-btn');
   if (cartBtn && cartBtn.tagName === 'BUTTON') {
     cartBtn.addEventListener('click', (e) => {
@@ -842,11 +988,120 @@ function initCart() {
   }
 }
 
+// ------------------------------------------------------------------------------
+// GRAND ORDER CONFIRMATION MODAL DISPLAY & WHATSAPP GREETING ACTION
+// ------------------------------------------------------------------------------
+function displayOrderConfirmation(order) {
+  const modal = document.getElementById('order-success-modal');
+  if (!modal) return;
+
+  // 1. Order ID & Ref
+  const idEl = document.getElementById('order-confirm-id');
+  if (idEl) idEl.textContent = '#' + order.orderNumber;
+
+  // Copy order ID button
+  const copyBtn = document.getElementById('btn-copy-order-id');
+  if (copyBtn) {
+    copyBtn.onclick = () => {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(order.orderNumber).then(() => {
+          showToast(`Copied Order #${order.orderNumber} to clipboard!`);
+        }).catch(() => {
+          showToast(`Order ID: #${order.orderNumber}`);
+        });
+      } else {
+        showToast(`Order ID: #${order.orderNumber}`);
+      }
+    };
+  }
+
+  // 2. Payment & Method details
+  const methodEl = document.getElementById('order-confirm-method');
+  if (methodEl) methodEl.textContent = order.paymentMethod;
+
+  const txnEl = document.getElementById('order-confirm-txnid');
+  const simTxn = 'pay_sim_' + Math.floor(100000 + Math.random() * 900000);
+  if (txnEl) txnEl.textContent = simTxn;
+
+  const amountEl = document.getElementById('order-confirm-amount');
+  if (amountEl) amountEl.textContent = formatPrice(order.amount);
+
+  const addrEl = document.getElementById('order-confirm-address');
+  if (addrEl) addrEl.textContent = `${order.name} • ${order.address}`;
+
+  // 3. Render Items summary in confirmation
+  const itemsContainer = document.getElementById('order-confirm-items');
+  if (itemsContainer && Array.isArray(order.items)) {
+    itemsContainer.innerHTML = order.items.map(item => `
+      <div class="receipt-item-row">
+        <div class="receipt-item-info">
+          <img src="${item.image}" alt="${item.name}" class="receipt-item-img" />
+          <div>
+            <div style="font-weight: 500; color: var(--dark);">${item.name}</div>
+            <div class="receipt-item-qty">Qty: ${item.qty} &bull; ${formatPrice(item.price)} each</div>
+          </div>
+        </div>
+        <div class="receipt-item-price">${formatPrice(item.price * item.qty)}</div>
+      </div>
+    `).join('');
+  }
+
+  // 4. Gift Recipient Strip
+  const giftBanner = document.getElementById('order-confirm-gift-banner');
+  const giftNameEl = document.getElementById('order-confirm-gift-name');
+  const giftNoteEl = document.getElementById('order-confirm-gift-note');
+  const giftWaBtn = document.getElementById('order-send-recipient-wa-btn');
+
+  if (order.isGift && order.giftRecipientName) {
+    if (giftBanner) giftBanner.style.display = 'block';
+    if (giftNameEl) giftNameEl.textContent = `${order.giftRecipientName} (+91 ${order.giftRecipientWhatsApp})`;
+    if (giftNoteEl) {
+      giftNoteEl.innerHTML = order.prayerNote 
+        ? `&ldquo;${order.prayerNote}&rdquo;`
+        : `&ldquo;May the Lord bless you and keep you!&rdquo;`;
+    }
+
+    if (giftWaBtn) {
+      const cleanWa = order.giftRecipientWhatsApp.replace(/\D/g, '');
+      const greetingMsg = `✝️ *Winny's Christian Zone — A Special Gift For You!*\n\nDear *${order.giftRecipientName}*,\n\n*${order.name}* has prayerfully ordered a Christian faith gift for you with love!\n\n*Personal Blessing Note:*\n"${order.prayerNote || 'May the Lord bless you and keep you!'}"\n\n📦 *Package Status:* Your gift is being prepared prayerfully and will arrive in 3–5 business days.\n\nMay God bless and keep you!\n_Winny's Christian Zone (winnyschristianzone.com)_`;
+      giftWaBtn.href = `https://wa.me/91${cleanWa}?text=${encodeURIComponent(greetingMsg)}`;
+      giftWaBtn.onclick = (e) => {
+        window.open(giftWaBtn.href, '_blank');
+        e.preventDefault();
+      };
+    }
+  } else {
+    if (giftBanner) giftBanner.style.display = 'none';
+  }
+
+  // 5. Buyer WhatsApp Receipt
+  const buyerWaBtn = document.getElementById('order-confirm-buyer-wa-btn');
+  if (buyerWaBtn) {
+    const cleanBuyerPhone = (order.phone || '').replace(/\D/g, '');
+    const buyerMsg = `✝️ *Winny's Christian Zone — Order Receipt*\n\nThank you for your blessed order, *${order.name}*!\n\n*Order Ref:* #${order.orderNumber}\n*Total Paid:* ${formatPrice(order.amount)}\n*Payment Mode:* ${order.paymentMethod}\n*Delivery Address:* ${order.address}\n\nWe are preparing your package prayerfully. Expected delivery in 3–5 business days. God bless you!`;
+    const targetWa = cleanBuyerPhone ? '91' + cleanBuyerPhone : (typeof WCZ_WHATSAPP_NUMBER !== 'undefined' ? WCZ_WHATSAPP_NUMBER : '919876543210');
+    buyerWaBtn.href = `https://wa.me/${targetWa}?text=${encodeURIComponent(buyerMsg)}`;
+    buyerWaBtn.onclick = (e) => {
+      window.open(buyerWaBtn.href, '_blank');
+      e.preventDefault();
+    };
+  }
+
+  // 6. Print Receipt
+  const printBtn = document.getElementById('btn-print-receipt');
+  if (printBtn) {
+    printBtn.onclick = () => window.print();
+  }
+
+  // 7. Open Success Modal
+  modal.classList.add('open');
+}
+
 function addToCart(productId) {
-  const product = PRODUCTS.find(p => p.id === productId);
+  const product = PRODUCTS.find(p => String(p.id) === String(productId));
   if (!product) return;
 
-  const existing = cart.find(item => item.id === productId);
+  const existing = cart.find(item => String(item.id) === String(productId));
   if (existing) {
     existing.qty++;
   } else {
@@ -855,18 +1110,23 @@ function addToCart(productId) {
 
   saveCartToStorage();
   updateCartUI();
-  showToast(`${product.name} added! <a href="cart.html" style="color:var(--gold);text-decoration:underline;margin-left:8px;font-weight:600;">View Cart &rarr;</a>`);
   bumpCartCount();
+
+  if (!window.location.pathname.includes('cart.html')) {
+    openCartDrawer();
+  } else {
+    showToast(`${product.name} added! <a href="cart.html" style="color:var(--gold);text-decoration:underline;margin-left:8px;font-weight:600;">View Cart &rarr;</a>`);
+  }
 }
 
 function removeFromCart(productId) {
-  cart = cart.filter(item => item.id !== productId);
+  cart = cart.filter(item => String(item.id) !== String(productId));
   saveCartToStorage();
   updateCartUI();
 }
 
 function changeQty(productId, delta) {
-  const item = cart.find(i => i.id === productId);
+  const item = cart.find(i => String(i.id) === String(productId));
   if (!item) return;
 
   const newQty = item.qty + delta;
@@ -889,6 +1149,11 @@ function updateCartUI() {
 
   // Render on cart.html if present
   renderCartPage(rawSubtotal, totalQty);
+
+  // Render on slide drawer if present
+  if (typeof renderCartDrawer === 'function') {
+    renderCartDrawer();
+  }
 }
 
 function renderCartPage(subtotal, totalQty) {
@@ -915,8 +1180,8 @@ function renderCartPage(subtotal, totalQty) {
   if (activeView) activeView.style.display = 'grid';
   if (shippingWrap) shippingWrap.style.display = 'block';
 
-  // Delivery calculation (Free on bulk orders: 5+ items or ₹5,000+)
-  const isBulkOrder = totalQty >= 5 || subtotal >= 5000;
+  // Delivery calculation (Free on bulk orders: 5+ items or ₹2,000+)
+  const isBulkOrder = totalQty >= 5 || subtotal >= 2000;
   const shippingCost = isBulkOrder ? 0 : 199;
   const shippingText = document.getElementById('free-shipping-text');
   if (shippingText) {
@@ -1217,4 +1482,249 @@ function initSplashScreen() {
       splash.remove();
     }, 850);
   }, 1500);
+}
+
+// ============================================
+// PRODUCT QUICK-VIEW MODAL
+// ============================================
+function openQuickView(productId) {
+  const product = PRODUCTS.find(p => String(p.id) === String(productId));
+  if (!product) return;
+
+  let modal = document.getElementById('quick-view-overlay');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'quick-view-overlay';
+    modal.className = 'quick-view-overlay';
+    document.body.appendChild(modal);
+  }
+
+  const isApparel = product.category === 'apparel';
+  const stars = '★'.repeat(product.rating) + '☆'.repeat(Math.max(0, 5 - product.rating));
+
+  modal.innerHTML = `
+    <div class="quick-view-dialog">
+      <button class="quick-view-close" id="quick-view-close" aria-label="Close dialog">&times;</button>
+      <div class="quick-view-media">
+        <img src="${product.image}" alt="${product.name}" />
+      </div>
+      <div class="quick-view-content">
+        <span class="quick-view-cat">${getCategoryLabel(product.category)}</span>
+        <h2 class="quick-view-name">${product.name}</h2>
+        
+        <div class="quick-view-price-row">
+          <span class="quick-view-price">${formatPrice(product.price)}</span>
+          <span class="product-return-badge" style="font-size: 11px;">
+            <svg class="return-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width: 12px; height: 12px; vertical-align: -1px; margin-right: 3px;"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>
+            3-Day Returns
+          </span>
+        </div>
+
+        <p class="quick-view-desc">${product.desc}</p>
+
+        ${isApparel ? `
+          <div class="quick-view-sizes">
+            <span class="quick-view-size-label">Select Size:</span>
+            <div class="quick-view-size-btns">
+              <button type="button" class="size-pill-btn active" data-size="S">S</button>
+              <button type="button" class="size-pill-btn" data-size="M">M</button>
+              <button type="button" class="size-pill-btn" data-size="L">L</button>
+              <button type="button" class="size-pill-btn" data-size="XL">XL</button>
+            </div>
+          </div>
+        ` : ''}
+
+        <div class="quick-view-actions">
+          <button type="button" class="btn btn-primary" id="quick-view-add-btn" style="flex: 1; justify-content: center; padding: 12px 20px;">
+            Add to Blessed Bag &#10022;
+          </button>
+          <a href="cart.html" class="btn btn-secondary" style="padding: 12px 16px; font-size: 12.5px;">View Cart</a>
+        </div>
+      </div>
+    </div>
+  `;
+
+  modal.classList.add('open');
+
+  // Close handlers
+  modal.querySelector('#quick-view-close').addEventListener('click', () => modal.classList.remove('open'));
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) modal.classList.remove('open');
+  });
+
+  // Size pill toggling
+  modal.querySelectorAll('.size-pill-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      modal.querySelectorAll('.size-pill-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  // Add to cart inside modal
+  modal.querySelector('#quick-view-add-btn').addEventListener('click', () => {
+    addToCart(product.id);
+    modal.classList.remove('open');
+  });
+}
+
+// ============================================
+// SLIDE-OUT MINI-CART DRAWER
+// ============================================
+function initCartDrawer() {
+  if (window.location.pathname.includes('cart.html')) return; // Cart page has dedicated full table
+
+  let drawerOverlay = document.getElementById('cart-drawer-overlay');
+  if (!drawerOverlay) {
+    drawerOverlay = document.createElement('div');
+    drawerOverlay.id = 'cart-drawer-overlay';
+    drawerOverlay.className = 'cart-drawer-overlay';
+    drawerOverlay.innerHTML = `
+      <div class="cart-drawer" id="cart-drawer">
+        <div class="drawer-header">
+          <div class="drawer-header-left">
+            <h3 class="drawer-title">Your Blessed Bag</h3>
+            <span class="drawer-count" id="drawer-item-count">0 items</span>
+          </div>
+          <button type="button" class="drawer-close" id="drawer-close-btn" aria-label="Close bag">&times;</button>
+        </div>
+
+        <div class="drawer-shipping-bar">
+          <div class="drawer-shipping-text">
+            <span id="drawer-shipping-msg">Add items for free delivery</span>
+            <span id="drawer-shipping-status" style="font-weight: 600; color: var(--gold-dark);">₹2,000 Bulk Goal</span>
+          </div>
+          <div class="drawer-shipping-progress">
+            <div class="drawer-shipping-fill" id="drawer-shipping-fill" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <div class="drawer-items-list" id="drawer-items-list">
+          <!-- Items injected dynamically -->
+        </div>
+
+        <div class="drawer-footer">
+          <div class="drawer-subtotal-row">
+            <span>Estimated Subtotal:</span>
+            <strong id="drawer-subtotal">₹0</strong>
+          </div>
+          <div class="drawer-actions">
+            <a href="cart.html" class="btn btn-primary btn-drawer-checkout">
+              Proceed to Blessed Checkout &#10022;
+            </a>
+            <a href="cart.html#cart-gift-card" class="btn-drawer-viewcart">
+              🎁 Add Gift Blessing &amp; WhatsApp Alert Options
+            </a>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(drawerOverlay);
+
+    // Close handlers
+    drawerOverlay.querySelector('#drawer-close-btn').addEventListener('click', closeCartDrawer);
+    drawerOverlay.addEventListener('click', (e) => {
+      if (e.target === drawerOverlay) closeCartDrawer();
+    });
+  }
+
+  // Intercept header cart buttons
+  const headerCartBtns = document.querySelectorAll('.cart-btn, #cart-btn');
+  headerCartBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openCartDrawer();
+    });
+  });
+}
+
+function openCartDrawer() {
+  const overlay = document.getElementById('cart-drawer-overlay');
+  if (overlay) {
+    renderCartDrawer();
+    overlay.classList.add('open');
+  }
+}
+
+function closeCartDrawer() {
+  const overlay = document.getElementById('cart-drawer-overlay');
+  if (overlay) overlay.classList.remove('open');
+}
+
+function renderCartDrawer() {
+  const list = document.getElementById('drawer-items-list');
+  const countEl = document.getElementById('drawer-item-count');
+  const subtotalEl = document.getElementById('drawer-subtotal');
+  const shipMsg = document.getElementById('drawer-shipping-msg');
+  const shipFill = document.getElementById('drawer-shipping-fill');
+
+  if (!list) return;
+
+  const totalQty = cart.reduce((s, i) => s + i.qty, 0);
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+
+  if (countEl) countEl.textContent = `${totalQty} item${totalQty === 1 ? '' : 's'}`;
+  if (subtotalEl) subtotalEl.textContent = formatPrice(subtotal);
+
+  // Free shipping progress (Bulk orders: ₹2,000 or 5+ items)
+  const isBulk = totalQty >= 5 || subtotal >= 2000;
+  if (shipMsg && shipFill) {
+    if (isBulk) {
+      shipMsg.innerHTML = '<strong style="color: #2E7D32;">✝ Free Bulk Delivery Unlocked!</strong>';
+      shipFill.style.width = '100%';
+      shipFill.style.background = '#2E7D32';
+    } else {
+      const needed = Math.max(0, 2000 - subtotal);
+      shipMsg.textContent = `Add ${formatPrice(needed)} more for Free Delivery!`;
+      const pct = Math.min(100, Math.round((subtotal / 2000) * 100));
+      shipFill.style.width = `${pct}%`;
+      shipFill.style.background = 'var(--gold)';
+    }
+  }
+
+  if (cart.length === 0) {
+    list.innerHTML = `
+      <div style="text-align: center; padding: 48px 10px; color: var(--text-muted);">
+        <div style="font-size: 32px; margin-bottom: 8px;">✝️</div>
+        <p style="font-size: 15px; font-weight: 600; color: var(--dark); margin-bottom: 4px;">Your Blessed Bag is Empty</p>
+        <p style="font-size: 13px;">Explore faith-inspired apparel, jewelry &amp; gifts.</p>
+        <a href="collections.html" class="btn btn-outline" style="margin-top: 16px; font-size: 12px; padding: 9px 18px;">Shop Collections &rarr;</a>
+      </div>
+    `;
+    return;
+  }
+
+  list.innerHTML = cart.map(item => `
+    <div class="drawer-item-row">
+      <img src="${item.image}" alt="${item.name}" class="drawer-item-img" />
+      <div class="drawer-item-details">
+        <span class="drawer-item-title">${item.name}</span>
+        <span class="drawer-item-cat">${getCategoryLabel(item.category)}</span>
+        <div class="drawer-item-bottom">
+          <div class="drawer-stepper">
+            <button type="button" class="drawer-step-btn" data-action="dec" data-id="${item.id}">−</button>
+            <span class="drawer-step-val">${item.qty}</span>
+            <button type="button" class="drawer-step-btn" data-action="inc" data-id="${item.id}">+</button>
+          </div>
+          <span class="drawer-item-price">${formatPrice(item.price * item.qty)}</span>
+          <button type="button" class="drawer-remove-btn" data-id="${item.id}" aria-label="Remove">&times;</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  // Bind drawer steppers & remove
+  list.querySelectorAll('.drawer-step-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const delta = btn.dataset.action === 'inc' ? 1 : -1;
+      changeQty(btn.dataset.id, delta);
+      renderCartDrawer();
+    });
+  });
+
+  list.querySelectorAll('.drawer-remove-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      removeFromCart(btn.dataset.id);
+      renderCartDrawer();
+    });
+  });
 }
