@@ -233,6 +233,20 @@ const PRODUCTS = [
     desc: 'Full-grain genuine leather bound journal with vintage wrap tie & archival paper. Includes easy 3-day returns.',
     returnPolicy: '3-Day Returns',
     liked: false
+  },
+  {
+    id: 99,
+    name: 'Faith Seed Prayer Token (Test Item)',
+    category: 'gifts',
+    price: 1,
+    badge: '₹1 Test Pay',
+    badgeType: 'new',
+    rating: 5,
+    reviewCount: 777,
+    image: 'images/category_jewelry.jpg',
+    desc: 'Special ₹1 testing item for verifying Razorpay standard payments, webhooks, and receipts.',
+    returnPolicy: 'Instant Verification',
+    liked: false
   }
 ];
 
@@ -1198,9 +1212,10 @@ function renderCartPage(subtotal, totalQty) {
   const shippingText = document.getElementById('free-shipping-text');
   if (shippingText) {
     if (isBulkOrder) {
-      shippingText.innerHTML = `<strong>${CROSS_SVG_ICON} Free delivery applied on your bulk order!</strong>`;
+      shippingText.innerHTML = `<span class="shipping-success-pill"><svg class="cross-icon inline-cross" viewBox="0 0 20 26" fill="currentColor" style="width:11px; height:14px; margin-right:4px;"><path d="M8.5 1C8.5 0.45 8.95 0 9.5 0H10.5C11.05 0 11.5 0.45 11.5 1V7H17.5C18.05 7 18.5 7.45 18.5 8V9C18.5 9.55 18.05 10 17.5 10H11.5V25C11.5 25.55 11.05 26 10.5 26H9.5C8.95 26 8.5 25.55 8.5 25V10H2.5C1.95 10 1.5 9.55 1.5 9V8C1.5 7.45 1.95 7 2.5 7H8.5V1Z"/></svg>Free delivery applied on your bulk order!</span>`;
     } else {
-      shippingText.textContent = 'Free delivery on bulk orders';
+      const remainingForBulk = Math.max(0, 2000 - subtotal);
+      shippingText.innerHTML = `Add <strong>₹${remainingForBulk}</strong> more for <strong>Free Delivery</strong> (Bulk Goal: ₹2,000)`;
     }
   }
 

@@ -3549,6 +3549,22 @@ html.is-mobile .product-quick-add {
   display: flex;
   align-items: center;
   gap: 8px;
+  line-height: 1.4;
+}
+
+.cart-shipping-text .cross-icon {
+  width: 12px;
+  height: 15px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.shipping-success-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #2E7D32;
+  font-weight: 600;
 }
 
 .cart-shipping-progress {

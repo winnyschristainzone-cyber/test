@@ -117,6 +117,7 @@
           </div>
         </div>
         <div class="wcz-debug-inspect-strip">
+          <button class="wcz-inspect-chip" onclick="WCZ_DEBUG.addTestItem()">+ Add ₹1 Test Item</button>
           <button class="wcz-inspect-chip" onclick="WCZ_DEBUG.inspectCart()">Cart State</button>
           <button class="wcz-inspect-chip" onclick="WCZ_DEBUG.inspectAuth()">User Auth</button>
           <button class="wcz-inspect-chip" onclick="WCZ_DEBUG.inspectPayment()">Payment RPC</button>
@@ -149,6 +150,30 @@
     },
 
     // Inspection Helper Functions
+    addTestItem: function () {
+      if (typeof window.addToCart === 'function') {
+        window.addToCart(99);
+        this.log('TEST-ITEM', 'Added ₹1 Faith Seed Prayer Token to Cart!');
+        if (typeof showToast === 'function') showToast('Added ₹1 Test Item to cart!');
+      } else {
+        const cart = JSON.parse(localStorage.getItem('wcz_cart') || '[]');
+        const existing = cart.find(i => i.id == 99);
+        if (existing) {
+          existing.qty += 1;
+        } else {
+          cart.push({
+            id: 99,
+            name: 'Faith Seed Prayer Token (Test Item)',
+            price: 1,
+            qty: 1,
+            image: 'images/category_jewelry.jpg'
+          });
+        }
+        localStorage.setItem('wcz_cart', JSON.stringify(cart));
+        window.location.reload();
+      }
+    },
+
     inspectCart: function () {
       const cart = JSON.parse(localStorage.getItem('wcz_cart') || '[]');
       this.log('CART-INSPECT', `Items in cart: ${cart.length}`, cart);
