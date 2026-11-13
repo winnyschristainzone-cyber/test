@@ -911,6 +911,17 @@ function initCart() {
           date: orderDate
         };
 
+        if (window.WCZ_DEBUG) {
+          window.WCZ_DEBUG.log('CHECKOUT', 'Submitting order form', orderDetails);
+          if (isGift) {
+            window.WCZ_DEBUG.log('GIFT', `Gift order for: ${giftRecipientName} (WA: ${giftRecipientWhatsApp})`, {
+              recipient: giftRecipientName,
+              whatsapp: giftRecipientWhatsApp,
+              prayerNote: prayerNote
+            });
+          }
+        }
+
         // Close checkout form modal
         checkoutModal.classList.remove('open');
 
@@ -922,6 +933,7 @@ function initCart() {
 
         // Check if Razorpay flow is available in supabaseClient.js
         if (typeof initRazorpayPayment === 'function') {
+          if (window.WCZ_DEBUG) window.WCZ_DEBUG.log('PAYMENT', 'Handoff to initRazorpayPayment');
           initRazorpayPayment(orderDetails);
           return;
         }

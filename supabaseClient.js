@@ -364,18 +364,23 @@ const WCZ_RAZORPAY_CONFIG = {
 };
 
 async function getRazorpayKey() {
+  if (window.WCZ_DEBUG) window.WCZ_DEBUG.log('PAYMENT', 'Fetching Razorpay Key ID...');
   // Securely fetch public Key ID from Supabase stored procedure
   if (supabaseClient) {
     try {
       const { data, error } = await supabaseClient.rpc('get_razorpay_key');
       if (!error && data?.key_id) {
+        if (window.WCZ_DEBUG) window.WCZ_DEBUG.log('PAYMENT', 'Retrieved Key ID from Supabase RPC', data.key_id);
         return data.key_id;
       }
     } catch (e) {
+      if (window.WCZ_DEBUG) window.WCZ_DEBUG.warn('PAYMENT', 'Supabase RPC key lookup failed', e);
       console.warn('Supabase key lookup fallback:', e);
     }
   }
-  return localStorage.getItem('wcz_razorpay_key_id') || '';
+  const fallbackKey = localStorage.getItem('wcz_razorpay_key_id') || '';
+  if (window.WCZ_DEBUG) window.WCZ_DEBUG.log('PAYMENT', 'Using local fallback key', fallbackKey || '(none)');
+  return fallbackKey;
 }
 
 function initRazorpayPayment(orderDetails) {
@@ -501,8 +506,10 @@ async function createOrderAndOpenRazorpay(orderDetails) {
 }
 
 async function handleRazorpayPaymentResponse(response, orderDetails) {
+  if (window.WCZ_DEBUG) window.WCZ_DEBUG.log('PAYMENT', 'Received response from Razorpay modal', response);
   // 1. First check via Supabase RPC verify_razorpay_payment if order_id & signature exist
   if (supabaseClient && response.razorpay_order_id && response.razorpay_signature) {
+    if (window.WCZ_DEBUG) window.WCZ_DEBUG.log('PAYMENT', 'Triggering Supabase verify_razorpay_payment RPC...');
     try {
       const { data: supaVerify, error: supaErr } = await supabaseClient.rpc('verify_razorpay_payment', {
         p_order_id: response.razorpay_order_id,
@@ -512,6 +519,7 @@ async function handleRazorpayPaymentResponse(response, orderDetails) {
 
       if (!supaErr && supaVerify) {
         if (!supaVerify.verified) {
+          if (window.WCZ_DEBUG) window.WCZ_DEBUG.error('PAYMENT', 'Supabase signature verification failed', supaVerify);
           console.error('Supabase signature verification failed:', supaVerify);
           if (typeof showToast === 'function') {
             showToast('Payment signature verification failed. Please contact support.');
@@ -519,11 +527,13 @@ async function handleRazorpayPaymentResponse(response, orderDetails) {
           resetPayButton();
           return;
         }
+        if (window.WCZ_DEBUG) window.WCZ_DEBUG.log('PAYMENT', 'Payment verified successfully by Supabase', supaVerify);
         console.log('✅ Payment signature verified securely in Supabase:', supaVerify);
         onPaymentSuccess(response, orderDetails);
         return;
       }
     } catch (e) {
+      if (window.WCZ_DEBUG) window.WCZ_DEBUG.warn('PAYMENT', 'Supabase verification exception', e);
       console.warn('Supabase verification note:', e);
     }
   }

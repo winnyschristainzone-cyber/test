@@ -5855,3 +5855,174 @@ html.is-mobile .product-quick-add {
     max-width: 100%;
   }
 }
+
+/* ==============================================================================
+   UNIVERSAL DEBUG DRAWER STYLING
+   ============================================================================== */
+#wcz-debug-drawer {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  width: 380px;
+  max-width: calc(100vw - 32px);
+  max-height: 480px;
+  background: rgba(26, 16, 11, 0.95);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #F8F5F0;
+  transition: all 0.25s ease;
+}
+
+#wcz-debug-drawer.minimized {
+  max-height: 44px;
+}
+
+.wcz-debug-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.wcz-debug-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #D4AF37;
+}
+
+.wcz-debug-live-tag {
+  font-size: 9px;
+  letter-spacing: 0.5px;
+  background: #2E7D32;
+  color: #FFF;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.wcz-debug-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.wcz-debug-btn-sm {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #F8F5F0;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.wcz-debug-btn-sm:hover {
+  background: rgba(212, 175, 55, 0.3);
+  color: #D4AF37;
+}
+
+.wcz-debug-inspect-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.wcz-inspect-chip {
+  background: rgba(212, 175, 55, 0.12);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: #E2D3B8;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.wcz-inspect-chip:hover {
+  background: #D4AF37;
+  color: #1A100B;
+  font-weight: 600;
+}
+
+.wcz-debug-log-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 11px;
+  min-height: 180px;
+  max-height: 340px;
+}
+
+.wcz-debug-log-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid #D4AF37;
+}
+
+.wcz-debug-log-row.warn {
+  border-left-color: #FFA000;
+  background: rgba(255, 160, 0, 0.08);
+}
+
+.wcz-debug-log-row.error {
+  border-left-color: #E53935;
+  background: rgba(229, 57, 53, 0.1);
+}
+
+.wcz-debug-time {
+  font-size: 9px;
+  color: #A08C75;
+}
+
+.wcz-debug-badge {
+  font-size: 10px;
+  font-weight: 700;
+  color: #D4AF37;
+  letter-spacing: 0.5px;
+}
+
+.wcz-debug-msg {
+  color: #F8F5F0;
+  word-break: break-word;
+}
+
+.wcz-debug-payload {
+  margin: 4px 0 0 0;
+  padding: 6px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 10px;
+  color: #81C784;
+  overflow-x: auto;
+}
+
+.wcz-debug-empty-hint {
+  color: #A08C75;
+  font-style: italic;
+  font-size: 11px;
+  text-align: center;
+  padding: 20px 0;
+}
