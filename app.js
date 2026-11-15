@@ -555,11 +555,12 @@ function renderProducts(tab) {
 
   let filtered = tab === 'all'
     ? [...PRODUCTS]
-    : PRODUCTS.filter(p => p.category === tab);
+    : PRODUCTS.filter(p => p.category === tab || p.id === 99);
 
   // Search filter
   if (currentSearch) {
     filtered = filtered.filter(p =>
+      p.id === 99 ||
       p.name.toLowerCase().includes(currentSearch) ||
       p.category.toLowerCase().includes(currentSearch) ||
       getCategoryLabel(p.category).toLowerCase().includes(currentSearch)
