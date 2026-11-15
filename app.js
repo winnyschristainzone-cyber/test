@@ -11,6 +11,20 @@ const CROSS_SVG_ICON = `<svg class="cross-icon" viewBox="0 0 20 26" fill="curren
 // ============================================
 const PRODUCTS = [
   {
+    id: 99,
+    name: 'Faith Seed Prayer Token (Test Item)',
+    category: 'gifts',
+    price: 1,
+    badge: '₹1 Test Pay',
+    badgeType: 'new',
+    rating: 5,
+    reviewCount: 777,
+    image: 'images/category_jewelry.jpg',
+    desc: 'Special ₹1 testing item for verifying Razorpay standard payments, webhooks, and receipts.',
+    returnPolicy: 'Instant Verification',
+    liked: false
+  },
+  {
     id: 1,
     name: 'Grace Graphic Tee',
     category: 'apparel',
@@ -232,20 +246,6 @@ const PRODUCTS = [
     image: 'images/product_journal.jpg',
     desc: 'Full-grain genuine leather bound journal with vintage wrap tie & archival paper. Includes easy 3-day returns.',
     returnPolicy: '3-Day Returns',
-    liked: false
-  },
-  {
-    id: 99,
-    name: 'Faith Seed Prayer Token (Test Item)',
-    category: 'gifts',
-    price: 1,
-    badge: '₹1 Test Pay',
-    badgeType: 'new',
-    rating: 5,
-    reviewCount: 777,
-    image: 'images/category_jewelry.jpg',
-    desc: 'Special ₹1 testing item for verifying Razorpay standard payments, webhooks, and receipts.',
-    returnPolicy: 'Instant Verification',
     liked: false
   }
 ];
