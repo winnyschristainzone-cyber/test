@@ -118,6 +118,9 @@
         </div>
         <div class="wcz-debug-inspect-strip">
           <button class="wcz-inspect-chip" onclick="WCZ_DEBUG.addTestItem()">+ Add ₹1 Test Item</button>
+          <button class="wcz-inspect-chip" id="wcz-debug-toggle-shipping-btn" onclick="WCZ_DEBUG.toggleZeroShipping()">
+            ${localStorage.getItem('wcz_zero_shipping') === 'true' ? '🚚 Delivery: FREE (Test Active)' : '🚚 Set Free Delivery (₹0)'}
+          </button>
           <button class="wcz-inspect-chip" onclick="WCZ_DEBUG.inspectCart()">Cart State</button>
           <button class="wcz-inspect-chip" onclick="WCZ_DEBUG.inspectAuth()">User Auth</button>
           <button class="wcz-inspect-chip" onclick="WCZ_DEBUG.inspectPayment()">Payment RPC</button>
@@ -150,6 +153,28 @@
     },
 
     // Inspection Helper Functions
+    toggleZeroShipping: function () {
+      const current = localStorage.getItem('wcz_zero_shipping') === 'true';
+      if (current) {
+        localStorage.removeItem('wcz_zero_shipping');
+        this.log('SHIPPING', 'Free Delivery test override DISABLED (standard ₹199 applies below ₹2000)');
+        if (typeof showToast === 'function') showToast('🚚 Standard Delivery Restored');
+      } else {
+        localStorage.setItem('wcz_zero_shipping', 'true');
+        this.log('SHIPPING', 'Free Delivery test override ENABLED (shipping = ₹0)');
+        if (typeof showToast === 'function') showToast('⚡ Delivery set to FREE (₹0 Test Mode)');
+      }
+      
+      const btn = document.getElementById('wcz-debug-toggle-shipping-btn');
+      if (btn) {
+        btn.textContent = !current ? '🚚 Delivery: FREE (Test Active)' : '🚚 Set Free Delivery (₹0)';
+      }
+
+      if (typeof updateCartUI === 'function') {
+        updateCartUI();
+      }
+    },
+
     addTestItem: function () {
       if (typeof window.addToCart === 'function') {
         window.addToCart(99);

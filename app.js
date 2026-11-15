@@ -904,7 +904,8 @@ function initCart() {
         const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
         const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
         const isBulk = totalQty >= 5 || subtotal >= 2000;
-        const shipping = isBulk ? 0 : 199;
+        const zeroShippingOverride = localStorage.getItem('wcz_zero_shipping') === 'true';
+        const shipping = (isBulk || zeroShippingOverride) ? 0 : 199;
         let discount = 0;
         if (appliedDiscount > 0) {
           discount = appliedDiscount < 1 ? Math.round(subtotal * appliedDiscount) : Math.min(subtotal, appliedDiscount);
@@ -1213,12 +1214,15 @@ function renderCartPage(subtotal, totalQty) {
   if (activeView) activeView.style.display = 'grid';
   if (shippingWrap) shippingWrap.style.display = 'block';
 
-  // Delivery calculation (Free on bulk orders: 5+ items or ₹2,000+)
+  // Delivery calculation (Free on bulk orders: 5+ items or ₹2,000+, or Test Override)
   const isBulkOrder = totalQty >= 5 || subtotal >= 2000;
-  const shippingCost = isBulkOrder ? 0 : 199;
+  const isZeroShippingMode = localStorage.getItem('wcz_zero_shipping') === 'true';
+  const shippingCost = (isBulkOrder || isZeroShippingMode) ? 0 : 199;
   const shippingText = document.getElementById('free-shipping-text');
   if (shippingText) {
-    if (isBulkOrder) {
+    if (isZeroShippingMode) {
+      shippingText.innerHTML = `<span class="shipping-success-pill" style="color: #D4AF37;">⚡ Zero Delivery Fee Active (Test Mode)</span>`;
+    } else if (isBulkOrder) {
       shippingText.innerHTML = `<span class="shipping-success-pill"><svg class="cross-icon inline-cross" viewBox="0 0 20 26" fill="currentColor" style="width:11px; height:14px; margin-right:4px;"><path d="M8.5 1C8.5 0.45 8.95 0 9.5 0H10.5C11.05 0 11.5 0.45 11.5 1V7H17.5C18.05 7 18.5 7.45 18.5 8V9C18.5 9.55 18.05 10 17.5 10H11.5V25C11.5 25.55 11.05 26 10.5 26H9.5C8.95 26 8.5 25.55 8.5 25V10H2.5C1.95 10 1.5 9.55 1.5 9V8C1.5 7.45 1.95 7 2.5 7H8.5V1Z"/></svg>Free delivery applied on your bulk order!</span>`;
     } else {
       const remainingForBulk = Math.max(0, 2000 - subtotal);
