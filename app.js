@@ -1268,6 +1268,24 @@ function renderCartPage(subtotal, totalQty) {
   if (totalEl) totalEl.textContent = formatPrice(grandTotal);
   if (modalTotalEl) modalTotalEl.textContent = formatPrice(grandTotal);
 
+  // Sync test delivery toggle button on cart page
+  const testDeliveryBtn = document.getElementById('cart-toggle-delivery-btn');
+  if (testDeliveryBtn) {
+    testDeliveryBtn.textContent = isZeroShippingMode ? 'Reset to ₹199' : 'Set Free (₹0)';
+    testDeliveryBtn.style.background = isZeroShippingMode ? '#2E7D32' : '#2C1810';
+    testDeliveryBtn.style.color = '#FFF';
+    testDeliveryBtn.onclick = () => {
+      if (isZeroShippingMode) {
+        localStorage.removeItem('wcz_zero_shipping');
+        if (typeof showToast === 'function') showToast('Standard ₹199 delivery restored');
+      } else {
+        localStorage.setItem('wcz_zero_shipping', 'true');
+        if (typeof showToast === 'function') showToast('⚡ Delivery set to FREE (₹0 Test Mode)');
+      }
+      updateCartUI();
+    };
+  }
+
   // Render items list
   itemsContainer.innerHTML = cart.map(item => `
     <div class="cart-item-row">
