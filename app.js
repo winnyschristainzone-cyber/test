@@ -526,8 +526,14 @@ function initProducts() {
   if (typeof fetchProductsFromDatabase === 'function') {
     fetchProductsFromDatabase().then(dbProducts => {
       if (dbProducts && dbProducts.length > 0) {
+        // Find if test item exists in local PRODUCTS
+        const testItem = PRODUCTS.find(p => p.id === 99);
         PRODUCTS.length = 0;
         PRODUCTS.push(...dbProducts);
+        // Ensure ₹1 Test Item is ALWAYS preserved at the top for testing
+        if (testItem && !PRODUCTS.some(p => p.id === 99)) {
+          PRODUCTS.unshift(testItem);
+        }
         renderProducts(activeTab);
       }
     });
