@@ -329,6 +329,114 @@
       </div>
     </section>
 
+    <!-- Custom Blessing Box Builder Section -->
+    <section class="blessing-box-section" id="blessing-box" style="padding: 85px 0; background: #FAF7F2; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+      <div class="container">
+        <div style="text-align: center; max-width: 660px; margin: 0 auto 40px;">
+          <p class="section-eyebrow" style="color: var(--gold); font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600; margin-bottom: 8px;">Curated with Love</p>
+          <h2 style="font-family: var(--font-display); font-size: 38px; color: var(--dark); margin-bottom: 12px;">Build Your Own Blessing Box</h2>
+          <p style="font-size: 15px; color: var(--text-light); line-height: 1.6;">
+            Create a custom gift set in 3 steps: choose your primary blessing item, add an artisan devotional keepsake, and personalize with your heartfelt prayer card.
+          </p>
+        </div>
+
+        <div style="max-width: 900px; margin: 0 auto; background: #FFFDF8; border: 1px solid var(--border-strong); border-radius: 16px; padding: 36px 32px; box-shadow: var(--shadow-md);">
+          <!-- Step Stepper -->
+          <div style="display: flex; justify-content: space-around; margin-bottom: 32px; border-bottom: 1px solid #EFE8DE; padding-bottom: 20px;">
+            <div id="bbox-step-tab-1" class="bbox-step-indicator active" style="font-weight: 600; color: var(--gold-dark); display: flex; align-items: center; gap: 8px;">
+              <span style="width: 26px; height: 26px; border-radius: 50%; background: var(--gold); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px;">1</span>
+              <span>Primary Item</span>
+            </div>
+            <div id="bbox-step-tab-2" class="bbox-step-indicator" style="font-weight: 500; color: var(--text-muted); display: flex; align-items: center; gap: 8px;">
+              <span style="width: 26px; height: 26px; border-radius: 50%; background: #E0D3C1; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px;">2</span>
+              <span>Devotional Keepsake</span>
+            </div>
+            <div id="bbox-step-tab-3" class="bbox-step-indicator" style="font-weight: 500; color: var(--text-muted); display: flex; align-items: center; gap: 8px;">
+              <span style="width: 26px; height: 26px; border-radius: 50%; background: #E0D3C1; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px;">3</span>
+              <span>Prayer Card &amp; Pack</span>
+            </div>
+          </div>
+
+          <!-- Step 1 Content -->
+          <div id="bbox-step-1" class="bbox-step-content">
+            <h4 style="font-family: var(--font-display); font-size: 20px; color: var(--dark); margin-bottom: 16px;">Step 1: Select Your Main Item</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
+              <label class="bbox-option-card" style="border: 2px solid var(--gold); border-radius: 12px; padding: 18px; cursor: pointer; background: #FAF7F2; display: block;">
+                <input type="radio" name="bbox_item1" value="Faith Seed Prayer Token" data-price="1" checked style="margin-bottom: 8px;" />
+                <strong style="display: block; font-size: 14.5px; color: var(--dark);">Faith Seed Prayer Token</strong>
+                <span style="font-size: 12px; color: var(--text-muted); display: block; margin: 4px 0;">Artisan Mustard Seed Brass Token</span>
+                <span style="font-size: 14px; font-weight: 600; color: var(--gold-dark);">&#8377;1</span>
+              </label>
+              <label class="bbox-option-card" style="border: 2px solid var(--border); border-radius: 12px; padding: 18px; cursor: pointer; background: #FAF7F2; display: block;">
+                <input type="radio" name="bbox_item1" value="Jerusalem Olive Wood Cross" data-price="1499" style="margin-bottom: 8px;" />
+                <strong style="display: block; font-size: 14.5px; color: var(--dark);">Jerusalem Olive Wood Cross</strong>
+                <span style="font-size: 12px; color: var(--text-muted); display: block; margin: 4px 0;">Hand-carved holy keepsake</span>
+                <span style="font-size: 14px; font-weight: 600; color: var(--gold-dark);">&#8377;1,499</span>
+              </label>
+              <label class="bbox-option-card" style="border: 2px solid var(--border); border-radius: 12px; padding: 18px; cursor: pointer; background: #FAF7F2; display: block;">
+                <input type="radio" name="bbox_item1" value="Grace & Truth Scripture Hoodie" data-price="2199" style="margin-bottom: 8px;" />
+                <strong style="display: block; font-size: 14.5px; color: var(--dark);">Grace Scripture Hoodie</strong>
+                <span style="font-size: 12px; color: var(--text-muted); display: block; margin: 4px 0;">400 GSM brushed fleece</span>
+                <span style="font-size: 14px; font-weight: 600; color: var(--gold-dark);">&#8377;2,199</span>
+              </label>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="goToBBoxStep(2)" style="width: 100%; justify-content: center; padding: 12px;">Next: Choose Keepsake &rarr;</button>
+          </div>
+
+          <!-- Step 2 Content -->
+          <div id="bbox-step-2" class="bbox-step-content" style="display: none;">
+            <h4 style="font-family: var(--font-display); font-size: 20px; color: var(--dark); margin-bottom: 16px;">Step 2: Add a Devotional Keepsake</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
+              <label class="bbox-option-card" style="border: 2px solid var(--gold); border-radius: 12px; padding: 18px; cursor: pointer; background: #FAF7F2; display: block;">
+                <input type="radio" name="bbox_item2" value="Be Still & Know Ceramic Mug" data-price="499" checked style="margin-bottom: 8px;" />
+                <strong style="display: block; font-size: 14.5px; color: var(--dark);">Ceramic Scripture Mug</strong>
+                <span style="font-size: 12px; color: var(--text-muted); display: block; margin: 4px 0;">Psalm 46:10 Matte Gold Rim</span>
+                <span style="font-size: 14px; font-weight: 600; color: var(--gold-dark);">&#8377;499</span>
+              </label>
+              <label class="bbox-option-card" style="border: 2px solid var(--border); border-radius: 12px; padding: 18px; cursor: pointer; background: #FAF7F2; display: block;">
+                <input type="radio" name="bbox_item2" value="Blessed Leather Scripture Journal" data-price="599" style="margin-bottom: 8px;" />
+                <strong style="display: block; font-size: 14.5px; color: var(--dark);">Leather Scripture Journal</strong>
+                <span style="font-size: 12px; color: var(--text-muted); display: block; margin: 4px 0;">Embossed prayer notebook</span>
+                <span style="font-size: 14px; font-weight: 600; color: var(--gold-dark);">&#8377;599</span>
+              </label>
+            </div>
+            <div style="display: flex; gap: 12px;">
+              <button type="button" class="btn btn-outline" onclick="goToBBoxStep(1)" style="flex: 1; justify-content: center; padding: 12px;">&larr; Back</button>
+              <button type="button" class="btn btn-primary" onclick="goToBBoxStep(3)" style="flex: 2; justify-content: center; padding: 12px;">Next: Personalize Prayer Card &rarr;</button>
+            </div>
+          </div>
+
+          <!-- Step 3 Content -->
+          <div id="bbox-step-3" class="bbox-step-content" style="display: none;">
+            <h4 style="font-family: var(--font-display); font-size: 20px; color: var(--dark); margin-bottom: 16px;">Step 3: Personalize Your Blessing Note</h4>
+            <div style="margin-bottom: 18px;">
+              <label style="display: block; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 6px;">Name on Gift Box</label>
+              <input type="text" id="bbox-recipient" placeholder="Recipient Name (e.g. For Sister Sarah)" style="width: 100%; box-sizing: border-box; padding: 12px 14px; border: 1px solid #D5C2A5; border-radius: 8px; font-size: 14px; background: #FAF7F2; outline: none;" />
+            </div>
+            <div style="margin-bottom: 24px;">
+              <label style="display: block; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 6px;">Handwritten Scripture or Blessing</label>
+              <textarea id="bbox-note" rows="3" placeholder="&ldquo;The Lord bless you and keep you; the Lord make his face shine on you...&rdquo;" style="width: 100%; box-sizing: border-box; padding: 12px 14px; border: 1px solid #D5C2A5; border-radius: 8px; font-size: 14px; background: #FAF7F2; outline: none; resize: vertical;"></textarea>
+            </div>
+
+            <div style="background: rgba(201, 168, 76, 0.1); border: 1px solid var(--border-strong); border-radius: 10px; padding: 16px 20px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <strong style="display: block; font-size: 15px; color: var(--dark);" id="bbox-summary-title">Custom Blessing Box Bundle</strong>
+                <span style="font-size: 12px; color: #2E7D32; font-weight: 600;">Includes Gold Ribbon Gift Packaging</span>
+              </div>
+              <div style="text-align: right;">
+                <div style="font-size: 20px; font-weight: 700; color: var(--dark);" id="bbox-total-price">&#8377;500</div>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 12px;">
+              <button type="button" class="btn btn-outline" onclick="goToBBoxStep(2)" style="flex: 1; justify-content: center; padding: 12px;">&larr; Back</button>
+              <button type="button" class="btn btn-primary" id="btn-add-bbox-cart" onclick="addBlessingBoxToCart()" style="flex: 2; justify-content: center; padding: 12px;">Add Blessing Box to Cart &#10022;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Why Choose Us -->
     <section class="why-us">
       <div class="container">

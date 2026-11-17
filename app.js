@@ -1703,3 +1703,74 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+// ============================================
+// BLESSING BOX BUNDLE BUILDER LOGIC
+// ============================================
+function goToBBoxStep(stepNum) {
+  [1, 2, 3].forEach(n => {
+    const stepEl = document.getElementById(`bbox-step-${n}`);
+    const tabEl = document.getElementById(`bbox-step-tab-${n}`);
+    if (stepEl) stepEl.style.display = n === stepNum ? 'block' : 'none';
+    if (tabEl) {
+      if (n === stepNum) {
+        tabEl.style.color = 'var(--gold-dark)';
+        tabEl.querySelector('span:first-child').style.background = 'var(--gold)';
+      } else {
+        tabEl.style.color = 'var(--text-muted)';
+        tabEl.querySelector('span:first-child').style.background = '#E0D3C1';
+      }
+    }
+  });
+
+  if (stepNum === 3) {
+    updateBBoxPrice();
+  }
+}
+
+function updateBBoxPrice() {
+  const item1Radio = document.querySelector('input[name="bbox_item1"]:checked');
+  const item2Radio = document.querySelector('input[name="bbox_item2"]:checked');
+  const p1 = item1Radio ? Number(item1Radio.dataset.price || 0) : 0;
+  const p2 = item2Radio ? Number(item2Radio.dataset.price || 0) : 0;
+  const total = p1 + p2;
+  const totalEl = document.getElementById('bbox-total-price');
+  if (totalEl) totalEl.innerHTML = formatPrice(total);
+}
+
+function addBlessingBoxToCart() {
+  const item1Radio = document.querySelector('input[name="bbox_item1"]:checked');
+  const item2Radio = document.querySelector('input[name="bbox_item2"]:checked');
+  const recipient = document.getElementById('bbox-recipient')?.value.trim() || 'A Special Believer';
+  const note = document.getElementById('bbox-note')?.value.trim() || 'May the Lord bless you and keep you!';
+
+  const name1 = item1Radio ? item1Radio.value : 'Blessing Token';
+  const name2 = item2Radio ? item2Radio.value : 'Scripture Mug';
+  const p1 = item1Radio ? Number(item1Radio.dataset.price || 0) : 0;
+  const p2 = item2Radio ? Number(item2Radio.dataset.price || 0) : 0;
+  const bundlePrice = p1 + p2;
+
+  const bundleProduct = {
+    id: 'bbox-' + Date.now(),
+    name: `Custom Blessing Box (${name1} + ${name2})`,
+    category: 'gifts',
+    price: bundlePrice,
+    image: 'images/church_sanctuary.jpg',
+    desc: `Personalized Gift Box for ${recipient}. Note: "${note}"`,
+    isGift: true,
+    giftRecipientName: recipient,
+    prayerNote: note
+  };
+
+  addToCart(bundleProduct.id);
+  // Replace dummy cart lookup if added
+  const lastItem = cart[cart.length - 1];
+  if (lastItem) {
+    Object.assign(lastItem, bundleProduct);
+    saveCartToStorage();
+    updateCartUI();
+  }
+
+  showToast(`Blessing Box for ${recipient} added to your bag! 🎁`);
+}
+
+
