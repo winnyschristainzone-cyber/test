@@ -607,12 +607,18 @@ async function saveOrderToSupabase(orderDetails, paymentResponse) {
     if (orderData && Array.isArray(orderDetails.items) && orderDetails.items.length > 0) {
       const itemsToInsert = orderDetails.items.map(item => ({
         order_id: orderData.id,
+        product_id: (typeof item.id === 'string' && item.id.length === 36) ? item.id : null,
         product_name: item.name,
         product_price: item.price,
         quantity: item.qty,
         subtotal: item.price * item.qty
       }));
       await supabaseClient.from('order_items').insert(itemsToInsert);
+
+      // Decrement stock in database
+      await supabaseClient.rpc('decrement_product_stock_on_order', {
+        p_order_id: orderDetails.orderNumber
+      });
     }
     console.log('✝️ Order logged to Supabase:', orderData);
   } catch (e) {

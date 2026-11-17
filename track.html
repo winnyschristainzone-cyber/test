@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Your Order — Winny's Christian Zone</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Sacramento&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .track-wrapper {
+      min-height: 80vh;
+      padding: 120px 20px 80px;
+      background: linear-gradient(180deg, var(--cream) 0%, #F5EFEB 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .track-card {
+      background: #FFFDF8;
+      border: 1px solid var(--border-strong);
+      border-radius: 16px;
+      padding: 36px 32px;
+      width: 100%;
+      max-width: 680px;
+      box-shadow: 0 10px 40px rgba(42, 20, 5, 0.08);
+      position: relative;
+    }
+    .track-title {
+      font-family: var(--font-display);
+      font-size: 32px;
+      color: var(--dark);
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .track-subtitle {
+      font-size: 14px;
+      color: var(--text-light);
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .track-form {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+    .track-input {
+      flex: 1;
+      padding: 14px 18px;
+      border: 1px solid #D5C2A5;
+      border-radius: 8px;
+      font-size: 15px;
+      background: #FAF7F2;
+      color: var(--dark);
+      outline: none;
+      transition: border 0.2s;
+    }
+    .track-input:focus {
+      border-color: var(--gold);
+      background: #fff;
+    }
+    .track-btn {
+      padding: 14px 28px;
+      background: var(--dark);
+      color: #FFFDF8;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 8px;
+      border: 1px solid var(--gold);
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .track-btn:hover {
+      background: var(--gold);
+      color: var(--dark);
+    }
+    .track-result {
+      display: none;
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+      animation: fadeIn 0.4s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .order-badge-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .order-number-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      color: var(--dark);
+      font-weight: 600;
+    }
+    .order-status-badge {
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .status-confirmed { background: rgba(46, 125, 50, 0.15); color: #2E7D32; }
+    .status-pending { background: rgba(230, 81, 0, 0.15); color: #E65100; }
+    .status-dispatched { background: rgba(25, 118, 210, 0.15); color: #1976D2; }
+    .status-delivered { background: rgba(92, 61, 122, 0.15); color: #5C3D7A; }
+
+    /* Stepper */
+    .timeline {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      margin: 32px 0 28px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 16px;
+      left: 12%;
+      right: 12%;
+      height: 2px;
+      background: #E0D3C1;
+      z-index: 1;
+    }
+    .timeline-progress {
+      content: '';
+      position: absolute;
+      top: 16px;
+      left: 12%;
+      height: 2px;
+      background: var(--gold);
+      z-index: 2;
+      transition: width 0.4s ease;
+    }
+    .timeline-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 3;
+      width: 25%;
+    }
+    .step-circle {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #FFFDF8;
+      border: 2px solid #D5C2A5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: #9C7A52;
+      transition: all 0.3s;
+    }
+    .timeline-step.active .step-circle {
+      border-color: var(--gold);
+      background: var(--gold);
+      color: #fff;
+      box-shadow: 0 0 0 4px rgba(201, 168, 76, 0.2);
+    }
+    .timeline-step.completed .step-circle {
+      border-color: var(--gold);
+      background: #2E7D32;
+      color: #fff;
+    }
+    .step-label {
+      margin-top: 8px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-light);
+      text-align: center;
+    }
+    .timeline-step.active .step-label {
+      color: var(--dark);
+      font-weight: 600;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      background: #FAF7F2;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-top: 20px;
+      font-size: 13px;
+    }
+    .detail-row span:first-child {
+      color: var(--text-muted);
+      display: block;
+      margin-bottom: 2px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .detail-row span:last-child {
+      font-weight: 600;
+      color: var(--dark);
+    }
+    .track-error {
+      display: none;
+      color: #C62828;
+      background: #FFEBEE;
+      border: 1px solid #FFCDD2;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .order-items-summary {
+      margin-top: 16px;
+      border-top: 1px dashed var(--border);
+      padding-top: 16px;
+    }
+  </style>
+</head>
+<body>
+  <header class="header scrolled" style="position: sticky; top: 0; background: rgba(250, 247, 242, 0.95); backdrop-filter: blur(10px); z-index: 100; border-bottom: 1px solid var(--border);">
+    <div class="header-inner container" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0;">
+      <a href="index.html" class="logo" style="text-decoration: none;">
+        <span class="logo-script" style="font-family: var(--font-script); font-size: 30px; color: var(--gold);">Winny's</span>
+        <span class="logo-sub" style="font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; display: block; color: var(--dark);">Christian Zone</span>
+      </a>
+      <a href="index.html" style="font-size: 14px; font-weight: 500; color: var(--brown); text-decoration: none; display: flex; align-items: center; gap: 6px;">
+        &larr; Back to Store
+      </a>
+    </div>
+  </header>
+
+  <main class="track-wrapper">
+    <div class="track-card">
+      <h1 class="track-title">Track Your Blessed Package</h1>
+      <p class="track-subtitle">Enter your Order ID (e.g. <code>WCZ-1001</code>) or your registered 10-digit phone number.</p>
+
+      <div class="track-error" id="trackError"></div>
+
+      <div class="track-form">
+        <input type="text" id="trackInput" class="track-input" placeholder="e.g. WCZ-1001 or 9876543210" />
+        <button class="track-btn" id="trackBtn" onclick="lookupOrder()">Find Order</button>
+      </div>
+
+      <div class="track-result" id="trackResult">
+        <div class="order-badge-row">
+          <div>
+            <div class="order-number-title" id="resOrderNumber">WCZ-1001</div>
+            <div style="font-size: 12px; color: var(--text-light); margin-top: 2px;" id="resOrderDate">Placed on Nov 18, 2026</div>
+          </div>
+          <span class="order-status-badge status-confirmed" id="resStatusBadge">Confirmed</span>
+        </div>
+
+        <div class="timeline">
+          <div class="timeline-progress" id="timelineBar" style="width: 0%;"></div>
+          <div class="timeline-step" id="step1">
+            <div class="step-circle">&#10003;</div>
+            <div class="step-label">Confirmed</div>
+          </div>
+          <div class="timeline-step" id="step2">
+            <div class="step-circle">2</div>
+            <div class="step-label">Preparing</div>
+          </div>
+          <div class="timeline-step" id="step3">
+            <div class="step-circle">3</div>
+            <div class="step-label">Dispatched</div>
+          </div>
+          <div class="timeline-step" id="step4">
+            <div class="step-circle">&#9829;</div>
+            <div class="step-label">Delivered</div>
+          </div>
+        </div>
+
+        <div class="detail-grid">
+          <div class="detail-row">
+            <span>Customer Name</span>
+            <span id="resCustName">&mdash;</span>
+          </div>
+          <div class="detail-row">
+            <span>Payment Status</span>
+            <span id="resPaymentStatus" style="color: #2E7D32;">Verified</span>
+          </div>
+          <div class="detail-row">
+            <span>Destination</span>
+            <span id="resCityState">&mdash;</span>
+          </div>
+          <div class="detail-row">
+            <span>Total Amount</span>
+            <span id="resOrderTotal">&#8377;0</span>
+          </div>
+        </div>
+
+        <div class="order-items-summary" id="resItemsList">
+          <div style="font-size: 13px; font-weight: 600; color: var(--dark); margin-bottom: 8px;">Ordered Items:</div>
+          <ul id="itemsUl" style="font-size: 13px; color: var(--text-light); padding-left: 18px; list-style: disc;"></ul>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabaseClient.js"></script>
+  <script>
+    async function lookupOrder() {
+      const input = document.getElementById('trackInput').value.trim();
+      const errEl = document.getElementById('trackError');
+      const resEl = document.getElementById('trackResult');
+      const btn = document.getElementById('trackBtn');
+
+      errEl.style.display = 'none';
+      resEl.style.display = 'none';
+
+      if (!input) {
+        errEl.innerText = 'Please enter an Order ID or Phone Number';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerText = 'Searching...';
+
+      try {
+        const client = window.wczSupabaseClient;
+        if (!client) throw new Error('Store client not initialized.');
+
+        // Query by order_number or customer_phone
+        let query = client.from('orders').select('*, order_items(*)');
+        if (input.toUpperCase().startsWith('WCZ-')) {
+          query = query.eq('order_number', input.toUpperCase());
+        } else {
+          // Phone lookup (clean input)
+          const cleanPhone = input.replace(/[^0-9]/g, '');
+          query = query.or(`customer_phone.ilike.%${cleanPhone}%,order_number.ilike.%${input}%`);
+        }
+
+        const { data, error } = await query.order('created_at', { ascending: false }).limit(1);
+
+        if (error) throw error;
+        if (!data || data.length === 0) {
+          errEl.innerText = 'No order found matching "' + input + '". Please check the ID or contact support.';
+          errEl.style.display = 'block';
+          return;
+        }
+
+        const order = data[0];
+        renderOrder(order);
+      } catch (err) {
+        console.error(err);
+        errEl.innerText = err.message || 'Unable to track order. Please try again.';
+        errEl.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Find Order';
+      }
+    }
+
+    function renderOrder(order) {
+      document.getElementById('resOrderNumber').innerText = order.order_number || 'WCZ-' + order.id.slice(0, 8);
+      document.getElementById('resOrderDate').innerText = 'Placed on ' + new Date(order.created_at).toLocaleDateString('en-IN', {
+        year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+      document.getElementById('resCustName').innerText = order.customer_name || 'Valued Believer';
+      document.getElementById('resPaymentStatus').innerText = (order.payment_status || 'verified').toUpperCase();
+      document.getElementById('resCityState').innerText = (order.shipping_city || '') + (order.shipping_state ? ', ' + order.shipping_state : '');
+      document.getElementById('resOrderTotal').innerText = '₹' + Number(order.total_amount || 0).toLocaleString('en-IN');
+
+      const status = (order.order_status || order.status || 'confirmed').toLowerCase();
+      const badge = document.getElementById('resStatusBadge');
+      badge.innerText = status.toUpperCase();
+
+      // Stepper logic
+      const bar = document.getElementById('timelineBar');
+      const s1 = document.getElementById('step1');
+      const s2 = document.getElementById('step2');
+      const s3 = document.getElementById('step3');
+      const s4 = document.getElementById('step4');
+
+      [s1, s2, s3, s4].forEach(s => { s.className = 'timeline-step'; });
+
+      if (status.includes('deliver')) {
+        bar.style.width = '76%';
+        [s1, s2, s3, s4].forEach(s => s.classList.add('completed'));
+        s4.classList.add('active');
+        badge.className = 'order-status-badge status-delivered';
+      } else if (status.includes('dispatch') || status.includes('ship')) {
+        bar.style.width = '50%';
+        s1.classList.add('completed');
+        s2.classList.add('completed');
+        s3.classList.add('active');
+        badge.className = 'order-status-badge status-dispatched';
+      } else if (status.includes('pack') || status.includes('prep') || status.includes('process')) {
+        bar.style.width = '25%';
+        s1.classList.add('completed');
+        s2.classList.add('active');
+        badge.className = 'order-status-badge status-pending';
+      } else {
+        bar.style.width = '0%';
+        s1.classList.add('active');
+        badge.className = 'order-status-badge status-confirmed';
+      }
+
+      // Items list
+      const itemsUl = document.getElementById('itemsUl');
+      itemsUl.innerHTML = '';
+      if (order.order_items && order.order_items.length > 0) {
+        order.order_items.forEach(it => {
+          const li = document.createElement('li');
+          li.innerText = `${it.product_name || 'Item'} × ${it.quantity} (₹${Number(it.unit_price || 0).toLocaleString('en-IN')})`;
+          itemsUl.appendChild(li);
+        });
+      } else {
+        itemsUl.innerHTML = '<li>Items recorded under verification</li>';
+      }
+
+      document.getElementById('trackResult').style.display = 'block';
+    }
+
+    // Check URL query param ?order=WCZ-1001
+    window.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const oParam = urlParams.get('order');
+      if (oParam) {
+        document.getElementById('trackInput').value = oParam;
+        lookupOrder();
+      }
+    });
+  </script>
+</body>
+</html>

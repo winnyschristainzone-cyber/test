@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Store Command Center | Winny's Christian Zone Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=4.0" />
+  <style>
+    :root {
+      --admin-bg: #F8F6F2;
+      --admin-card: #FFFFFF;
+      --admin-border: #E8DFD3;
+      --admin-primary: #7B1113;
+      --admin-gold: #C5A059;
+      --admin-dark: #2C1810;
+      --admin-text: #332B25;
+      --admin-muted: #8C7D70;
+    }
+
+    body {
+      background: var(--admin-bg);
+      color: var(--admin-text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Admin Auth Gate */
+    #admin-gate-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 16, 11, 0.92);
+      backdrop-filter: blur(16px);
+      z-index: 999999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .admin-gate-card {
+      background: #FFFFFF;
+      width: 100%;
+      max-width: 420px;
+      border-radius: 14px;
+      padding: 40px 32px;
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.4);
+      border: 1px solid var(--admin-gold);
+    }
+
+    .admin-gate-logo {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 16px;
+      background: #2C1810;
+      color: #D4AF37;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .admin-gate-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 28px;
+      margin: 0 0 6px;
+      color: var(--admin-dark);
+    }
+
+    .admin-gate-sub {
+      font-size: 13px;
+      color: var(--admin-muted);
+      margin: 0 0 24px;
+    }
+
+    .admin-input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px 16px;
+      border: 1px solid var(--admin-border);
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 16px;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .admin-input:focus {
+      border-color: var(--admin-gold);
+      box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.2);
+    }
+
+    .btn-admin {
+      background: var(--admin-primary);
+      color: #FFF;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s;
+    }
+
+    .btn-admin:hover {
+      background: #5A0C0E;
+    }
+
+    /* Admin Dashboard Header */
+    .admin-nav {
+      background: #FFFFFF;
+      border-bottom: 1px solid var(--admin-border);
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .admin-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .admin-brand-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--admin-dark);
+      margin: 0;
+    }
+
+    .admin-brand-tag {
+      font-size: 10px;
+      background: #2C1810;
+      color: #D4AF37;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .admin-stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin: 28px 0;
+    }
+
+    .admin-stat-card {
+      background: #FFFFFF;
+      border: 1px solid var(--admin-border);
+      border-radius: 10px;
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .admin-stat-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--admin-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .admin-stat-num {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--admin-dark);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+    }
+
+    /* Tab Controls */
+    .admin-tabs {
+      display: flex;
+      gap: 10px;
+      border-bottom: 1px solid var(--admin-border);
+      margin-bottom: 24px;
+    }
+
+    .admin-tab {
+      background: none;
+      border: none;
+      padding: 12px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--admin-muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .admin-tab.active {
+      color: var(--admin-primary);
+      border-bottom-color: var(--admin-primary);
+    }
+
+    /* Table Styles */
+    .admin-card-wrap {
+      background: #FFFFFF;
+      border: 1px solid var(--admin-border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.02);
+      margin-bottom: 40px;
+    }
+
+    .admin-card-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--admin-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      text-align: left;
+    }
+
+    .admin-table th {
+      background: #FAF8F5;
+      padding: 12px 20px;
+      font-weight: 600;
+      color: var(--admin-dark);
+      border-bottom: 1px solid var(--admin-border);
+    }
+
+    .admin-table td {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--admin-border);
+      vertical-align: middle;
+    }
+
+    .admin-table tr:hover {
+      background: #FCFBF9;
+    }
+
+    .stock-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+    .stock-badge.in-stock { background: #E8F5E9; color: #2E7D32; }
+    .stock-badge.low-stock { background: #FFF3E0; color: #E65100; }
+    .stock-badge.out-of-stock { background: #FFEBEE; color: #C62828; }
+
+    .action-btn-sm {
+      background: #FAF8F5;
+      border: 1px solid var(--admin-border);
+      color: var(--admin-dark);
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .action-btn-sm:hover {
+      background: var(--admin-primary);
+      color: #FFF;
+      border-color: var(--admin-primary);
+    }
+    .action-btn-sm.delete:hover {
+      background: #C62828;
+      border-color: #C62828;
+      color: #FFF;
+    }
+
+    /* Product Modal */
+    #product-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(8px);
+      z-index: 100000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    #product-modal.open {
+      display: flex;
+    }
+
+    .modal-box {
+      background: #FFF;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 540px;
+      padding: 28px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ADMIN PASSKEY ACCESS GATE -->
+  <div id="admin-gate-overlay">
+    <div class="admin-gate-card">
+      <div class="admin-gate-logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
+      </div>
+      <h2 class="admin-gate-title">Winny's Store Command</h2>
+      <p class="admin-gate-sub">Enter the administrative passkey to manage catalog, orders, and real-time inventory.</p>
+      <form id="admin-gate-form">
+        <input type="password" id="gate-passkey-input" class="admin-input" placeholder="Enter Admin Passkey..." required />
+        <button type="submit" class="btn-admin" id="gate-submit-btn">Unlock Store Manager &#10022;</button>
+        <div id="gate-error-msg" style="color: #C62828; font-size: 12px; margin-top: 10px; display: none;"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADMIN TOP NAVBAR -->
+  <header class="admin-nav">
+    <div class="admin-brand">
+      <a href="index.html" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 8px;">
+        <span style="color: var(--admin-gold);"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 22h20L12 2z"/></svg></span>
+        <h1 class="admin-brand-title">Winny's Christian Zone</h1>
+      </a>
+      <span class="admin-brand-tag">STORE COMMAND</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <a href="collections.html" target="_blank" class="action-btn-sm" style="text-decoration:none;">View Live Store ↗</a>
+      <button id="admin-logout-btn" class="action-btn-sm" style="color:#C62828;">Lock Panel</button>
+    </div>
+  </header>
+
+  <main style="max-width: 1200px; margin: 0 auto; padding: 0 24px;">
+
+    <!-- TOP KPI STATS -->
+    <div class="admin-stats-row">
+      <div class="admin-stat-card">
+        <span class="admin-stat-label">Total Orders</span>
+        <span class="admin-stat-num" id="stat-total-orders">0</span>
+      </div>
+      <div class="admin-stat-card">
+        <span class="admin-stat-label">Verified Revenue</span>
+        <span class="admin-stat-num" id="stat-total-revenue">₹0</span>
+      </div>
+      <div class="admin-stat-card">
+        <span class="admin-stat-label">Active Catalog Items</span>
+        <span class="admin-stat-num" id="stat-active-products">0</span>
+      </div>
+      <div class="admin-stat-card">
+        <span class="admin-stat-label">Low / Out of Stock</span>
+        <span class="admin-stat-num" id="stat-low-stock" style="color:#E65100;">0</span>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="admin-tabs">
+      <button class="admin-tab active" data-view="products-view" id="tab-btn-products">Product Catalog &amp; Inventory</button>
+      <button class="admin-tab" data-view="orders-view" id="tab-btn-orders">Customer Orders Feed</button>
+    </div>
+
+    <!-- VIEW 1: PRODUCTS & INVENTORY -->
+    <div id="products-view">
+      <div class="admin-card-wrap">
+        <div class="admin-card-header">
+          <div>
+            <h3 style="margin: 0; font-size: 18px; color: var(--admin-dark);">Live Product Inventory</h3>
+            <span style="font-size: 13px; color: var(--admin-muted);">Add, edit prices, set real stock numbers, or remove products instantly.</span>
+          </div>
+          <button id="btn-open-add-product" class="btn-admin" style="width: auto; padding: 9px 18px;">+ Add New Product</button>
+        </div>
+
+        <div style="overflow-x: auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock Quantity</th>
+                <th>Status</th>
+                <th style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-products-table-body">
+              <tr>
+                <td colspan="6" style="text-align: center; color: var(--admin-muted); padding: 30px;">Loading catalog...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 2: ORDERS FEED -->
+    <div id="orders-view" style="display: none;">
+      <div class="admin-card-wrap">
+        <div class="admin-card-header">
+          <div>
+            <h3 style="margin: 0; font-size: 18px; color: var(--admin-dark);">Customer Orders</h3>
+            <span style="font-size: 13px; color: var(--admin-muted);">Incoming purchases with customer delivery addresses and payment status.</span>
+          </div>
+          <button id="btn-export-orders-csv" class="action-btn-sm" style="font-weight:600;">📥 Export to CSV</button>
+        </div>
+
+        <div style="overflow-x: auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Order Number</th>
+                <th>Customer</th>
+                <th>Contact</th>
+                <th>Total</th>
+                <th>Payment</th>
+                <th>Delivery Address</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="admin-orders-table-body">
+              <tr>
+                <td colspan="7" style="text-align: center; color: var(--admin-muted); padding: 30px;">Loading orders...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ADD / EDIT PRODUCT MODAL -->
+  <div id="product-modal">
+    <div class="modal-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 id="modal-product-title" style="margin: 0; font-family:'Cormorant Garamond', serif; font-size: 24px;">Add New Product</h3>
+        <button id="modal-product-close" style="background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
+      </div>
+
+      <form id="product-form">
+        <input type="hidden" id="prod-id" />
+
+        <label style="font-size: 12px; font-weight: 600; color: var(--admin-muted);">Product Name</label>
+        <input type="text" id="prod-name" class="admin-input" placeholder="e.g. Jerusalem Olive Wood Cross" required />
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div>
+            <label style="font-size: 12px; font-weight: 600; color: var(--admin-muted);">Price (INR ₹)</label>
+            <input type="number" id="prod-price" class="admin-input" placeholder="e.g. 1999" step="1" required />
+          </div>
+          <div>
+            <label style="font-size: 12px; font-weight: 600; color: var(--admin-muted);">Stock Quantity</label>
+            <input type="number" id="prod-stock" class="admin-input" placeholder="e.g. 25" min="0" required />
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div>
+            <label style="font-size: 12px; font-weight: 600; color: var(--admin-muted);">Category</label>
+            <select id="prod-category" class="admin-input" style="height: 44px;">
+              <option value="apparel">Apparel &amp; Clothing</option>
+              <option value="jewelry">Jewelry &amp; Accessories</option>
+              <option value="home">Home D&eacute;cor</option>
+              <option value="gifts">Devotionals &amp; Gifts</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size: 12px; font-weight: 600; color: var(--admin-muted);">Badge (Optional)</label>
+            <input type="text" id="prod-badge" class="admin-input" placeholder="e.g. Best Seller / Blessed" />
+          </div>
+        </div>
+
+        <label style="font-size: 12px; font-weight: 600; color: var(--admin-muted);">Description</label>
+        <textarea id="prod-desc" class="admin-input" style="height: 70px; resize: vertical;" placeholder="Scripture reference or artisan details..."></textarea>
+
+        <button type="submit" class="btn-admin" id="btn-save-product-submit">Save Product to Live Store &#10022;</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabaseClient.js?v=4.0"></script>
+  <script>
+    (function () {
+      let activePasskey = sessionStorage.getItem('wcz_admin_passkey') || '';
+      let cachedProducts = [];
+      let cachedOrders = [];
+
+      // Check auth gate
+      if (activePasskey) {
+        unlockPanel();
+      }
+
+      document.getElementById('admin-gate-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const pass = document.getElementById('gate-passkey-input').value.trim();
+        const submitBtn = document.getElementById('gate-submit-btn');
+        const errEl = document.getElementById('gate-error-msg');
+
+        submitBtn.textContent = 'Verifying...';
+        errEl.style.display = 'none';
+
+        try {
+          const { data, error } = await supabaseClient.rpc('verify_admin_access', { p_passkey: pass });
+          if (!error && data?.authorized) {
+            activePasskey = pass;
+            sessionStorage.setItem('wcz_admin_passkey', pass);
+            unlockPanel();
+          } else {
+            errEl.textContent = 'Incorrect administrative passkey.';
+            errEl.style.display = 'block';
+          }
+        } catch (ex) {
+          // Local fallback verification
+          if (pass === 'WinnyAdmin2026!') {
+            activePasskey = pass;
+            sessionStorage.setItem('wcz_admin_passkey', pass);
+            unlockPanel();
+          } else {
+            errEl.textContent = 'Access verification failed.';
+            errEl.style.display = 'block';
+          }
+        } finally {
+          submitBtn.textContent = 'Unlock Store Manager ✦';
+        }
+      });
+
+      function unlockPanel() {
+        document.getElementById('admin-gate-overlay').style.display = 'none';
+        loadAdminCatalog();
+        loadAdminOrders();
+      }
+
+      document.getElementById('admin-logout-btn').addEventListener('click', () => {
+        sessionStorage.removeItem('wcz_admin_passkey');
+        window.location.reload();
+      });
+
+      // Tab switcher
+      const tabProducts = document.getElementById('tab-btn-products');
+      const tabOrders = document.getElementById('tab-btn-orders');
+      const viewProducts = document.getElementById('products-view');
+      const viewOrders = document.getElementById('orders-view');
+
+      tabProducts.addEventListener('click', () => {
+        tabProducts.classList.add('active');
+        tabOrders.classList.remove('active');
+        viewProducts.style.display = 'block';
+        viewOrders.style.display = 'none';
+      });
+
+      tabOrders.addEventListener('click', () => {
+        tabOrders.classList.add('active');
+        tabProducts.classList.remove('active');
+        viewOrders.style.display = 'block';
+        viewProducts.style.display = 'none';
+      });
+
+      // Load products
+      async function loadAdminCatalog() {
+        const tbody = document.getElementById('admin-products-table-body');
+        try {
+          const { data, error } = await supabaseClient
+            .from('products')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+          cachedProducts = data || [];
+          document.getElementById('stat-active-products').textContent = cachedProducts.length;
+
+          const lowStockCount = cachedProducts.filter(p => p.stock_quantity <= 5).length;
+          document.getElementById('stat-low-stock').textContent = lowStockCount;
+
+          if (cachedProducts.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 40px; color: var(--admin-muted);">No products in database yet. Click <strong>+ Add New Product</strong> above to add your first real merchandise!</td></tr>`;
+            return;
+          }
+
+          tbody.innerHTML = cachedProducts.map(p => {
+            const stock = p.stock_quantity ?? 0;
+            const stockClass = stock <= 0 ? 'out-of-stock' : (stock <= 5 ? 'low-stock' : 'in-stock');
+            const stockLabel = stock <= 0 ? 'Out of Stock' : (stock <= 5 ? `Low Stock (${stock})` : `${stock} Units`);
+
+            return `
+              <tr>
+                <td>
+                  <strong>${p.name}</strong>
+                  <div style="font-size: 11px; color: var(--admin-muted);">SKU: ${p.sku || 'N/A'}</div>
+                </td>
+                <td style="text-transform: capitalize;">${p.category_slug || 'General'}</td>
+                <td><strong>₹${p.price}</strong></td>
+                <td>
+                  <input type="number" min="0" value="${stock}" 
+                    style="width: 70px; padding: 4px 6px; border: 1px solid var(--admin-border); border-radius: 4px; font-size: 13px;"
+                    onchange="updateProductStock('${p.id}', this.value)" />
+                </td>
+                <td><span class="stock-badge ${stockClass}">${stockLabel}</span></td>
+                <td style="text-align: right;">
+                  <button class="action-btn-sm" onclick="editProduct('${p.id}')">Edit</button>
+                  <button class="action-btn-sm delete" onclick="deleteProduct('${p.id}', '${p.name.replace(/'/g, "\\'")}')">Delete</button>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        } catch (err) {
+          tbody.innerHTML = `<tr><td colspan="6" style="color: red; text-align: center;">Error loading products: ${err.message}</td></tr>`;
+        }
+      }
+
+      // Quick stock update
+      window.updateProductStock = async function (id, val) {
+        const newStock = parseInt(val, 10);
+        if (isNaN(newStock)) return;
+        try {
+          await supabaseClient.rpc('admin_update_stock', {
+            p_passkey: activePasskey,
+            p_product_id: id,
+            p_new_stock: newStock
+          });
+          loadAdminCatalog();
+        } catch (e) {
+          alert('Stock update error: ' + e.message);
+        }
+      };
+
+      // Delete product
+      window.deleteProduct = async function (id, name) {
+        if (!confirm(`Are you sure you want to permanently delete "${name}" from the store?`)) return;
+        try {
+          const { data, error } = await supabaseClient.rpc('admin_delete_product', {
+            p_passkey: activePasskey,
+            p_product_id: id
+          });
+          if (error) throw error;
+          loadAdminCatalog();
+        } catch (e) {
+          alert('Error deleting product: ' + e.message);
+        }
+      };
+
+      // Edit product modal
+      window.editProduct = function (id) {
+        const prod = cachedProducts.find(p => p.id === id);
+        if (!prod) return;
+        document.getElementById('modal-product-title').textContent = 'Edit Product';
+        document.getElementById('prod-id').value = prod.id;
+        document.getElementById('prod-name').value = prod.name;
+        document.getElementById('prod-price').value = prod.price;
+        document.getElementById('prod-stock').value = prod.stock_quantity || 10;
+        document.getElementById('prod-category').value = prod.category_slug || 'gifts';
+        document.getElementById('prod-badge').value = prod.badge || '';
+        document.getElementById('prod-desc').value = prod.description || '';
+        document.getElementById('product-modal').classList.add('open');
+      };
+
+      // Add Product modal button
+      document.getElementById('btn-open-add-product').addEventListener('click', () => {
+        document.getElementById('modal-product-title').textContent = 'Add New Product';
+        document.getElementById('product-form').reset();
+        document.getElementById('prod-id').value = '';
+        document.getElementById('prod-stock').value = 10;
+        document.getElementById('product-modal').classList.add('open');
+      });
+
+      document.getElementById('modal-product-close').addEventListener('click', () => {
+        document.getElementById('product-modal').classList.remove('open');
+      });
+
+      // Save product submit
+      document.getElementById('product-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('prod-id').value;
+        const name = document.getElementById('prod-name').value.trim();
+        const price = parseFloat(document.getElementById('prod-price').value);
+        const stock = parseInt(document.getElementById('prod-stock').value, 10);
+        const category = document.getElementById('prod-category').value;
+        const badge = document.getElementById('prod-badge').value.trim();
+        const desc = document.getElementById('prod-desc').value.trim();
+        const submitBtn = document.getElementById('btn-save-product-submit');
+
+        submitBtn.textContent = 'Saving...';
+        try {
+          const { data, error } = await supabaseClient.rpc('admin_save_product', {
+            p_passkey: activePasskey,
+            p_product: {
+              id: id || null,
+              name,
+              price,
+              stock_quantity: stock,
+              category,
+              badge,
+              desc
+            }
+          });
+          if (error) throw error;
+          document.getElementById('product-modal').classList.remove('open');
+          loadAdminCatalog();
+        } catch (err) {
+          alert('Failed to save product: ' + err.message);
+        } finally {
+          submitBtn.textContent = 'Save Product to Live Store ✦';
+        }
+      });
+
+      // Load Orders
+      async function loadAdminOrders() {
+        const tbody = document.getElementById('admin-orders-table-body');
+        try {
+          const { data, error } = await supabaseClient.rpc('admin_get_all_orders', {
+            p_passkey: activePasskey
+          });
+
+          cachedOrders = data?.orders || [];
+          document.getElementById('stat-total-orders').textContent = cachedOrders.length;
+
+          const verifiedRevenue = cachedOrders
+            .filter(o => o.payment_status === 'PAID')
+            .reduce((sum, o) => sum + (parseFloat(o.total_amount) || 0), 0);
+          document.getElementById('stat-total-revenue').textContent = `₹${verifiedRevenue.toLocaleString('en-IN')}`;
+
+          if (cachedOrders.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 40px; color: var(--admin-muted);">No orders recorded yet. Verified purchases appear here in real time.</td></tr>`;
+            return;
+          }
+
+          tbody.innerHTML = cachedOrders.map(o => {
+            const isPaid = o.payment_status === 'PAID';
+            const payBadge = isPaid
+              ? `<span style="background:#E8F5E9; color:#2E7D32; font-size:11px; padding:3px 8px; border-radius:10px; font-weight:700;">PAID</span>`
+              : `<span style="background:#FFF3E0; color:#E65100; font-size:11px; padding:3px 8px; border-radius:10px; font-weight:700;">PENDING</span>`;
+
+            const dateStr = o.created_at ? new Date(o.created_at).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }) : 'N/A';
+            const addr = o.shipping_address?.address || 'N/A';
+
+            return `
+              <tr>
+                <td><strong>${o.order_number || 'WCZ-REF'}</strong></td>
+                <td>${o.customer_name || 'Anonymous'}</td>
+                <td>
+                  <div>${o.customer_phone || ''}</div>
+                  <div style="font-size:11px; color:var(--admin-muted);">${o.customer_email || ''}</div>
+                </td>
+                <td><strong>₹${o.total_amount}</strong></td>
+                <td>${payBadge}</td>
+                <td style="max-width:240px; font-size:12px; color:#555;">${addr}</td>
+                <td style="font-size:12px; color:var(--admin-muted);">${dateStr}</td>
+              </tr>
+            `;
+          }).join('');
+        } catch (e) {
+          tbody.innerHTML = `<tr><td colspan="7" style="color:red; text-align:center;">Failed to load orders: ${e.message}</td></tr>`;
+        }
+      }
+
+      // Export CSV
+      document.getElementById('btn-export-orders-csv').addEventListener('click', () => {
+        if (!cachedOrders || cachedOrders.length === 0) {
+          alert('No orders to export.');
+          return;
+        }
+        let csv = 'Order Number,Customer Name,Phone,Email,Total Amount,Payment Status,Date,Address\n';
+        cachedOrders.forEach(o => {
+          csv += `"${o.order_number || ''}","${o.customer_name || ''}","${o.customer_phone || ''}","${o.customer_email || ''}","${o.total_amount || 0}","${o.payment_status || ''}","${o.created_at || ''}","${(o.shipping_address?.address || '').replace(/"/g, '""')}"\n`;
+        });
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `winnys-orders-${new Date().toISOString().slice(0,10)}.csv`;
+        a.click();
+      });
+
+    })();
+  </script>
+</body>
+</html>

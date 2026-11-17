@@ -22,230 +22,7 @@ const PRODUCTS = [
     image: 'images/category_jewelry.jpg',
     desc: 'Special ₹1 testing item for verifying Razorpay standard payments, webhooks, and receipts.',
     returnPolicy: 'Instant Verification',
-    liked: false
-  },
-  {
-    id: 1,
-    name: 'Grace Graphic Tee',
-    category: 'apparel',
-    price: 2699,
-    badge: 'Best Seller',
-    badgeType: '',
-    rating: 5,
-    reviewCount: 148,
-    image: 'images/category_apparel.jpg',
-    desc: '100% premium combed cotton tee printed with faith-inspired scripture typography. Includes easy 3-day returns.',
-    returnPolicy: '3-Day Returns',
-    liked: false
-  },
-  {
-    id: 2,
-    name: 'Faith Over Fear Hoodie',
-    category: 'apparel',
-    price: 4899,
-    badge: 'Popular',
-    badgeType: '',
-    rating: 5,
-    reviewCount: 89,
-    image: 'images/category_apparel.jpg',
-    desc: 'Cozy fleece-lined heavyweight hoodie with bold embroidered scripture artwork. Includes easy 3-day returns.',
-    returnPolicy: '3-Day Returns',
-    liked: false
-  },
-  {
-    id: 3,
-    name: 'Gold Cross Necklace',
-    category: 'jewelry',
-    price: 3799,
-    badge: 'New',
-    badgeType: 'new',
-    rating: 5,
-    reviewCount: 62,
-    image: 'images/category_jewelry.jpg',
-    desc: '18K gold-plated stainless steel crucifix on an adjustable artisan chain. Includes easy 3-day returns.',
-    returnPolicy: '3-Day Returns',
-    liked: false
-  },
-  {
-    id: 4,
-    name: 'Scripture Faith Bracelet',
-    category: 'jewelry',
-    price: 2299,
-    badge: 'Handcrafted',
-    badgeType: '',
-    rating: 4,
-    reviewCount: 44,
-    image: 'images/category_jewelry.jpg',
-    desc: 'Handcrafted natural stone beads featuring an engraved silver verse charm. Includes easy 3-day returns.',
-    returnPolicy: '3-Day Returns',
-    liked: false
-  },
-  {
-    id: 5,
-    name: 'John 3:16 Ceramic Mug',
-    category: 'home',
-    price: 1849,
-    badge: 'Best Seller',
-    badgeType: '',
-    rating: 5,
-    reviewCount: 201,
-    image: 'images/product_mug.jpg',
-    desc: '12oz microwave & dishwasher safe ceramic mug with gold-foiled scripture. Includes easy 3-day returns.',
-    returnPolicy: '3-Day Returns',
-    liked: false
-  },
-  {
-    id: 6,
-    name: 'Blessed Faith Journal',
-    category: 'gifts',
-    price: 2849,
-    badge: 'New',
-    badgeType: 'new',
-    rating: 5,
-    reviewCount: 77,
-    image: 'images/product_journal.jpg',
-    desc: 'Hardcover devotional journal with 192 lined pages, ribbon marker & scripture. Includes easy 3-day returns.',
-    returnPolicy: '3-Day Returns',
-    liked: false
-  },
-  {
-    id: 7,
-    name: 'Angel Wings Earrings',
-    category: 'jewelry',
-    price: 2999,
-    badge: '',
-    badgeType: '',
-    rating: 4,
-    reviewCount: 33,
-    image: 'images/category_jewelry.jpg',
-    desc: 'Hypoallergenic 925 sterling silver drop earrings with delicate feather detailing. Includes easy 3-day returns.',
-    returnPolicy: '3-Day Returns',
-    liked: false
-  },
-  {
-    id: 8,
-    name: 'Christian Gift Set Deluxe',
-    category: 'gifts',
-    price: 6499,
-    badge: 'Best Seller',
-    badgeType: '',
-    rating: 5,
-    reviewCount: 55,
-    image: 'images/product_giftset.jpg',
-    desc: 'Luxurious gift box with devotional journal, scripture mug & scented candle. Includes easy 3-day returns.',
-    returnPolicy: '3-Day Returns',
-    liked: false
-  },
-  {
-    id: 9,
-    name: 'Walk by Faith Canvas Tote',
-    category: 'apparel',
-    price: 1999,
-    badge: 'New',
-    badgeType: 'new',
-    rating: 5,
-    reviewCount: 41,
-    image: 'images/category_apparel.jpg',
-    desc: 'Heavy-duty organic canvas tote with reinforced shoulder straps and biblical print. Includes easy 3-day returns.',
-    returnPolicy: '3-Day Returns',
-    liked: false
-  },
-  {
-    id: 10,
-    name: 'Sterling Silver Rosary',
-    category: 'jewelry',
-    price: 4299,
-    badge: 'Blessed',
-    badgeType: '',
-    rating: 5,
-    reviewCount: 73,
-    image: 'images/category_jewelry.jpg',
-    desc: 'Solid 925 sterling silver prayer rosary with detailed corpus & Marian medal. Includes easy 3-day returns.',
-    returnPolicy: '3-Day Returns',
-    liked: false
-  },
-  {
-    id: 11,
-    name: 'Psalm 23 Olive Wood Wall Cross',
-    category: 'home',
-    price: 3499,
-    badge: 'Handcrafted',
-    badgeType: '',
-    rating: 5,
-    reviewCount: 96,
-    image: 'images/product_mug.jpg',
-    desc: 'Hand-carved natural olive wood wall cross engraved with beloved Psalm 23. Includes easy 3-day returns.',
-    returnPolicy: '3-Day Returns',
-    liked: false
-  },
-  {
-    id: 12,
-    name: 'Promises of God Scripture Cards',
-    category: 'gifts',
-    price: 1699,
-    badge: '',
-    badgeType: '',
-    rating: 5,
-    reviewCount: 68,
-    image: 'images/product_journal.jpg',
-    desc: 'Deck of 52 gold-edged devotional verse reflection cards in a luxury keepsake box. Includes easy 3-day returns.',
-    returnPolicy: '3-Day Returns',
-    liked: false
-  },
-  {
-    id: 13,
-    name: 'Be Still & Know Sweatshirt',
-    category: 'apparel',
-    price: 3999,
-    badge: 'Best Seller',
-    badgeType: '',
-    rating: 5,
-    reviewCount: 112,
-    image: 'images/social_faith_tee.jpg',
-    desc: 'Soft crewneck fleece sweatshirt with comforting Psalm 46:10 graphic. Includes easy 3-day returns.',
-    returnPolicy: '3-Day Returns',
-    liked: false
-  },
-  {
-    id: 14,
-    name: 'Mustard Seed Faith Pendant',
-    category: 'jewelry',
-    price: 3199,
-    badge: 'New',
-    badgeType: 'new',
-    rating: 5,
-    reviewCount: 51,
-    image: 'images/category_jewelry.jpg',
-    desc: 'Genuine mustard seed encapsulated in clear resin sphere on a delicate gold chain. Includes easy 3-day returns.',
-    returnPolicy: '3-Day Returns',
-    liked: false
-  },
-  {
-    id: 15,
-    name: 'Lavender & Amber Prayer Candle',
-    category: 'home',
-    price: 1499,
-    badge: '',
-    badgeType: '',
-    rating: 4,
-    reviewCount: 39,
-    image: 'images/product_mug.jpg',
-    desc: 'Hand-poured 100% natural soy wax aromatherapy candle with 45-hour burn time. Includes easy 3-day returns.',
-    returnPolicy: '3-Day Returns',
-    liked: false
-  },
-  {
-    id: 16,
-    name: 'Leather Bound Devotional Journal',
-    category: 'gifts',
-    price: 4599,
-    badge: 'Premium',
-    badgeType: '',
-    rating: 5,
-    reviewCount: 84,
-    image: 'images/product_journal.jpg',
-    desc: 'Full-grain genuine leather bound journal with vintage wrap tie & archival paper. Includes easy 3-day returns.',
-    returnPolicy: '3-Day Returns',
+    stock: 999,
     liked: false
   }
 ];
@@ -621,14 +398,22 @@ function renderProducts(tab) {
     card.style.transitionDelay = `${(i % 8) * 0.06}s`;
     card.dataset.productId = product.id;
 
+    const isOutOfStock = product.stock !== undefined && product.stock <= 0;
+    const stockPill = isOutOfStock
+      ? `<span class="stock-pill out-of-stock">Sold Out</span>`
+      : (product.stock !== undefined && product.stock <= 5 ? `<span class="stock-pill low-stock">Only ${product.stock} left!</span>` : '');
+
     card.innerHTML = `
       <div class="product-image-wrap">
         <img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy" />
         ${badgeHtml}
+        ${stockPill}
         <button class="product-wishlist ${product.liked ? 'liked' : ''}" data-id="${product.id}" aria-label="Add to wishlist">
           ${product.liked ? '&#10084;' : '&#9825;'}
         </button>
-        <button class="product-quick-add" data-id="${product.id}">Add to Cart &#10022;</button>
+        <button class="product-quick-add ${isOutOfStock ? 'disabled' : ''}" data-id="${product.id}" ${isOutOfStock ? 'disabled' : ''}>
+          ${isOutOfStock ? 'Sold Out' : 'Add to Cart &#10022;'}
+        </button>
       </div>
       <div class="product-info">
         <p class="product-category">${getCategoryLabel(product.category)}</p>
