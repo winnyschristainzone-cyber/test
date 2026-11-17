@@ -5,6 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Winny's Christian Zone — Premium faith-inspired merchandise. Discover beautifully crafted Christian apparel, jewelry, home decor, and devotional gifts that celebrate your walk with God." />
   <meta name="keywords" content="Christian merchandise, faith gifts, Christian apparel, cross jewelry, Bible gifts, devotional gifts, Christian store" />
+  
+  <!-- OpenGraph / Facebook / WhatsApp Rich Sharing Previews -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://winnyschristainzone-cyber.github.io/test/" />
+  <meta property="og:title" content="Winny's Christian Zone | Faith-Inspired Merchandise" />
+  <meta property="og:description" content="Discover beautifully crafted Christian apparel, cross jewelry, home decor, and blessed devotional gifts in India." />
+  <meta property="og:image" content="https://winnyschristainzone-cyber.github.io/test/Untitled.jpg" />
+  <meta property="og:site_name" content="Winny's Christian Zone" />
+
+  <!-- Twitter Card Previews -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Winny's Christian Zone | Faith-Inspired Merchandise" />
+  <meta name="twitter:description" content="Discover beautifully crafted Christian apparel, cross jewelry, home decor, and blessed devotional gifts in India." />
+  <meta name="twitter:image" content="https://winnyschristainzone-cyber.github.io/test/Untitled.jpg" />
   <title>Winny's Christian Zone | Faith-Inspired Merchandise</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -360,6 +374,81 @@
               <cite>&mdash; Winny, Founder</cite>
             </blockquote>
             <a href="#contact" class="btn btn-primary" id="about-learn-more">Get in Touch</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Community Prayer Wall Section -->
+    <section class="prayer-wall-section" id="prayer-wall" style="padding: 80px 0; background: linear-gradient(180deg, var(--cream) 0%, #F5ECE0 100%); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+      <div class="container">
+        <div style="text-align: center; max-width: 640px; margin: 0 auto 48px;">
+          <p class="section-eyebrow" style="color: var(--gold); font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600; margin-bottom: 8px;">Heart to Heart</p>
+          <h2 style="font-family: var(--font-display); font-size: 38px; color: var(--dark); margin-bottom: 14px;">The Faithful Prayer Wall</h2>
+          <p style="font-size: 15px; color: var(--text-light); line-height: 1.6;">
+            &ldquo;For where two or three gather in my name, there am I with them.&rdquo; &mdash; <em>Matthew 18:20</em>.<br/>
+            Share your prayer requests or join together in blessing one another.
+          </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; align-items: start;">
+          <!-- Left: Submit Prayer Request Form -->
+          <div style="background: #FFFDF8; border: 1px solid var(--border-strong); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-md);">
+            <h3 style="font-family: var(--font-display); font-size: 22px; color: var(--dark); margin-bottom: 6px;">Submit a Prayer Request</h3>
+            <p style="font-size: 13px; color: var(--text-light); margin-bottom: 20px;">Our prayer circle will uphold you in faith.</p>
+            
+            <form id="prayer-form">
+              <div style="margin-bottom: 14px;">
+                <label style="display: block; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 6px;">Your Name (or "Anonymous")</label>
+                <input type="text" id="prayer-name" placeholder="e.g. Grace from Bengaluru" style="width: 100%; box-sizing: border-box; padding: 12px 14px; border: 1px solid #D5C2A5; border-radius: 8px; font-size: 14px; background: #FAF7F2; outline: none;" required />
+              </div>
+
+              <div style="margin-bottom: 16px;">
+                <label style="display: block; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 6px;">Prayer Intention</label>
+                <textarea id="prayer-text" rows="4" placeholder="Share your heartfelt prayer or thanksgiving with our church family..." style="width: 100%; box-sizing: border-box; padding: 12px 14px; border: 1px solid #D5C2A5; border-radius: 8px; font-size: 14px; background: #FAF7F2; outline: none; resize: vertical;" required></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary" id="btn-submit-prayer" style="width: 100%; justify-content: center; padding: 14px 20px;">
+                Share Prayer Request &#128591;
+              </button>
+            </form>
+          </div>
+
+          <!-- Right: Live Blessed Prayer Cards Feed -->
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+              <h3 style="font-family: var(--font-display); font-size: 22px; color: var(--dark); margin: 0;">Community Prayers</h3>
+              <span style="font-size: 12px; color: var(--gold); font-weight: 600;">&#10022; Live Intercession</span>
+            </div>
+
+            <div id="prayer-wall-feed" style="display: flex; flex-direction: column; gap: 16px; max-height: 440px; overflow-y: auto; padding-right: 6px;">
+              <!-- Example Blessed Prayer Cards -->
+              <div class="prayer-card" style="background: #FFFDF8; border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; box-shadow: var(--shadow-sm); transition: transform 0.2s;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                  <strong style="color: var(--dark); font-size: 14px;">Sister Maria &bull; Kochi</strong>
+                  <span style="font-size: 11px; color: var(--text-muted);">Today</span>
+                </div>
+                <p style="font-size: 13.5px; color: var(--text); line-height: 1.5; font-style: italic;">&ldquo;Praying for complete healing for my father after surgery, and strength for our family to stay steadfast in Christ.&rdquo;</p>
+                <div style="margin-top: 12px; display: flex; align-items: center; gap: 8px;">
+                  <button type="button" class="pray-btn" style="background: rgba(201, 168, 76, 0.12); color: var(--gold-dark); border: 1px solid rgba(201, 168, 76, 0.3); padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; cursor: pointer;">
+                    &#128591; Prayed (24)
+                  </button>
+                </div>
+              </div>
+
+              <div class="prayer-card" style="background: #FFFDF8; border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; box-shadow: var(--shadow-sm); transition: transform 0.2s;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                  <strong style="color: var(--dark); font-size: 14px;">Brother David &bull; Hyderabad</strong>
+                  <span style="font-size: 11px; color: var(--text-muted);">Yesterday</span>
+                </div>
+                <p style="font-size: 13.5px; color: var(--text); line-height: 1.5; font-style: italic;">&ldquo;Praising the Lord for open doors in our new ministry outreach and guidance in this season.&rdquo;</p>
+                <div style="margin-top: 12px; display: flex; align-items: center; gap: 8px;">
+                  <button type="button" class="pray-btn" style="background: rgba(201, 168, 76, 0.12); color: var(--gold-dark); border: 1px solid rgba(201, 168, 76, 0.3); padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; cursor: pointer;">
+                    &#128591; Prayed (19)
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

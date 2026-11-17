@@ -916,25 +916,29 @@ function displayOrderConfirmation(order) {
   modal.classList.add('open');
 }
 
-function addToCart(productId) {
+function addToCart(productId, selectedSize) {
   const product = PRODUCTS.find(p => String(p.id) === String(productId));
   if (!product) return;
 
-  const existing = cart.find(item => String(item.id) === String(productId));
+  const itemSize = selectedSize || (product.category === 'apparel' ? 'M' : null);
+  const cartItemKey = itemSize ? `${product.id}_${itemSize}` : String(product.id);
+
+  const existing = cart.find(item => (item.cartKey || String(item.id)) === cartItemKey);
   if (existing) {
     existing.qty++;
   } else {
-    cart.push({ ...product, qty: 1 });
+    cart.push({ ...product, qty: 1, size: itemSize, cartKey: cartItemKey });
   }
 
   saveCartToStorage();
   updateCartUI();
   bumpCartCount();
 
+  const sizeNote = itemSize ? ` (Size: ${itemSize})` : '';
   if (!window.location.pathname.includes('cart.html')) {
     openCartDrawer();
   } else {
-    showToast(`${product.name} added! <a href="cart.html" style="color:var(--gold);text-decoration:underline;margin-left:8px;font-weight:600;">View Cart &rarr;</a>`);
+    showToast(`${product.name}${sizeNote} added! <a href="cart.html" style="color:var(--gold);text-decoration:underline;margin-left:8px;font-weight:600;">View Cart &rarr;</a>`);
   }
 }
 
@@ -1364,16 +1368,27 @@ function openQuickView(productId) {
         <p class="quick-view-desc">${product.desc}</p>
 
         ${isApparel ? `
-          <div class="quick-view-sizes">
-            <span class="quick-view-size-label">Select Size:</span>
-            <div class="quick-view-size-btns">
+          <div class="quick-view-sizes" style="margin: 16px 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <span class="quick-view-size-label" style="font-weight: 600; font-size: 13px;">Select Size:</span>
+              <button type="button" id="btn-open-size-chart" style="font-size: 11.5px; color: var(--gold-dark); text-decoration: underline; background: none; border: none; cursor: pointer;">
+                📏 Size Guide
+              </button>
+            </div>
+            <div class="quick-view-size-btns" style="display: flex; gap: 8px;">
               <button type="button" class="size-pill-btn active" data-size="S">S</button>
               <button type="button" class="size-pill-btn" data-size="M">M</button>
               <button type="button" class="size-pill-btn" data-size="L">L</button>
               <button type="button" class="size-pill-btn" data-size="XL">XL</button>
+              <button type="button" class="size-pill-btn" data-size="XXL">XXL</button>
             </div>
           </div>
         ` : ''}
+
+        <!-- Embedded Scripture Context Box -->
+        <div class="quick-view-scripture" style="background: rgba(201, 168, 76, 0.08); border-left: 3px solid var(--gold); padding: 10px 14px; border-radius: 6px; margin: 16px 0; font-size: 12.5px; color: var(--text-light); font-style: italic;">
+          &ldquo;Clothed with strength and dignity, she laughs without fear of the future.&rdquo; &mdash; Proverbs 31:25
+        </div>
 
         <div class="quick-view-actions">
           <button type="button" class="btn btn-primary" id="quick-view-add-btn" style="flex: 1; justify-content: center; padding: 12px 20px;">
@@ -1401,10 +1416,73 @@ function openQuickView(productId) {
     });
   });
 
-  // Add to cart inside modal
+  // Size Guide Modal Trigger
+  const sizeChartBtn = modal.querySelector('#btn-open-size-chart');
+  if (sizeChartBtn) {
+    sizeChartBtn.addEventListener('click', () => {
+      openSizeGuideModal();
+    });
+  }
+
+  // Add to cart inside modal with selected size
   modal.querySelector('#quick-view-add-btn').addEventListener('click', () => {
-    addToCart(product.id);
+    const activeSizeBtn = modal.querySelector('.size-pill-btn.active');
+    const selectedSize = activeSizeBtn ? activeSizeBtn.getAttribute('data-size') : null;
+    addToCart(product.id, selectedSize);
     modal.classList.remove('open');
+  });
+}
+
+// ============================================
+// SIZE GUIDE MODAL
+// ============================================
+function openSizeGuideModal() {
+  let guideModal = document.getElementById('size-guide-modal-overlay');
+  if (!guideModal) {
+    guideModal = document.createElement('div');
+    guideModal.id = 'size-guide-modal-overlay';
+    guideModal.style.cssText = `
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(26, 18, 8, 0.7); backdrop-filter: blur(6px);
+      z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px;
+    `;
+    document.body.appendChild(guideModal);
+  }
+
+  guideModal.innerHTML = `
+    <div style="background: #FFFDF8; border: 1px solid var(--border-strong); border-radius: 14px; max-width: 500px; width: 100%; padding: 28px; box-shadow: var(--shadow-lg); position: relative; animation: fadeIn 0.3s ease;">
+      <button id="size-guide-close" style="position: absolute; top: 16px; right: 18px; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--dark);">&times;</button>
+      <h3 style="font-family: var(--font-display); font-size: 24px; color: var(--dark); margin-bottom: 4px;">Apparel Size Guide</h3>
+      <p style="font-size: 13px; color: var(--text-light); margin-bottom: 18px;">All measurements in inches (Chest &times; Length). Premium unisex fit.</p>
+      
+      <table style="width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; margin-bottom: 20px;">
+        <thead>
+          <tr style="background: #FAF7F2; border-bottom: 1px solid var(--border);">
+            <th style="padding: 10px 14px;">Size</th>
+            <th style="padding: 10px 14px;">Chest (in)</th>
+            <th style="padding: 10px 14px;">Length (in)</th>
+            <th style="padding: 10px 14px;">Fit Advice</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom: 1px solid #EFE8DE;"><td style="padding: 8px 14px; font-weight: 600;">S</td><td style="padding: 8px 14px;">38"</td><td style="padding: 8px 14px;">27"</td><td style="padding: 8px 14px; color: var(--text-muted);">Standard</td></tr>
+          <tr style="border-bottom: 1px solid #EFE8DE;"><td style="padding: 8px 14px; font-weight: 600;">M</td><td style="padding: 8px 14px;">40"</td><td style="padding: 8px 14px;">28"</td><td style="padding: 8px 14px; color: var(--text-muted);">Regular</td></tr>
+          <tr style="border-bottom: 1px solid #EFE8DE;"><td style="padding: 8px 14px; font-weight: 600;">L</td><td style="padding: 8px 14px;">42"</td><td style="padding: 8px 14px;">29"</td><td style="padding: 8px 14px; color: var(--text-muted);">Comfort</td></tr>
+          <tr style="border-bottom: 1px solid #EFE8DE;"><td style="padding: 8px 14px; font-weight: 600;">XL</td><td style="padding: 8px 14px;">44"</td><td style="padding: 8px 14px;">30"</td><td style="padding: 8px 14px; color: var(--text-muted);">Relaxed</td></tr>
+          <tr><td style="padding: 8px 14px; font-weight: 600;">XXL</td><td style="padding: 8px 14px;">46"</td><td style="padding: 8px 14px;">31"</td><td style="padding: 8px 14px; color: var(--text-muted);">Oversized</td></tr>
+        </tbody>
+      </table>
+
+      <button id="size-guide-ok-btn" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 10px;">Got It</button>
+    </div>
+  `;
+
+  guideModal.style.display = 'flex';
+  const closeBtn = guideModal.querySelector('#size-guide-close');
+  const okBtn = guideModal.querySelector('#size-guide-ok-btn');
+  [closeBtn, okBtn].forEach(b => b.addEventListener('click', () => { guideModal.style.display = 'none'; }));
+  guideModal.addEventListener('click', (e) => {
+    if (e.target === guideModal) guideModal.style.display = 'none';
   });
 }
 
@@ -1569,3 +1647,59 @@ function renderCartDrawer() {
     });
   });
 }
+
+// ============================================
+// PRAYER WALL INTERACTIVE HANDLER
+// ============================================
+document.addEventListener('DOMContentLoaded', () => {
+  const prayerForm = document.getElementById('prayer-form');
+  const feed = document.getElementById('prayer-wall-feed');
+
+  if (prayerForm && feed) {
+    prayerForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const nameInput = document.getElementById('prayer-name');
+      const textInput = document.getElementById('prayer-text');
+      const name = nameInput.value.trim() || 'Anonymous';
+      const text = textInput.value.trim();
+
+      if (!text) return;
+
+      const card = document.createElement('div');
+      card.className = 'prayer-card';
+      card.style.cssText = 'background: #FFFDF8; border: 1px solid var(--gold); border-radius: 12px; padding: 18px 20px; box-shadow: var(--shadow-sm); animation: fadeIn 0.4s ease;';
+      card.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <strong style="color: var(--dark); font-size: 14px;">${name}</strong>
+          <span style="font-size: 11px; color: var(--gold-dark); font-weight: 600;">Just now</span>
+        </div>
+        <p style="font-size: 13.5px; color: var(--text); line-height: 1.5; font-style: italic;">&ldquo;${text}&rdquo;</p>
+        <div style="margin-top: 12px; display: flex; align-items: center; gap: 8px;">
+          <button type="button" class="pray-btn" style="background: rgba(201, 168, 76, 0.12); color: var(--gold-dark); border: 1px solid rgba(201, 168, 76, 0.3); padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; cursor: pointer;">
+            &#128591; Prayed (1)
+          </button>
+        </div>
+      `;
+
+      feed.insertBefore(card, feed.firstChild);
+      prayerForm.reset();
+      showToast('Your prayer intention has been shared with the family. God bless you! 🙏');
+    });
+
+    // Prayer count increment click
+    feed.addEventListener('click', (e) => {
+      const btn = e.target.closest('.pray-btn');
+      if (btn && !btn.classList.contains('prayed')) {
+        btn.classList.add('prayed');
+        btn.style.background = '#2E7D32';
+        btn.style.color = '#FFF';
+        btn.style.borderColor = '#2E7D32';
+        const match = btn.innerText.match(/\d+/);
+        const count = match ? parseInt(match[0]) + 1 : 1;
+        btn.innerHTML = `&#10003; Prayed Together (${count})`;
+        showToast('Amen! Praying together in unity.');
+      }
+    });
+  }
+});
+
