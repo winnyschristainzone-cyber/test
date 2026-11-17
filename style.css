@@ -6126,3 +6126,42 @@ html.is-mobile .product-quick-add {
   box-shadow: 0 6px 22px rgba(201, 168, 76, 0.3);
 }
 
+/* ============================================
+   TAX INVOICE & PRINT RECEIPT OPTIMIZATION
+   ============================================ */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #order-success-modal,
+  #order-success-modal * {
+    visibility: visible;
+  }
+  #order-success-modal {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: auto;
+    background: #FFF !important;
+    padding: 0 !important;
+    display: block !important;
+    opacity: 1 !important;
+  }
+  .order-confirmation-modal {
+    box-shadow: none !important;
+    border: none !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 20px !important;
+  }
+  .order-confirm-actions,
+  #btn-print-receipt,
+  #btn-copy-order-id,
+  .checkout-modal-close {
+    display: none !important;
+  }
+}
+
+
