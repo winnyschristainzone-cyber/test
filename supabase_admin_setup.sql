@@ -81,36 +81,62 @@ BEGIN
 END;
 $$;
 
--- 3. STORE ADMIN PASSKEY STORAGE
--- Stores your private administrative passkey securely
+-- 3. STORE ADMIN PASSKEY & AUTHORIZED EMAIL STORAGE
+-- Stores your private administrative passkey and authorized email securely
 CREATE TABLE IF NOT EXISTS public.admin_config (
   id INT PRIMARY KEY DEFAULT 1,
+  admin_email TEXT NOT NULL DEFAULT 'akshithreddyworld2020@gmail.com',
   admin_passkey TEXT NOT NULL DEFAULT 'WinnyAdmin2026!',
   authorized_phone TEXT NOT NULL DEFAULT '+919281234772',
   CONSTRAINT single_admin_config CHECK (id = 1)
 );
 
+ALTER TABLE public.admin_config ADD COLUMN IF NOT EXISTS admin_email TEXT NOT NULL DEFAULT 'akshithreddyworld2020@gmail.com';
+
 ALTER TABLE public.admin_config ENABLE ROW LEVEL SECURITY;
 REVOKE ALL ON public.admin_config FROM anon, authenticated;
 
-INSERT INTO public.admin_config (id, admin_passkey, authorized_phone)
-VALUES (1, 'WinnyAdmin2026!', '+919281234772')
-ON CONFLICT (id) DO NOTHING;
+INSERT INTO public.admin_config (id, admin_email, admin_passkey, authorized_phone)
+VALUES (1, 'akshithreddyworld2020@gmail.com', 'WinnyAdmin2026!', '+919281234772')
+ON CONFLICT (id) DO UPDATE 
+SET admin_email = EXCLUDED.admin_email,
+    admin_passkey = EXCLUDED.admin_passkey,
+    authorized_phone = EXCLUDED.authorized_phone;
 
 -- 4. ADMIN AUTH VERIFIER RPC
-CREATE OR REPLACE FUNCTION verify_admin_access(p_passkey TEXT)
+CREATE OR REPLACE FUNCTION verify_admin_access(p_passkey TEXT DEFAULT NULL, p_email TEXT DEFAULT NULL)
 RETURNS JSONB
 LANGUAGE plpgsql
 SECURITY DEFINER
 AS $$
 DECLARE
   v_real_passkey TEXT;
+  v_real_email TEXT;
+  v_authorized BOOLEAN := FALSE;
 BEGIN
-  SELECT admin_passkey INTO v_real_passkey FROM admin_config WHERE id = 1;
-  IF p_passkey = v_real_passkey THEN
-    RETURN jsonb_build_object('authorized', true, 'role', 'admin');
+  SELECT admin_passkey, admin_email INTO v_real_passkey, v_real_email FROM admin_config WHERE id = 1;
+
+  -- Check authenticated Supabase user email or passed email parameter
+  IF p_email IS NOT NULL AND LOWER(TRIM(p_email)) = LOWER(TRIM(v_real_email)) THEN
+    v_authorized := TRUE;
+  END IF;
+
+  -- Fallback passkey verification
+  IF p_passkey IS NOT NULL AND p_passkey = v_real_passkey THEN
+    v_authorized := TRUE;
+  END IF;
+
+  IF v_authorized THEN
+    RETURN jsonb_build_object(
+      'authorized', true, 
+      'role', 'admin', 
+      'admin_email', v_real_email
+    );
   ELSE
-    RETURN jsonb_build_object('authorized', false, 'error', 'Invalid credentials');
+    RETURN jsonb_build_object(
+      'authorized', false, 
+      'error', 'Unauthorized: Only akshithreddyworld2020@gmail.com is authorized.'
+    );
   END IF;
 END;
 $$;
