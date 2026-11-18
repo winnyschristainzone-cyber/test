@@ -823,6 +823,16 @@ function closeAuthModal() {
 }
 
 function updateAuthUI() {
+  const AUTHORIZED_ADMIN_EMAIL = 'akshithreddyworld2020@gmail.com'.toLowerCase();
+  const userEmail = (currentUser?.email || '').trim().toLowerCase();
+  const isAdmin = userEmail === AUTHORIZED_ADMIN_EMAIL;
+
+  // Show/Hide footer admin portal link strictly for authorized admin
+  const footerAdminLink = document.getElementById('footer-admin-link');
+  if (footerAdminLink) {
+    footerAdminLink.style.display = isAdmin ? 'inline-block' : 'none';
+  }
+
   const accountBtns = document.querySelectorAll('.nav-action[aria-label="Account"], #account-btn');
   accountBtns.forEach(btn => {
     if (currentUser) {
@@ -863,6 +873,9 @@ function showUserAccountMenu(anchorEl) {
     existing.remove();
     return;
   }
+
+  const AUTHORIZED_ADMIN_EMAIL = 'akshithreddyworld2020@gmail.com'.toLowerCase();
+  const isAdmin = (currentUser?.email || '').trim().toLowerCase() === AUTHORIZED_ADMIN_EMAIL;
 
   const meta = currentUser?.user_metadata || {};
   const fullName = meta.full_name || meta.name || (currentUser?.email ? currentUser.email.split('@')[0] : 'Faithful Patron');
@@ -913,6 +926,19 @@ function showUserAccountMenu(anchorEl) {
 
       <!-- Curated Customer Navigation -->
       <div class="wcz-popover-nav">
+        ${isAdmin ? `
+          <a href="admin.html" class="wcz-popover-item" style="background: rgba(201, 168, 76, 0.12); border: 1px solid rgba(201, 168, 76, 0.3); border-radius: 8px; margin-bottom: 6px;">
+            <span class="wcz-item-icon" style="color: var(--gold-dark);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
+            </span>
+            <div class="wcz-item-text">
+              <span class="wcz-item-title" style="color: var(--dark); font-weight: 700;">✦ Store Command Center</span>
+              <span class="wcz-item-sub" style="color: var(--gold-dark);">Manage catalog, orders & stock</span>
+            </div>
+            <svg class="wcz-item-arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+        ` : ''}
+
         <a href="cart.html" class="wcz-popover-item">
           <span class="wcz-item-icon">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
