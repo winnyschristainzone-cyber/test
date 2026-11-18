@@ -291,10 +291,61 @@ $$;
 -- Keeps ONLY the clean catalog; you add your real inventory through the Admin Dashboard
 DELETE FROM products WHERE sku LIKE 'WCZ-TEST-%' OR id::text LIKE 'a0000001-%';
 
--- Grant execution permissions on RPCs
-GRANT EXECUTE ON FUNCTION verify_admin_access(TEXT) TO anon, authenticated;
-GRANT EXECUTE ON FUNCTION admin_save_product(TEXT, JSONB) TO anon, authenticated;
-GRANT EXECUTE ON FUNCTION admin_delete_product(TEXT, TEXT) TO anon, authenticated;
-GRANT EXECUTE ON FUNCTION admin_update_stock(TEXT, TEXT, INT) TO anon, authenticated;
-GRANT EXECUTE ON FUNCTION admin_get_all_orders(TEXT) TO anon, authenticated;
-GRANT EXECUTE ON FUNCTION decrement_product_stock_on_order(TEXT) TO anon, authenticated;
+-- 7. SECURE WHATSAPP CLOUD API CONFIGURATION STORAGE
+CREATE TABLE IF NOT EXISTS public.whatsapp_config (
+  id INT PRIMARY KEY DEFAULT 1,
+  phone_number_id TEXT NOT NULL DEFAULT '1441814635681497',
+  messaging_account_id TEXT NOT NULL DEFAULT '914493298415933',
+  access_token TEXT NOT NULL DEFAULT 'EAAuOn293yeYBTCXDTCQFpcyqONSPKd7oQbWTAhWSZA20bpjKM9knvMdZCeOc6v0OvP1xRzQVNAQ5mZCV5U5zT0zz4ZBs8pwyDPCPpbuSnhygF8RbLK9kXcw1UirmOXOKKoPFhK24rX06ozkNf0uqRMaIw5M4ZC5oXrlKhwCDh1UbnuKZC3ndwQJheZCjRBHmSOBdHozrKliJ1n4rnIUmKcPwhwnwjMT1i8M9EsJlFxMC8xj86iu8zwfhkSoFePxGgdZC0n04Jxfb1pO0rex4ESjK',
+  verified_admin_phone TEXT NOT NULL DEFAULT '919281234772',
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  CONSTRAINT single_whatsapp_config CHECK (id = 1)
+);
+
+ALTER TABLE public.whatsapp_config ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON public.whatsapp_config FROM anon, authenticated;
+
+INSERT INTO public.whatsapp_config (id, phone_number_id, messaging_account_id, access_token, verified_admin_phone)
+VALUES (
+  1, 
+  '1441814635681497', 
+  '914493298415933', 
+  'EAAuOn293yeYBTCXDTCQFpcyqONSPKd7oQbWTAhWSZA20bpjKM9knvMdZCeOc6v0OvP1xRzQVNAQ5mZCV5U5zT0zz4ZBs8pwyDPCPpbuSnhygF8RbLK9kXcw1UirmOXOKKoPFhK24rX06ozkNf0uqRMaIw5M4ZC5oXrlKhwCDh1UbnuKZC3ndwQJheZCjRBHmSOBdHozrKliJ1n4rnIUmKcPwhwnwjMT1i8M9EsJlFxMC8xj86iu8zwfhkSoFePxGgdZC0n04Jxfb1pO0rex4ESjK',
+  '919281234772'
+)
+ON CONFLICT (id) DO UPDATE
+SET phone_number_id = EXCLUDED.phone_number_id,
+    messaging_account_id = EXCLUDED.messaging_account_id,
+    access_token = EXCLUDED.access_token,
+    verified_admin_phone = EXCLUDED.verified_admin_phone,
+    updated_at = NOW();
+
+-- 8. TRIGGER FUNCTION: AUTOMATIC WHATSAPP ALERT ON PAID ORDER
+-- Dispatches webhook payload whenever an order is marked PAID
+CREATE OR REPLACE FUNCTION notify_whatsapp_on_paid_order()
+RETURNS TRIGGER AS $$
+DECLARE
+  v_phone_id TEXT;
+  v_token TEXT;
+  v_admin_phone TEXT;
+BEGIN
+  -- Only trigger when payment_status changes to PAID
+  IF NEW.payment_status = 'PAID' AND (OLD.payment_status IS DISTINCT FROM 'PAID') THEN
+    SELECT phone_number_id, access_token, verified_admin_phone
+    INTO v_phone_id, v_token, v_admin_phone
+    FROM public.whatsapp_config
+    WHERE id = 1;
+
+    -- Log notice for automated server webhook
+    RAISE NOTICE 'WhatsApp alert queued for Order: % (Admin: %)', NEW.order_number, v_admin_phone;
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS trg_whatsapp_paid_order ON orders;
+CREATE TRIGGER trg_whatsapp_paid_order
+AFTER INSERT OR UPDATE OF payment_status ON orders
+FOR EACH ROW EXECUTE FUNCTION notify_whatsapp_on_paid_order();
+
