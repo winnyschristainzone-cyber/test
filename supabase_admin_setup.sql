@@ -180,6 +180,13 @@ BEGIN
         badge = p_product->>'badge',
         updated_at = NOW()
     WHERE id = v_prod_id;
+
+    -- Update or insert primary image if provided
+    IF p_product->>'image_url' IS NOT NULL AND TRIM(p_product->>'image_url') != '' THEN
+      DELETE FROM product_images WHERE product_id = v_prod_id;
+      INSERT INTO product_images (product_id, image_url, alt_text, is_primary)
+      VALUES (v_prod_id, p_product->>'image_url', p_product->>'name', true);
+    END IF;
   ELSE
     -- Insert new product
     INSERT INTO products (
@@ -191,11 +198,21 @@ BEGIN
       v_price,
       v_stock,
       COALESCE(p_product->>'category', 'gifts'),
-      COALESCE(p_product->>'desc', 'Includes easy 3-day returns.'),
+      COALESCE(p_product->>'desc', 'Artisan consecrated faith merchandise.'),
       p_product->>'badge',
       true
     )
     RETURNING id INTO v_prod_id;
+
+    -- Insert primary image into product_images
+    IF p_product->>'image_url' IS NOT NULL AND TRIM(p_product->>'image_url') != '' THEN
+      INSERT INTO product_images (product_id, image_url, alt_text, is_primary)
+      VALUES (v_prod_id, p_product->>'image_url', p_product->>'name', true);
+    ELSE
+      -- Fallback default image
+      INSERT INTO product_images (product_id, image_url, alt_text, is_primary)
+      VALUES (v_prod_id, 'images/category_apparel.jpg', p_product->>'name', true);
+    END IF;
   END IF;
 
   RETURN jsonb_build_object('success', true, 'id', v_prod_id);

@@ -506,6 +506,20 @@
           </div>
         </div>
 
+        <!-- Product Image Input & Live Preview -->
+        <label style="font-size: 12px; font-weight: 600; color: var(--admin-muted);">Product Image URL or Upload</label>
+        <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+          <input type="text" id="prod-image-url" class="admin-input" style="margin-bottom: 0; flex: 1;" placeholder="Enter image URL or choose file &rarr;" />
+          <label class="action-btn-sm" style="display: inline-flex; align-items: center; justify-content: center; cursor: pointer; white-space: nowrap; height: 42px; padding: 0 14px; background: #FAF7F2; border: 1px solid var(--admin-border); border-radius: 8px; font-size: 12.5px; font-weight: 600;">
+            📁 Upload
+            <input type="file" id="prod-image-file" accept="image/*" style="display: none;" />
+          </label>
+        </div>
+        <div id="prod-image-preview-wrap" style="display: none; margin-bottom: 16px; align-items: center; gap: 12px; background: #FAF7F2; padding: 10px; border-radius: 8px; border: 1px dashed var(--admin-border);">
+          <img id="prod-image-preview" src="" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid #DDD;" />
+          <span id="prod-image-filename" style="font-size: 12px; color: var(--admin-muted); word-break: break-all;">Preview</span>
+        </div>
+
         <label style="font-size: 12px; font-weight: 600; color: var(--admin-muted);">Description</label>
         <textarea id="prod-desc" class="admin-input" style="height: 70px; resize: vertical;" placeholder="Scripture reference or artisan details..."></textarea>
 
@@ -776,6 +790,39 @@
         }
       };
 
+      // Image file upload & preview handling
+      const fileInput = document.getElementById('prod-image-file');
+      const urlInput = document.getElementById('prod-image-url');
+      const previewWrap = document.getElementById('prod-image-preview-wrap');
+      const previewImg = document.getElementById('prod-image-preview');
+      const filenameTxt = document.getElementById('prod-image-filename');
+
+      urlInput.addEventListener('input', () => {
+        const val = urlInput.value.trim();
+        if (val) {
+          previewImg.src = val;
+          filenameTxt.textContent = val;
+          previewWrap.style.display = 'flex';
+        } else {
+          previewWrap.style.display = 'none';
+        }
+      });
+
+      fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (re) => {
+          const base64Data = re.target.result;
+          urlInput.value = base64Data;
+          previewImg.src = base64Data;
+          filenameTxt.textContent = `${file.name} (${Math.round(file.size / 1024)} KB)`;
+          previewWrap.style.display = 'flex';
+        };
+        reader.readAsDataURL(file);
+      });
+
       // Edit product modal
       window.editProduct = function (id) {
         const prod = cachedProducts.find(p => p.id === id);
@@ -788,6 +835,17 @@
         document.getElementById('prod-category').value = prod.category_slug || 'gifts';
         document.getElementById('prod-badge').value = prod.badge || '';
         document.getElementById('prod-desc').value = prod.description || '';
+
+        const primaryImg = prod.image_url || prod.product_images?.[0]?.image_url || '';
+        urlInput.value = primaryImg;
+        if (primaryImg) {
+          previewImg.src = primaryImg;
+          filenameTxt.textContent = primaryImg;
+          previewWrap.style.display = 'flex';
+        } else {
+          previewWrap.style.display = 'none';
+        }
+
         document.getElementById('product-modal').classList.add('open');
       };
 
@@ -797,6 +855,8 @@
         document.getElementById('product-form').reset();
         document.getElementById('prod-id').value = '';
         document.getElementById('prod-stock').value = 10;
+        urlInput.value = '';
+        previewWrap.style.display = 'none';
         document.getElementById('product-modal').classList.add('open');
       });
 
@@ -814,6 +874,7 @@
         const category = document.getElementById('prod-category').value;
         const badge = document.getElementById('prod-badge').value.trim();
         const desc = document.getElementById('prod-desc').value.trim();
+        const imageUrl = urlInput.value.trim();
         const submitBtn = document.getElementById('btn-save-product-submit');
 
         submitBtn.textContent = 'Saving...';
@@ -827,7 +888,8 @@
               stock_quantity: stock,
               category,
               badge,
-              desc
+              desc,
+              image_url: imageUrl
             }
           });
           if (error) throw error;
