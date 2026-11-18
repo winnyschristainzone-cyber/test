@@ -23,6 +23,23 @@ if (!localStorage.getItem('wcz_supabase_anon_key')) {
 let supabaseClient = null;
 let currentUser = null;
 
+// Helper to reliably get logged in user across Supabase, Google OAuth, or local session
+function getActiveCustomerUser() {
+  if (currentUser && currentUser.email) return currentUser;
+  try {
+    const saved = localStorage.getItem('wcz_local_user');
+    if (saved) {
+      const u = JSON.parse(saved);
+      if (u && u.email) return u;
+    }
+  } catch (e) {}
+  const adminEmail = sessionStorage.getItem('wcz_admin_email');
+  if (adminEmail) {
+    return { email: adminEmail, user_metadata: { full_name: adminEmail.split('@')[0] } };
+  }
+  return null;
+}
+
 // Initialize Supabase Client if credentials exist
 function initSupabaseClient() {
   if (typeof window.supabase !== 'undefined' && WCZ_SUPABASE_CONFIG.url && WCZ_SUPABASE_CONFIG.anonKey) {

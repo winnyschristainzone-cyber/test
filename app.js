@@ -649,6 +649,20 @@ function initCart() {
           showToast('Your cart is empty');
           return;
         }
+
+        // REQUIRE LOGIN TO MAKE A PURCHASE
+        const loggedUser = typeof getActiveCustomerUser === 'function' ? getActiveCustomerUser() : null;
+        if (!loggedUser || !loggedUser.email) {
+          showToast('✝️ Please sign in to your account to complete your purchase.');
+          if (typeof openAuthModal === 'function') {
+            openAuthModal();
+          }
+          return;
+        }
+
+        // PREFILL SAVED ADDRESS / CUSTOMER DETAILS IF AVAILABLE
+        prefillSavedCustomerDetails(loggedUser);
+
         checkoutModal.classList.add('open');
       });
     }
@@ -732,6 +746,9 @@ function initCart() {
           phone: customerPhone,
           email: customerEmail,
           address: `${customerAddress}, ${customerCity} - ${customerPincode}`,
+          addressLine: customerAddress,
+          city: customerCity,
+          pincode: customerPincode,
           paymentMethod: 'Razorpay Secure Online',
           isGift: isGift,
           giftRecipientName: giftRecipientName,
@@ -740,6 +757,16 @@ function initCart() {
           items: [...cart],
           date: orderDate
         };
+
+        // SAVE ADDRESS DETAILS FOR FUTURE PURCHASES
+        saveCustomerAddressDetails({
+          name: customerName,
+          phone: customerPhone,
+          email: customerEmail,
+          address: customerAddress,
+          city: customerCity,
+          pincode: customerPincode
+        });
 
         if (window.WCZ_DEBUG) {
           window.WCZ_DEBUG.log('CHECKOUT', 'Submitting order form', orderDetails);
@@ -1909,26 +1936,72 @@ function initLiveSocialProof() {
 }
 
 // ============================================
-// PINCODE DELIVERY CHECKER
+// CUSTOMER ADDRESS PERSISTENCE & AUTO-PREFILL
 // ============================================
-function checkDeliveryPincode(pincodeInputId, resultElId) {
-  const input = document.getElementById(pincodeInputId);
-  const result = document.getElementById(resultElId);
-  if (!input || !result) return;
-
-  const pin = input.value.trim().replace(/\D/g, '');
-  if (pin.length !== 6) {
-    result.style.color = '#C62828';
-    result.innerHTML = '⚠️ Please enter a valid 6-digit Indian Pincode.';
-    return;
-  }
-
-  result.style.color = '#2E7D32';
-  result.innerHTML = `
-    <strong>✓ Express Delivery Available to ${pin}</strong><br>
-    <span style="color:#555; font-size:11.5px;">Estimated delivery in <strong>3–5 business days</strong> via Bluedart / Delhivery / India Post.</span>
-  `;
+function getSavedAddressKey(userEmail) {
+  const clean = (userEmail || '').trim().toLowerCase();
+  return clean ? `wcz_saved_address_${clean}` : 'wcz_saved_address_guest';
 }
+
+function saveCustomerAddressDetails(details) {
+  try {
+    const loggedUser = typeof getActiveCustomerUser === 'function' ? getActiveCustomerUser() : null;
+    const userEmail = loggedUser?.email || details.email;
+    if (!userEmail) return;
+
+    const storageKey = getSavedAddressKey(userEmail);
+    localStorage.setItem(storageKey, JSON.stringify({
+      name: details.name,
+      phone: details.phone,
+      email: details.email,
+      address: details.address,
+      city: details.city,
+      pincode: details.pincode,
+      savedAt: new Date().toISOString()
+    }));
+  } catch(e) {}
+}
+
+function prefillSavedCustomerDetails(loggedUser) {
+  if (!loggedUser || !loggedUser.email) return;
+  const storageKey = getSavedAddressKey(loggedUser.email);
+  try {
+    const raw = localStorage.getItem(storageKey);
+    const saved = raw ? JSON.parse(raw) : null;
+
+    const nameInput = document.getElementById('checkout-name');
+    const emailInput = document.getElementById('checkout-email');
+    const phoneInput = document.getElementById('checkout-phone');
+    const addressInput = document.getElementById('checkout-address');
+    const cityInput = document.getElementById('checkout-city');
+    const pinInput = document.getElementById('checkout-pincode');
+
+    // Default email from login
+    if (emailInput && !emailInput.value) {
+      emailInput.value = loggedUser.email;
+    }
+    // Default name from login metadata
+    if (nameInput && !nameInput.value) {
+      const metaName = loggedUser.user_metadata?.full_name || loggedUser.user_metadata?.name || '';
+      if (metaName) nameInput.value = metaName;
+    }
+
+    // If customer has a previous order address saved, prefill everything!
+    if (saved) {
+      if (nameInput && saved.name) nameInput.value = saved.name;
+      if (emailInput && saved.email) emailInput.value = saved.email;
+      if (phoneInput && saved.phone) phoneInput.value = saved.phone;
+      if (addressInput && saved.address) addressInput.value = saved.address;
+      if (cityInput && saved.city) cityInput.value = saved.city;
+      if (pinInput && saved.pincode) pinInput.value = saved.pincode;
+
+      if (typeof showToast === 'function') {
+        showToast('✓ Welcome back! Your saved delivery address has been loaded.');
+      }
+    }
+  } catch(e) {}
+}
+
 
 
 
