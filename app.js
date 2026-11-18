@@ -898,7 +898,7 @@ function displayOrderConfirmation(order) {
   if (buyerWaBtn) {
     const cleanBuyerPhone = (order.phone || '').replace(/\D/g, '');
     const buyerMsg = `✝️ *Winny's Christian Zone — Order Receipt*\n\nThank you for your blessed order, *${order.name}*!\n\n*Order Ref:* #${order.orderNumber}\n*Total Paid:* ${formatPrice(order.amount)}\n*Payment Mode:* ${order.paymentMethod}\n*Delivery Address:* ${order.address}\n\nWe are preparing your package prayerfully. Expected delivery in 3–5 business days. God bless you!`;
-    const targetWa = cleanBuyerPhone ? '91' + cleanBuyerPhone : (typeof WCZ_WHATSAPP_NUMBER !== 'undefined' ? WCZ_WHATSAPP_NUMBER : '919876543210');
+    const targetWa = cleanBuyerPhone ? '91' + cleanBuyerPhone : (typeof WCZ_WHATSAPP_NUMBER !== 'undefined' ? WCZ_WHATSAPP_NUMBER : '919281234772');
     buyerWaBtn.href = `https://wa.me/${targetWa}?text=${encodeURIComponent(buyerMsg)}`;
     buyerWaBtn.onclick = (e) => {
       window.open(buyerWaBtn.href, '_blank');

@@ -290,7 +290,7 @@ async function syncCartWithSupabase() {
 // ------------------------------------------------------------------------------
 // WHATSAPP INTEGRATION (PAYMENT RECEIPTS, DELIVERY INFO & ADMIN NOTIFICATIONS)
 // ------------------------------------------------------------------------------
-const WCZ_WHATSAPP_NUMBER = '919876543210'; // Store support / admin WhatsApp number
+const WCZ_WHATSAPP_NUMBER = '919281234772'; // Winny's Christian Zone verified admin & support phone
 
 /**
  * Send Payment Confirmation Receipt via WhatsApp
@@ -305,7 +305,7 @@ function sendWhatsAppPaymentReceipt(orderDetails) {
   message += `*Return Guarantee:* 3-Day Return Policy on all items\n\n`;
   message += `We are preparing your package prayerfully. You will receive delivery dispatch details shortly. God bless you!`;
 
-  const encoded = encodeURI(message);
+  const encoded = encodeURIComponent(message);
   const targetPhone = (orderDetails.phone || WCZ_WHATSAPP_NUMBER).replace(/\D/g, '');
   const url = `https://wa.me/${targetPhone}?text=${encoded}`;
   window.open(url, '_blank');
@@ -324,7 +324,7 @@ function sendWhatsAppDeliveryUpdate(orderDetails, trackingNumber, courierName) {
   message += `*Return Guarantee:* 3-Day Easy Return Policy active upon receipt\n\n`;
   message += `Thank you for choosing Winny's Christian Zone. May God bless and keep you!`;
 
-  const encoded = encodeURI(message);
+  const encoded = encodeURIComponent(message);
   const targetPhone = (orderDetails.phone || WCZ_WHATSAPP_NUMBER).replace(/\D/g, '');
   const url = `https://wa.me/${targetPhone}?text=${encoded}`;
   window.open(url, '_blank');
@@ -349,7 +349,7 @@ function sendWhatsAppAdminAlert(orderDetails) {
   }
   message += `\nAction: Please verify stock and print shipping label.`;
 
-  const encoded = encodeURI(message);
+  const encoded = encodeURIComponent(message);
   const url = `https://wa.me/${WCZ_WHATSAPP_NUMBER}?text=${encoded}`;
   window.open(url, '_blank');
 }

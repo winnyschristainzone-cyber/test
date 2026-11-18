@@ -450,6 +450,7 @@
                 <th>Payment</th>
                 <th>Delivery Address</th>
                 <th>Date</th>
+                <th style="text-align: right;">WhatsApp Actions</th>
               </tr>
             </thead>
             <tbody id="admin-orders-table-body">
@@ -868,6 +869,9 @@
 
             const dateStr = o.created_at ? new Date(o.created_at).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }) : 'N/A';
             const addr = o.shipping_address?.address || 'N/A';
+            const cleanPhone = (o.customer_phone || '').replace(/\D/g, '');
+            const phoneParam = cleanPhone.length === 10 ? '91' + cleanPhone : cleanPhone;
+            const waDispatchMsg = encodeURIComponent(`✝️ *Winny's Christian Zone — Order Update*\n\nHello *${o.customer_name || 'Valued Patron'}*!\n\nYour order *#${o.order_number || ''}* (₹${o.total_amount}) is being prepared with prayer and love.\n\nTrack your order anytime here:\nhttps://winnyschristainzone-cyber.github.io/test/track.html?order=${o.order_number || ''}\n\nGod bless you!`);
 
             return `
               <tr>
@@ -881,11 +885,18 @@
                 <td>${payBadge}</td>
                 <td style="max-width:240px; font-size:12px; color:#555;">${addr}</td>
                 <td style="font-size:12px; color:var(--admin-muted);">${dateStr}</td>
+                <td style="text-align: right;">
+                  ${phoneParam ? `
+                    <a href="https://wa.me/${phoneParam}?text=${waDispatchMsg}" target="_blank" class="action-btn-sm" style="display:inline-flex; align-items:center; gap:4px; text-decoration:none; background:#25D366; color:#FFF; font-weight:600; font-size:11.5px; border-radius:6px; padding:6px 10px;">
+                      💬 WhatsApp
+                    </a>
+                  ` : `<span style="font-size:11px; color:var(--admin-muted);">No phone</span>`}
+                </td>
               </tr>
             `;
           }).join('');
         } catch (e) {
-          tbody.innerHTML = `<tr><td colspan="7" style="color:red; text-align:center;">Failed to load orders: ${e.message}</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="8" style="color:red; text-align:center;">Failed to load orders: ${e.message}</td></tr>`;
         }
       }
 
