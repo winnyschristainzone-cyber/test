@@ -249,8 +249,8 @@ async function fetchProductsFromDatabase() {
         rating: Math.round(item.rating) || 5,
         reviewCount: item.review_count || 0,
         image: primaryImg,
-        desc: item.description || 'Includes easy 3-day returns.',
-        returnPolicy: item.return_policy || '3-Day Returns',
+        desc: item.description || 'Artisan consecrated faith merchandise.',
+        returnPolicy: 'All Sales Final',
         liked: false
       };
     });
@@ -302,7 +302,7 @@ function sendWhatsAppPaymentReceipt(orderDetails) {
   message += `*Customer:* ${orderDetails.name || 'Valued Customer'}\n`;
   message += `*Amount Paid:* ₹${(orderDetails.amount || 0).toLocaleString('en-IN')}\n`;
   message += `*Payment Mode:* Razorpay Online Verified\n`;
-  message += `*Return Guarantee:* 3-Day Return Policy on all items\n\n`;
+  message += `*Quality Assurance:* 100% Quality Inspected • All Sales Final\n\n`;
   message += `We are preparing your package prayerfully. You will receive delivery dispatch details shortly. God bless you!`;
 
   const encoded = encodeURIComponent(message);
@@ -320,8 +320,7 @@ function sendWhatsAppDeliveryUpdate(orderDetails, trackingNumber, courierName) {
   message += `*Order Ref:* #${orderDetails.orderNumber || 'WCZ-10042'}\n`;
   message += `*Courier:* ${courierName || 'BlueDart Express'}\n`;
   message += `*Tracking AWB:* ${trackingNumber || 'BD-WCZ-' + Date.now().toString().slice(-6)}\n`;
-  message += `*Estimated Delivery:* 2 - 4 Business Days\n`;
-  message += `*Return Guarantee:* 3-Day Easy Return Policy active upon receipt\n\n`;
+  message += `*Estimated Delivery:* 2 - 4 Business Days\n\n`;
   message += `Thank you for choosing Winny's Christian Zone. May God bless and keep you!`;
 
   const encoded = encodeURIComponent(message);
@@ -460,7 +459,7 @@ async function createOrderAndOpenRazorpay(orderDetails) {
       contact: orderDetails.phone || ''
     },
     notes: {
-      return_policy: '3-Day Returns Guarantee',
+      fulfillment: 'All Sales Final',
       order_number: orderDetails.orderNumber || ''
     },
     theme: {
@@ -903,7 +902,7 @@ function showUserAccountMenu(anchorEl) {
       <div class="wcz-popover-assurance">
         <div class="wcz-assurance-item">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          <span>3-Day Returns Guarantee</span>
+          <span>Quality Checked</span>
         </div>
         <div class="wcz-assurance-sep">&bull;</div>
         <div class="wcz-assurance-item">

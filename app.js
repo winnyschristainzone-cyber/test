@@ -425,9 +425,8 @@ function renderProducts(tab) {
         </div>
         <div class="product-price-row">
           <span class="product-price">${formatPrice(product.price)}</span>
-          <span class="product-return-badge" title="3-Day Return Policy">
-            <svg class="return-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>
-            3-Day Returns
+          <span class="product-return-badge" style="background:rgba(201,168,76,0.1); border-color:rgba(201,168,76,0.25); color:var(--gold-dark); font-size:10px;">
+            &#10003; Inspected
           </span>
         </div>
       </div>
@@ -1082,7 +1081,7 @@ function renderCartPage(subtotal, totalQty) {
         <img src="${item.image}" alt="${item.name}" class="cart-product-img" />
         <div class="cart-product-details">
           <a href="collections.html" class="cart-product-title">${item.name}</a>
-          <span class="cart-product-cat">${getCategoryLabel(item.category)} &bull; <span class="cart-return-pill"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="vertical-align:-1px;margin-right:3px;" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>3-Day Returns</span></span>
+          <span class="cart-product-cat">${getCategoryLabel(item.category)}</span>
         </div>
       </div>
       <div class="cart-unit-price">${formatPrice(item.price)}</div>
@@ -1359,9 +1358,8 @@ function openQuickView(productId) {
         
         <div class="quick-view-price-row">
           <span class="quick-view-price">${formatPrice(product.price)}</span>
-          <span class="product-return-badge" style="font-size: 11px;">
-            <svg class="return-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width: 12px; height: 12px; vertical-align: -1px; margin-right: 3px;"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>
-            3-Day Returns
+          <span class="product-return-badge" style="font-size: 11px; color: var(--gold-dark); background: rgba(201, 168, 76, 0.1); border-color: rgba(201, 168, 76, 0.3);">
+            &#10003; Inspected &bull; All Sales Final
           </span>
         </div>
 
