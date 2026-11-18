@@ -301,6 +301,17 @@
           <ul id="itemsUl" style="font-size: 13px; color: var(--text-light); padding-left: 18px; list-style: disc;"></ul>
         </div>
       </div>
+
+      <!-- Recent Orders List for Logged-In User -->
+      <div id="userOrdersSection" style="margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--border); display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+          <h3 style="font-family: var(--font-display); font-size: 20px; color: var(--dark); margin: 0;">Your Recent Orders</h3>
+          <span style="font-size: 12px; color: var(--text-muted);" id="userOrdersCount"></span>
+        </div>
+        <div id="userOrdersList" style="display: flex; flex-direction: column; gap: 10px;">
+          <!-- Injected via JS -->
+        </div>
+      </div>
     </div>
   </main>
 
@@ -421,7 +432,7 @@
       document.getElementById('trackResult').style.display = 'block';
     }
 
-    // Check URL query param ?order=WCZ-1001
+    // Check URL query param ?order=WCZ-1001 and load user's order history
     window.addEventListener('DOMContentLoaded', () => {
       const urlParams = new URLSearchParams(window.location.search);
       const oParam = urlParams.get('order');
@@ -429,7 +440,88 @@
         document.getElementById('trackInput').value = oParam;
         lookupOrder();
       }
+
+      loadLoggedInUserOrders();
     });
+
+    async function loadLoggedInUserOrders() {
+      try {
+        const client = window.wczSupabaseClient;
+        let userEmail = '';
+
+        // 1. Check active Supabase auth session
+        if (client) {
+          const { data: { session } } = await client.auth.getSession();
+          if (session?.user?.email) {
+            userEmail = session.user.email;
+          }
+        }
+
+        // 2. Check localStorage fallback
+        if (!userEmail) {
+          try {
+            const localUser = JSON.parse(localStorage.getItem('wcz_local_user') || '{}');
+            userEmail = localUser.email || '';
+          } catch (e) {}
+        }
+
+        if (!userEmail || !client) return;
+
+        // Fetch user's orders
+        const { data: orders, error } = await client
+          .from('orders')
+          .select('id, order_number, total_amount, payment_status, order_status, created_at, order_items(*)')
+          .ilike('customer_email', userEmail.trim())
+          .order('created_at', { ascending: false })
+          .limit(8);
+
+        if (error || !orders || orders.length === 0) return;
+
+        const sec = document.getElementById('userOrdersSection');
+        const listEl = document.getElementById('userOrdersList');
+        const countEl = document.getElementById('userOrdersCount');
+
+        countEl.textContent = `(${orders.length} orders found for ${userEmail})`;
+        sec.style.display = 'block';
+
+        listEl.innerHTML = orders.map(o => {
+          const orderNum = o.order_number || ('WCZ-' + o.id.slice(0, 6).toUpperCase());
+          const dateStr = new Date(o.created_at).toLocaleDateString('en-IN', {
+            month: 'short', day: 'numeric', year: 'numeric'
+          });
+          const status = (o.order_status || 'Confirmed').toUpperCase();
+          const itemsText = o.order_items && o.order_items.length > 0 
+            ? o.order_items.map(it => it.product_name).join(', ')
+            : 'Faith Item';
+
+          return `
+            <div style="background: #FAF7F2; border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; gap: 12px; transition: all 0.2s;">
+              <div style="flex: 1;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                  <strong style="color: var(--dark); font-size: 14px;">#${orderNum}</strong>
+                  <span style="font-size: 10px; background: rgba(46,125,50,0.12); color: #2E7D32; padding: 2px 7px; border-radius: 999px; font-weight: 700;">${status}</span>
+                  <span style="font-size: 11.5px; color: var(--text-muted);">&bull; ${dateStr}</span>
+                </div>
+                <div style="font-size: 12.5px; color: var(--text-light); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 380px;">
+                  ${itemsText} &bull; <strong>₹${Number(o.total_amount || 0).toLocaleString('en-IN')}</strong>
+                </div>
+              </div>
+              <button type="button" onclick="trackSpecificOrder('${orderNum}')" class="btn btn-primary" style="padding: 7px 14px; font-size: 12px; white-space: nowrap; border-radius: 6px;">
+                Track Package &rarr;
+              </button>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        console.warn('Could not load user order history:', err);
+      }
+    }
+
+    function trackSpecificOrder(orderNum) {
+      document.getElementById('trackInput').value = orderNum;
+      lookupOrder();
+      window.scrollTo({ top: 100, behavior: 'smooth' });
+    }
   </script>
 </body>
 </html>
