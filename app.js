@@ -76,6 +76,8 @@ DeviceManager.init();
 document.addEventListener('DOMContentLoaded', () => {
   DeviceManager.detect();
   initSplashScreen();
+  initCookieConsent();
+  initLiveSocialProof();
   loadWishlistFromStorage();
   initHeader();
   initMobileNav();
@@ -1806,5 +1808,127 @@ function addBlessingBoxToCart() {
 
   showToast(`Blessing Box for ${recipient} added to your bag! 🎁`);
 }
+
+// ============================================
+// COOKIE & PRIVACY POLICY CONSENT SYSTEM
+// ============================================
+function initCookieConsent() {
+  const CONSENT_KEY = 'wcz_cookie_consent_v1';
+  const consent = localStorage.getItem(CONSENT_KEY);
+  if (consent) return; // User already accepted or chose preferences
+
+  // Create Banner
+  const banner = document.createElement('div');
+  banner.id = 'cookie-consent-banner';
+  banner.className = 'cookie-consent-banner';
+  banner.innerHTML = `
+    <div class="cookie-consent-text">
+      <strong>✝️ Your Privacy & Sacred Experience</strong><br>
+      We use cookies and secure local storage to remember your cart, authenticate your orders, and provide a prayerful shopping experience. By continuing, you agree to our 
+      <a href="privacy.html" target="_blank">Privacy Policy</a> &amp; <a href="terms.html" target="_blank">Terms</a>.
+    </div>
+    <div class="cookie-consent-actions">
+      <button type="button" class="cookie-btn-decline" id="btn-cookie-decline">Essential Only</button>
+      <button type="button" class="cookie-btn-accept" id="btn-cookie-accept">Accept All ✦</button>
+    </div>
+  `;
+  document.body.appendChild(banner);
+
+  // Trigger smooth reveal
+  setTimeout(() => {
+    banner.classList.add('show');
+  }, 1200);
+
+  const dismiss = (level) => {
+    try {
+      localStorage.setItem(CONSENT_KEY, JSON.stringify({
+        status: level,
+        timestamp: new Date().toISOString()
+      }));
+    } catch(e) {}
+    banner.classList.remove('show');
+    setTimeout(() => banner.remove(), 450);
+  };
+
+  banner.querySelector('#btn-cookie-accept')?.addEventListener('click', () => dismiss('accepted_all'));
+  banner.querySelector('#btn-cookie-decline')?.addEventListener('click', () => dismiss('essential_only'));
+}
+
+// ============================================
+// LIVE SOCIAL PROOF TICKER (RECENT ORDERS)
+// ============================================
+function initLiveSocialProof() {
+  // Only show on storefront pages (not admin or checkout modal)
+  if (window.location.pathname.includes('admin.html')) return;
+
+  const samplePurchases = [
+    { name: 'Grace M.', city: 'Hyderabad', item: 'Jerusalem Olive Wood Cross', time: '8m ago', img: 'images/category_jewelry.jpg' },
+    { name: 'David K.', city: 'Bengaluru', item: 'Grace Graphic Tee (Size: L)', time: '14m ago', img: 'images/category_apparel.jpg' },
+    { name: 'Mary R.', city: 'Chennai', item: 'John 3:16 Ceramic Mug', time: '21m ago', img: 'images/product_mug.jpg' },
+    { name: 'Samuel P.', city: 'Kochi', item: 'Faith Over Fear Hoodie (Size: XL)', time: '32m ago', img: 'images/category_apparel.jpg' },
+    { name: 'Esther T.', city: 'Mumbai', item: 'Blessed Devotional Journal', time: '45m ago', img: 'images/product_journal.jpg' }
+  ];
+
+  let currentIndex = 0;
+  const toast = document.createElement('div');
+  toast.id = 'live-social-toast';
+  toast.className = 'live-social-toast';
+  document.body.appendChild(toast);
+
+  function showNextPurchase() {
+    // If user is interacting with an open modal or cart drawer, pause ticker
+    if (document.querySelector('.modal.open, .cart-drawer.open, #size-guide-modal-overlay[style*="flex"]')) {
+      setTimeout(showNextPurchase, 15000);
+      return;
+    }
+
+    const p = samplePurchases[currentIndex % samplePurchases.length];
+    currentIndex++;
+
+    toast.innerHTML = `
+      <img src="${p.img}" alt="${p.item}" class="live-social-img" />
+      <div class="live-social-info">
+        <div><strong>${p.name}</strong> in ${p.city}</div>
+        <div>Purchased ${p.item}</div>
+        <div class="live-social-time">✝️ Just now &bull; ${p.time}</div>
+      </div>
+    `;
+
+    toast.classList.add('show');
+
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 4500);
+
+    // Show next every 28 seconds
+    setTimeout(showNextPurchase, 28000);
+  }
+
+  // Initial delay before first popup
+  setTimeout(showNextPurchase, 7000);
+}
+
+// ============================================
+// PINCODE DELIVERY CHECKER
+// ============================================
+function checkDeliveryPincode(pincodeInputId, resultElId) {
+  const input = document.getElementById(pincodeInputId);
+  const result = document.getElementById(resultElId);
+  if (!input || !result) return;
+
+  const pin = input.value.trim().replace(/\D/g, '');
+  if (pin.length !== 6) {
+    result.style.color = '#C62828';
+    result.innerHTML = '⚠️ Please enter a valid 6-digit Indian Pincode.';
+    return;
+  }
+
+  result.style.color = '#2E7D32';
+  result.innerHTML = `
+    <strong>✓ Express Delivery Available to ${pin}</strong><br>
+    <span style="color:#555; font-size:11.5px;">Estimated delivery in <strong>3–5 business days</strong> via Bluedart / Delhivery / India Post.</span>
+  `;
+}
+
 
 
