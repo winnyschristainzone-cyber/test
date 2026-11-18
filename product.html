@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Winny's Christian Zone — Premium faith-inspired Christian merchandise." />
+  <title id="pdp-meta-title">Product Details | Winny's Christian Zone</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=Sacramento&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=4.0" />
+  <style>
+    .pdp-section {
+      padding: 120px 0 80px;
+      background: var(--cream);
+      min-height: 80vh;
+    }
+    .pdp-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 50px;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .pdp-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+      .pdp-section {
+        padding-top: 90px;
+      }
+    }
+
+    /* Gallery styles with zoom */
+    .pdp-gallery-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .pdp-main-image-box {
+      background: #FFFDF8;
+      border: 1px solid var(--border-strong);
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      cursor: crosshair;
+      box-shadow: var(--shadow-md);
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pdp-main-image-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.25s ease-out;
+      transform-origin: center center;
+    }
+    .pdp-thumbnails {
+      display: flex;
+      gap: 12px;
+    }
+    .pdp-thumb {
+      width: 72px;
+      height: 72px;
+      border-radius: 8px;
+      border: 2px solid var(--border);
+      overflow: hidden;
+      cursor: pointer;
+      background: #FFF;
+      transition: all 0.2s;
+    }
+    .pdp-thumb.active {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px rgba(201, 168, 76, 0.3);
+    }
+    .pdp-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Details */
+    .pdp-content-box {
+      background: #FFFDF8;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px 32px;
+      box-shadow: var(--shadow-sm);
+    }
+    .pdp-category {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .pdp-title {
+      font-family: var(--font-display);
+      font-size: 34px;
+      color: var(--dark);
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+    .pdp-rating-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .pdp-stars {
+      color: #D4AF37;
+      font-size: 15px;
+    }
+    .pdp-price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #EFE8DE;
+    }
+    .pdp-price {
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--dark);
+      font-family: var(--font-display);
+    }
+
+    .pdp-scripture-highlight {
+      background: rgba(201, 168, 76, 0.08);
+      border-left: 3px solid var(--gold);
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 24px;
+    }
+    .pdp-scripture-quote {
+      font-style: italic;
+      color: var(--dark);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 4px;
+    }
+    .pdp-scripture-ref {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gold-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .pdp-desc {
+      font-size: 15px;
+      color: var(--text);
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+
+    /* Actions */
+    .pdp-actions-row {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .pdp-qty-stepper {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--border-strong);
+      border-radius: 8px;
+      background: #FAF7F2;
+    }
+    .pdp-qty-btn {
+      padding: 12px 16px;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--dark);
+      cursor: pointer;
+    }
+    .pdp-qty-val {
+      padding: 0 10px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .pdp-perks-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      border-top: 1px solid #EFE8DE;
+      padding-top: 20px;
+      font-size: 13px;
+      color: var(--text-light);
+    }
+    .pdp-perk-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Frequently Bought Together */
+    .fbt-section {
+      margin-top: 60px;
+      background: #FFFDF8;
+      border: 1px solid var(--border-strong);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: var(--shadow-sm);
+    }
+    .fbt-title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      color: var(--dark);
+      margin-bottom: 18px;
+    }
+    .fbt-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    .fbt-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+      background: #FAF7F2;
+    }
+    .fbt-card img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Announcement Bar -->
+  <div class="announcement-bar">
+    <div class="announcement-content">
+      <span>Free Shipping Across India On Bulk Orders <span class="announcement-icon">&#10022;</span></span>
+      <span>Handcrafted With Prayer &amp; Purpose <span class="announcement-icon">&#10022;</span></span>
+      <span>3-Day Easy Returns <span class="announcement-icon">&#10022;</span></span>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="header scrolled" id="header" style="position: sticky; top: 0; background: rgba(250, 247, 242, 0.95); backdrop-filter: blur(10px); z-index: 100; border-bottom: 1px solid var(--border);">
+    <div class="header-inner container" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0;">
+      <a href="index.html" class="logo" style="text-decoration: none;">
+        <span class="logo-script" style="font-family: var(--font-script); font-size: 30px; color: var(--gold);">Winny's</span>
+        <span class="logo-sub" style="font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; display: block; color: var(--dark);">Christian Zone</span>
+      </a>
+
+      <div style="display: flex; align-items: center; gap: 20px;">
+        <a href="collections.html" style="font-size: 14px; font-weight: 500; color: var(--dark); text-decoration: none;">&larr; Back to Catalog</a>
+        <a href="cart.html" class="icon-btn cart-btn" aria-label="Cart" style="display: flex; align-items: center; gap: 6px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span class="cart-count" id="cart-count">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="pdp-section">
+    <div class="container">
+
+      <!-- Breadcrumbs -->
+      <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px; display: flex; gap: 8px; align-items: center;">
+        <a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &rsaquo;
+        <a href="collections.html" style="color: inherit; text-decoration: none;" id="pdp-breadcrumb-cat">Catalog</a> &rsaquo;
+        <span style="color: var(--dark); font-weight: 500;" id="pdp-breadcrumb-title">Product Details</span>
+      </div>
+
+      <div class="pdp-grid">
+        <!-- Left: Image Gallery & Zoom -->
+        <div class="pdp-gallery-wrap">
+          <div class="pdp-main-image-box" id="pdp-zoom-box">
+            <img id="pdp-main-img" src="images/church_sanctuary.jpg" alt="Product Image" />
+          </div>
+          <div class="pdp-thumbnails" id="pdp-thumbnails">
+            <!-- Dynamic Thumbnails -->
+          </div>
+          <span style="font-size: 11px; color: var(--text-muted); text-align: center; display: block;">Hover or move cursor over the image for magnified zoom</span>
+        </div>
+
+        <!-- Right: Content & Purchase -->
+        <div class="pdp-content-box">
+          <div class="pdp-category" id="pdp-cat-label">Sacred Devotional</div>
+          <h1 class="pdp-title" id="pdp-title">Faith Seed Prayer Token</h1>
+
+          <div class="pdp-rating-row">
+            <span class="pdp-stars">★★★★★</span>
+            <span style="font-size: 13px; color: var(--text-muted);" id="pdp-reviews-count">(48 Verified Reviews)</span>
+            <span id="pdp-stock-status"></span>
+          </div>
+
+          <div class="pdp-price-row">
+            <div class="pdp-price" id="pdp-price">&#8377;1</div>
+            <span style="font-size: 12px; color: #2E7D32; font-weight: 600; background: rgba(46,125,50,0.1); padding: 4px 10px; border-radius: 999px;">
+              &#10003; In Stock &bull; Ready to Dispatch
+            </span>
+          </div>
+
+          <!-- Scripture Inspiration Box -->
+          <div class="pdp-scripture-highlight">
+            <div class="pdp-scripture-quote" id="pdp-scripture-quote">
+              &ldquo;Truly I tell you, if you have faith as small as a mustard seed, nothing will be impossible for you.&rdquo;
+            </div>
+            <div class="pdp-scripture-ref" id="pdp-scripture-ref">&mdash; Matthew 17:20</div>
+          </div>
+
+          <p class="pdp-desc" id="pdp-desc">
+            An artisan devotional keepsake crafted with reverence. Designed to anchor your spirit in prayer and remind you daily of God's abundant grace and steadfast promises.
+          </p>
+
+          <!-- Apparel Size Picker (If apparel) -->
+          <div id="pdp-size-wrap" style="display: none; margin-bottom: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <span style="font-size: 13px; font-weight: 600; color: var(--dark);">Choose Size:</span>
+              <button type="button" onclick="openSizeGuideModal()" style="font-size: 12px; color: var(--gold-dark); text-decoration: underline; background: none; border: none; cursor: pointer;">
+                📏 Size Guide
+              </button>
+            </div>
+            <div style="display: flex; gap: 8px;" id="pdp-size-btns">
+              <button type="button" class="size-pill-btn active" data-size="S">S</button>
+              <button type="button" class="size-pill-btn" data-size="M">M</button>
+              <button type="button" class="size-pill-btn" data-size="L">L</button>
+              <button type="button" class="size-pill-btn" data-size="XL">XL</button>
+              <button type="button" class="size-pill-btn" data-size="XXL">XXL</button>
+            </div>
+          </div>
+
+          <!-- Add to Cart Controls -->
+          <div class="pdp-actions-row">
+            <div class="pdp-qty-stepper">
+              <button class="pdp-qty-btn" id="pdp-qty-dec">&minus;</button>
+              <span class="pdp-qty-val" id="pdp-qty-val">1</span>
+              <button class="pdp-qty-btn" id="pdp-qty-inc">&plus;</button>
+            </div>
+
+            <button class="btn btn-primary" id="pdp-add-btn" style="flex: 1; justify-content: center; padding: 14px 24px; font-size: 14.5px;">
+              Add to Blessed Bag &#10022;
+            </button>
+          </div>
+
+          <div class="pdp-perks-list">
+            <div class="pdp-perk-item">
+              <span style="color: var(--gold);">&#10003;</span>
+              <span><strong>3-Day Easy Returns</strong> &bull; Return without hassle if not blessed.</span>
+            </div>
+            <div class="pdp-perk-item">
+              <span style="color: var(--gold);">&#10003;</span>
+              <span><strong>100% Secure Checkout</strong> via Razorpay (UPI, Credit/Debit, NetBanking).</span>
+            </div>
+            <div class="pdp-perk-item">
+              <span style="color: var(--gold);">&#10003;</span>
+              <span><strong>Gift Ready</strong> &bull; Individually wrapped with handwritten scripture blessing.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Frequently Bought Together / Bundle Recommendation -->
+      <section class="fbt-section">
+        <h3 class="fbt-title">Frequently Chosen Together</h3>
+        <p style="font-size: 13.5px; color: var(--text-light); margin-bottom: 20px;">Complements your walk with God. Pairs beautifully with this selection.</p>
+
+        <div class="fbt-grid" id="fbt-grid">
+          <!-- Injected via JS -->
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-bottom">
+      <div class="container" style="display: flex; justify-content: space-between; align-items: center; padding: 24px 0;">
+        <p style="font-size: 12px; color: var(--text-muted);">&copy; 2026 Winny's Christian Zone. Operated by WINNYS (GSTIN: 29CTHPK9945A1ZD).</p>
+        <div style="display: flex; gap: 16px; font-size: 12px; color: var(--gold-dark);">
+          <a href="track.html">&#10022; Track Order</a>
+          <a href="shipping-returns.html">Shipping Policy</a>
+          <a href="privacy.html">Privacy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <span class="toast-icon">&#10022;</span>
+    <span class="toast-message" id="toast-message">Added to cart!</span>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="debug.js"></script>
+  <script src="supabaseClient.js?v=3.8"></script>
+  <script src="app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Get Product ID from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const prodId = urlParams.get('id') || '99';
+
+      // Load products or find current
+      setTimeout(() => {
+        loadPDPProduct(prodId);
+      }, 250);
+
+      // Interactive Zoom Box
+      const zoomBox = document.getElementById('pdp-zoom-box');
+      const mainImg = document.getElementById('pdp-main-img');
+
+      if (zoomBox && mainImg) {
+        zoomBox.addEventListener('mousemove', (e) => {
+          const rect = zoomBox.getBoundingClientRect();
+          const x = ((e.clientX - rect.left) / rect.width) * 100;
+          const y = ((e.clientY - rect.top) / rect.height) * 100;
+          mainImg.style.transformOrigin = `${x}% ${y}%`;
+          mainImg.style.transform = 'scale(1.8)';
+        });
+        zoomBox.addEventListener('mouseleave', () => {
+          mainImg.style.transform = 'scale(1)';
+          mainImg.style.transformOrigin = 'center center';
+        });
+      }
+
+      // Quantity Stepper
+      let qty = 1;
+      const qtyVal = document.getElementById('pdp-qty-val');
+      document.getElementById('pdp-qty-dec').addEventListener('click', () => {
+        if (qty > 1) { qty--; qtyVal.textContent = qty; }
+      });
+      document.getElementById('pdp-qty-inc').addEventListener('click', () => {
+        qty++; qtyVal.textContent = qty;
+      });
+
+      // Apparel Size selection
+      document.querySelectorAll('#pdp-size-btns .size-pill-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('#pdp-size-btns .size-pill-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        });
+      });
+    });
+
+    function loadPDPProduct(prodId) {
+      const product = (typeof PRODUCTS !== 'undefined' ? PRODUCTS : []).find(p => String(p.id) === String(prodId)) || {
+        id: 99,
+        name: 'Faith Seed Prayer Token (Test Item)',
+        price: 1,
+        category: 'gifts',
+        image: 'images/church_sanctuary.jpg',
+        stock: 999,
+        desc: 'Artisan brass mustard seed pocket token representing Matthew 17:20 faith. Beautifully polished, designed to accompany daily prayer.'
+      };
+
+      document.getElementById('pdp-meta-title').textContent = `${product.name} | Winny's Christian Zone`;
+      document.getElementById('pdp-title').textContent = product.name;
+      document.getElementById('pdp-breadcrumb-title').textContent = product.name;
+      document.getElementById('pdp-cat-label').textContent = (typeof getCategoryLabel === 'function' ? getCategoryLabel(product.category) : product.category).toUpperCase();
+      document.getElementById('pdp-price').textContent = typeof formatPrice === 'function' ? formatPrice(product.price) : '₹' + product.price;
+      document.getElementById('pdp-desc').textContent = product.desc;
+      document.getElementById('pdp-main-img').src = product.image;
+
+      // Scripture logic
+      const scriptures = {
+        apparel: { quote: 'Clothed with strength and dignity, she laughs without fear of the future.', ref: 'Proverbs 31:25' },
+        jewelry: { quote: 'Let love and faithfulness never leave you; bind them around your neck.', ref: 'Proverbs 3:3' },
+        home: { quote: 'As for me and my house, we will serve the Lord.', ref: 'Joshua 24:15' },
+        gifts: { quote: 'If you have faith as small as a mustard seed, nothing will be impossible for you.', ref: 'Matthew 17:20' }
+      };
+      const sc = scriptures[product.category] || scriptures.gifts;
+      document.getElementById('pdp-scripture-quote').innerHTML = `&ldquo;${sc.quote}&rdquo;`;
+      document.getElementById('pdp-scripture-ref').innerHTML = `&mdash; ${sc.ref}`;
+
+      // Show size if apparel
+      if (product.category === 'apparel') {
+        document.getElementById('pdp-size-wrap').style.display = 'block';
+      }
+
+      // Thumbnails
+      const thumbWrap = document.getElementById('pdp-thumbnails');
+      thumbWrap.innerHTML = `
+        <div class="pdp-thumb active" onclick="switchPDPThumb('${product.image}', this)"><img src="${product.image}" /></div>
+        <div class="pdp-thumb" onclick="switchPDPThumb('images/church_sanctuary.jpg', this)"><img src="images/church_sanctuary.jpg" /></div>
+        <div class="pdp-thumb" onclick="switchPDPThumb('Untitled.jpg', this)"><img src="Untitled.jpg" /></div>
+      `;
+
+      // Add to cart bind
+      const addBtn = document.getElementById('pdp-add-btn');
+      addBtn.onclick = () => {
+        const qty = parseInt(document.getElementById('pdp-qty-val').textContent) || 1;
+        const activeSizeBtn = document.querySelector('#pdp-size-btns .size-pill-btn.active');
+        const selectedSize = product.category === 'apparel' && activeSizeBtn ? activeSizeBtn.getAttribute('data-size') : null;
+
+        for (let i = 0; i < qty; i++) {
+          addToCart(product.id, selectedSize);
+        }
+        showToast(`${product.name} (×${qty}) added to your blessed bag!`);
+      };
+
+      // Frequently Bought Together Render
+      renderFBT(product);
+    }
+
+    function switchPDPThumb(src, el) {
+      document.getElementById('pdp-main-img').src = src;
+      document.querySelectorAll('.pdp-thumb').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    function renderFBT(currentProd) {
+      const fbtGrid = document.getElementById('fbt-grid');
+      const recs = [
+        { name: 'Ceramic Scripture Mug', price: 499, img: 'images/church_sanctuary.jpg' },
+        { name: 'Jerusalem Olive Wood Cross', price: 1499, img: 'Untitled.jpg' },
+        { name: 'Embossed Prayer Journal', price: 599, img: 'images/church_sanctuary.jpg' }
+      ];
+
+      fbtGrid.innerHTML = recs.map(r => `
+        <div class="fbt-card">
+          <img src="${r.img}" alt="${r.name}" />
+          <strong style="display: block; font-size: 13.5px; color: var(--dark); margin-bottom: 4px;">${r.name}</strong>
+          <span style="font-size: 13px; font-weight: 600; color: var(--gold-dark); display: block; margin-bottom: 8px;">₹${r.price}</span>
+          <button class="btn btn-outline" style="width: 100%; justify-content: center; padding: 6px 10px; font-size: 11.5px;" onclick="showToast('Added ${r.name} to bundle!')">
+            + Add to Pair
+          </button>
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>

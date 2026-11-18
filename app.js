@@ -1394,7 +1394,9 @@ function openQuickView(productId) {
           <button type="button" class="btn btn-primary" id="quick-view-add-btn" style="flex: 1; justify-content: center; padding: 12px 20px;">
             Add to Blessed Bag &#10022;
           </button>
-          <a href="cart.html" class="btn btn-secondary" style="padding: 12px 16px; font-size: 12.5px;">View Cart</a>
+          <a href="product.html?id=${product.id}" class="btn btn-secondary" style="padding: 12px 14px; font-size: 12px; display: inline-flex; align-items: center; gap: 4px;">
+            Full Details ↗
+          </a>
         </div>
       </div>
     </div>
