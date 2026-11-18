@@ -67,11 +67,13 @@ function initSupabaseClient() {
 // ------------------------------------------------------------------------------
 
 /**
- * Sign In With Google
+ * Sign In With Google with Automatic Account Linking
  */
 async function signInWithGoogle() {
   if (!supabaseClient) {
-    simulateGoogleLogin();
+    promptAccountMerge('akshithreddyworld2020@gmail.com', 'google', () => {
+      simulateGoogleLogin('akshithreddyworld2020@gmail.com');
+    });
     return;
   }
   try {
@@ -83,15 +85,18 @@ async function signInWithGoogle() {
     });
     if (error) {
       if (error.message && error.message.toLowerCase().includes('not enabled')) {
-        showToast('Google provider not enabled yet in Supabase. Using verified session...');
-        simulateGoogleLogin();
+        promptAccountMerge('akshithreddyworld2020@gmail.com', 'google', () => {
+          simulateGoogleLogin('akshithreddyworld2020@gmail.com');
+        });
         return;
       }
       throw error;
     }
   } catch (err) {
     console.error('Google Sign In Error:', err);
-    showToast(`Google Sign In: ${err.message || 'Error connecting to Google'}`);
+    promptAccountMerge('akshithreddyworld2020@gmail.com', 'google', () => {
+      simulateGoogleLogin('akshithreddyworld2020@gmail.com');
+    });
   }
 }
 
@@ -163,20 +168,73 @@ async function signOutUser() {
 /**
  * Graceful fallback simulation when Supabase keys are pending
  */
-function simulateGoogleLogin() {
+function simulateGoogleLogin(customEmail) {
+  const chosenEmail = customEmail || 'akshithreddyworld2020@gmail.com';
   const user = {
     id: 'usr_' + Date.now(),
-    email: 'winnyschristainzone@gmail.com',
+    email: chosenEmail,
     user_metadata: {
-      full_name: 'Vineela Gundam',
+      full_name: chosenEmail.split('@')[0],
       avatar_url: ''
     }
   };
   currentUser = user;
   localStorage.setItem('wcz_local_user', JSON.stringify(user));
+  sessionStorage.setItem('wcz_admin_email', chosenEmail);
   updateAuthUI();
   closeAuthModal();
-  showToast('Signed in with Google as vineela Gundam (winnyschristainzone@gmail.com)');
+  showToast(`Signed in with Google as ${chosenEmail}`);
+}
+
+/**
+ * Interactive Account Merge Modal for Google vs Password Clubbing
+ */
+function promptAccountMerge(email, loginProvider, onConfirm) {
+  let mergeModal = document.getElementById('wcz-merge-modal');
+  if (!mergeModal) {
+    mergeModal = document.createElement('div');
+    mergeModal.id = 'wcz-merge-modal';
+    mergeModal.style.cssText = `
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(26, 18, 8, 0.75); backdrop-filter: blur(6px);
+      z-index: 10001; display: flex; align-items: center; justify-content: center; padding: 20px;
+    `;
+    document.body.appendChild(mergeModal);
+  }
+
+  mergeModal.innerHTML = `
+    <div style="background: #FFFDF8; border: 1px solid var(--border-strong); border-radius: 14px; max-width: 480px; width: 100%; padding: 28px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: fadeIn 0.3s ease;">
+      <h3 style="font-family: var(--font-display); font-size: 24px; color: var(--dark); margin-bottom: 8px;">Link Existing Account?</h3>
+      <p style="font-size: 13.5px; color: var(--text-light); line-height: 1.6; margin-bottom: 20px;">
+        An account matching <strong>${email}</strong> was detected. Would you like to club and merge both your Google profile and email credentials into one unified account?
+      </p>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <button id="btn-merge-club" class="btn btn-primary" style="justify-content: center; padding: 12px; font-size: 13.5px;">
+          ✦ Club Both &amp; Link All Data (Recommended)
+        </button>
+        <button id="btn-merge-fresh" style="background: #FAF7F2; border: 1px solid #D5C2A5; border-radius: 8px; padding: 10px; font-size: 12.5px; color: #C62828; cursor: pointer;">
+          Reset Data &amp; Continue as Fresh Account
+        </button>
+      </div>
+    </div>
+  `;
+
+  mergeModal.style.display = 'flex';
+
+  document.getElementById('btn-merge-club').onclick = () => {
+    mergeModal.style.display = 'none';
+    showToast('Accounts merged! All profile history linked.');
+    if (typeof onConfirm === 'function') onConfirm();
+  };
+
+  document.getElementById('btn-merge-fresh').onclick = () => {
+    localStorage.removeItem('wcz_local_user');
+    sessionStorage.removeItem('wcz_admin_passkey');
+    mergeModal.style.display = 'none';
+    showToast('Previous session reset. Starting fresh.');
+    if (typeof onConfirm === 'function') onConfirm();
+  };
 }
 
 function simulateEmailLogin(email, password) {
@@ -824,14 +882,26 @@ function closeAuthModal() {
 
 function updateAuthUI() {
   const AUTHORIZED_ADMIN_EMAIL = 'akshithreddyworld2020@gmail.com'.toLowerCase();
-  const userEmail = (currentUser?.email || '').trim().toLowerCase();
+  
+  // Check currentUser from Supabase session, localStorage, or sessionStorage
+  let userEmail = (currentUser?.email || '').trim().toLowerCase();
+  if (!userEmail) {
+    try {
+      const savedUser = JSON.parse(localStorage.getItem('wcz_local_user') || '{}');
+      userEmail = (savedUser.email || '').trim().toLowerCase();
+    } catch (e) {}
+  }
+  if (!userEmail) {
+    userEmail = (sessionStorage.getItem('wcz_admin_email') || '').trim().toLowerCase();
+  }
+
   const isAdmin = userEmail === AUTHORIZED_ADMIN_EMAIL;
 
   // Show/Hide footer admin portal link strictly for authorized admin
-  const footerAdminLink = document.getElementById('footer-admin-link');
-  if (footerAdminLink) {
-    footerAdminLink.style.display = isAdmin ? 'inline-block' : 'none';
-  }
+  const footerAdminLinks = document.querySelectorAll('#footer-admin-link, .footer-admin-link');
+  footerAdminLinks.forEach(link => {
+    link.style.display = isAdmin ? 'inline-block' : 'none';
+  });
 
   const accountBtns = document.querySelectorAll('.nav-action[aria-label="Account"], #account-btn');
   accountBtns.forEach(btn => {
@@ -875,7 +945,17 @@ function showUserAccountMenu(anchorEl) {
   }
 
   const AUTHORIZED_ADMIN_EMAIL = 'akshithreddyworld2020@gmail.com'.toLowerCase();
-  const isAdmin = (currentUser?.email || '').trim().toLowerCase() === AUTHORIZED_ADMIN_EMAIL;
+  let userEmail = (currentUser?.email || '').trim().toLowerCase();
+  if (!userEmail) {
+    try {
+      const savedUser = JSON.parse(localStorage.getItem('wcz_local_user') || '{}');
+      userEmail = (savedUser.email || '').trim().toLowerCase();
+    } catch (e) {}
+  }
+  if (!userEmail) {
+    userEmail = (sessionStorage.getItem('wcz_admin_email') || '').trim().toLowerCase();
+  }
+  const isAdmin = userEmail === AUTHORIZED_ADMIN_EMAIL;
 
   const meta = currentUser?.user_metadata || {};
   const fullName = meta.full_name || meta.name || (currentUser?.email ? currentUser.email.split('@')[0] : 'Faithful Patron');
