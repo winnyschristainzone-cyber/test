@@ -380,6 +380,21 @@ function renderProducts(tab) {
       ? `<span class="stock-pill out-of-stock">Sold Out</span>`
       : (product.stock !== undefined && product.stock <= 5 ? `<span class="stock-pill low-stock">Only ${product.stock} left!</span>` : '');
 
+    const needsSize = doesProductNeedSize(product);
+    const sizeSelectorHtml = needsSize ? `
+      <div class="card-size-selector" onclick="event.stopPropagation();">
+        <span class="card-size-label">Size:</span>
+        <div class="card-size-btns" data-product-id="${product.id}">
+          <button type="button" class="card-size-btn active" data-size="S">S</button>
+          <button type="button" class="card-size-btn" data-size="M">M</button>
+          <button type="button" class="card-size-btn" data-size="L">L</button>
+          <button type="button" class="card-size-btn" data-size="XL">XL</button>
+          <button type="button" class="card-size-btn" data-size="XXL">XXL</button>
+        </div>
+        <button type="button" class="card-size-guide-link" onclick="openSizeGuideModal();" title="View Dimensions">Guide</button>
+      </div>
+    ` : '';
+
     card.innerHTML = `
       <div class="product-image-wrap">
         <img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy" />
@@ -400,6 +415,7 @@ function renderProducts(tab) {
           <span class="product-stars">${stars}</span>
           <span class="product-rating-count">(${product.reviewCount})</span>
         </div>
+        ${sizeSelectorHtml}
         <div class="product-price-row">
           <span class="product-price">${formatPrice(product.price)}</span>
           <span class="product-return-badge" style="background:rgba(201,168,76,0.1); border-color:rgba(201,168,76,0.25); color:var(--gold-dark); font-size:10px;">
@@ -414,9 +430,20 @@ function renderProducts(tab) {
     // Trigger animation
     setTimeout(() => card.classList.add('visible'), 40 + (i % 8) * 50);
 
+    // Size button clicks inside card
+    if (needsSize) {
+      card.querySelectorAll('.card-size-btn').forEach(sBtn => {
+        sBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          card.querySelectorAll('.card-size-btn').forEach(b => b.classList.remove('active'));
+          sBtn.classList.add('active');
+        });
+      });
+    }
+
     // Card click -> Open Quick View Modal
     card.addEventListener('click', (e) => {
-      if (e.target.closest('.product-wishlist') || e.target.closest('.product-quick-add')) return;
+      if (e.target.closest('.product-wishlist') || e.target.closest('.product-quick-add') || e.target.closest('.card-size-selector')) return;
       openQuickView(product.id);
     });
 
@@ -431,13 +458,31 @@ function renderProducts(tab) {
     const addBtn = card.querySelector('.product-quick-add');
     addBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      addToCart(product.id);
+      let chosenSize = null;
+      if (needsSize) {
+        const activeS = card.querySelector('.card-size-btn.active');
+        chosenSize = activeS ? activeS.getAttribute('data-size') : 'M';
+      }
+      addToCart(product.id, chosenSize);
     });
   });
 }
 
 function formatPrice(amount) {
   return '₹' + amount.toLocaleString('en-IN');
+}
+
+function doesProductNeedSize(product) {
+  if (!product) return false;
+  if (product.needsSize === true) return true;
+  if (product.category === 'apparel') return true;
+  const name = (product.name || '').toLowerCase();
+  const desc = (product.desc || '').toLowerCase();
+  return (
+    name.includes('tee') || name.includes('t-shirt') || name.includes('hoodie') ||
+    name.includes('sweatshirt') || name.includes('shirt') || name.includes('apparel') ||
+    desc.includes('tee') || desc.includes('hoodie') || desc.includes('sweatshirt')
+  );
 }
 
 function getCategoryLabel(cat) {
@@ -827,18 +872,21 @@ function displayOrderConfirmation(order) {
   // 3. Render Items summary in confirmation
   const itemsContainer = document.getElementById('order-confirm-items');
   if (itemsContainer && Array.isArray(order.items)) {
-    itemsContainer.innerHTML = order.items.map(item => `
+    itemsContainer.innerHTML = order.items.map(item => {
+      const sizeNote = item.size ? ` &bull; Size: <strong>${item.size}</strong>` : '';
+      return `
       <div class="receipt-item-row">
         <div class="receipt-item-info">
           <img src="${item.image}" alt="${item.name}" class="receipt-item-img" />
           <div>
             <div style="font-weight: 500; color: var(--dark);">${item.name}</div>
-            <div class="receipt-item-qty">Qty: ${item.qty} &bull; ${formatPrice(item.price)} each</div>
+            <div class="receipt-item-qty">Qty: ${item.qty} &bull; ${formatPrice(item.price)} each${sizeNote}</div>
           </div>
         </div>
         <div class="receipt-item-price">${formatPrice(item.price * item.qty)}</div>
       </div>
-    `).join('');
+    `;
+    }).join('');
   }
 
   // 4. Gift Recipient Strip
@@ -896,7 +944,8 @@ function addToCart(productId, selectedSize) {
   const product = PRODUCTS.find(p => String(p.id) === String(productId));
   if (!product) return;
 
-  const itemSize = selectedSize || (product.category === 'apparel' ? 'M' : null);
+  const needsSize = doesProductNeedSize(product);
+  const itemSize = selectedSize || (needsSize ? 'M' : null);
   const cartItemKey = itemSize ? `${product.id}_${itemSize}` : String(product.id);
 
   const existing = cart.find(item => (item.cartKey || String(item.id)) === cartItemKey);
@@ -918,19 +967,19 @@ function addToCart(productId, selectedSize) {
   }
 }
 
-function removeFromCart(productId) {
-  cart = cart.filter(item => String(item.id) !== String(productId));
+function removeFromCart(keyOrId) {
+  cart = cart.filter(item => (item.cartKey || String(item.id)) !== String(keyOrId) && String(item.id) !== String(keyOrId));
   saveCartToStorage();
   updateCartUI();
 }
 
-function changeQty(productId, delta) {
-  const item = cart.find(i => String(i.id) === String(productId));
+function changeQty(keyOrId, delta) {
+  const item = cart.find(i => (i.cartKey || String(i.id)) === String(keyOrId) || String(i.id) === String(keyOrId));
   if (!item) return;
 
   const newQty = item.qty + delta;
   if (newQty <= 0) {
-    removeFromCart(productId);
+    removeFromCart(keyOrId);
     return;
   }
   item.qty = newQty;
@@ -1052,30 +1101,34 @@ function renderCartPage(subtotal, totalQty) {
   }
 
   // Render items list
-  itemsContainer.innerHTML = cart.map(item => `
+  itemsContainer.innerHTML = cart.map(item => {
+    const itemKey = item.cartKey || String(item.id);
+    const sizeBadge = item.size ? `<span class="cart-item-size-badge">Size: ${item.size}</span>` : '';
+    return `
     <div class="cart-item-row">
       <div class="cart-product-cell">
         <img src="${item.image}" alt="${item.name}" class="cart-product-img" />
         <div class="cart-product-details">
           <a href="collections.html" class="cart-product-title">${item.name}</a>
-          <span class="cart-product-cat">${getCategoryLabel(item.category)}</span>
+          <span class="cart-product-cat">${getCategoryLabel(item.category)}${sizeBadge}</span>
         </div>
       </div>
       <div class="cart-unit-price">${formatPrice(item.price)}</div>
       <div class="cart-qty-stepper">
-        <button class="cart-qty-btn" data-action="dec" data-id="${item.id}" aria-label="Decrease quantity">&#8722;</button>
+        <button class="cart-qty-btn" data-action="dec" data-id="${itemKey}" aria-label="Decrease quantity">&#8722;</button>
         <span class="cart-qty-val">${item.qty}</span>
-        <button class="cart-qty-btn" data-action="inc" data-id="${item.id}" aria-label="Increase quantity">&#43;</button>
+        <button class="cart-qty-btn" data-action="inc" data-id="${itemKey}" aria-label="Increase quantity">&#43;</button>
       </div>
       <div class="cart-line-total">${formatPrice(item.price * item.qty)}</div>
-      <button class="cart-remove-btn" data-id="${item.id}" aria-label="Remove item">&times;</button>
+      <button class="cart-remove-btn" data-id="${itemKey}" aria-label="Remove item">&times;</button>
     </div>
-  `).join('');
+  `;
+  }).join('');
 
   // Bind qty buttons
   itemsContainer.querySelectorAll('.cart-qty-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const id = parseInt(btn.dataset.id);
+      const id = btn.dataset.id;
       const delta = btn.dataset.action === 'inc' ? 1 : -1;
       changeQty(id, delta);
     });
@@ -1084,7 +1137,7 @@ function renderCartPage(subtotal, totalQty) {
   // Bind remove buttons
   itemsContainer.querySelectorAll('.cart-remove-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      removeFromCart(parseInt(btn.dataset.id));
+      removeFromCart(btn.dataset.id);
     });
   });
 }
@@ -1589,24 +1642,28 @@ function renderCartDrawer() {
     return;
   }
 
-  list.innerHTML = cart.map(item => `
+  list.innerHTML = cart.map(item => {
+    const itemKey = item.cartKey || String(item.id);
+    const sizeBadge = item.size ? `<span class="cart-item-size-badge">Size: ${item.size}</span>` : '';
+    return `
     <div class="drawer-item-row">
       <img src="${item.image}" alt="${item.name}" class="drawer-item-img" />
       <div class="drawer-item-details">
         <span class="drawer-item-title">${item.name}</span>
-        <span class="drawer-item-cat">${getCategoryLabel(item.category)}</span>
+        <span class="drawer-item-cat">${getCategoryLabel(item.category)}${sizeBadge}</span>
         <div class="drawer-item-bottom">
           <div class="drawer-stepper">
-            <button type="button" class="drawer-step-btn" data-action="dec" data-id="${item.id}">−</button>
+            <button type="button" class="drawer-step-btn" data-action="dec" data-id="${itemKey}">−</button>
             <span class="drawer-step-val">${item.qty}</span>
-            <button type="button" class="drawer-step-btn" data-action="inc" data-id="${item.id}">+</button>
+            <button type="button" class="drawer-step-btn" data-action="inc" data-id="${itemKey}">+</button>
           </div>
           <span class="drawer-item-price">${formatPrice(item.price * item.qty)}</span>
-          <button type="button" class="drawer-remove-btn" data-id="${item.id}" aria-label="Remove">&times;</button>
+          <button type="button" class="drawer-remove-btn" data-id="${itemKey}" aria-label="Remove">&times;</button>
         </div>
       </div>
     </div>
-  `).join('');
+  `;
+  }).join('');
 
   // Bind drawer steppers & remove
   list.querySelectorAll('.drawer-step-btn').forEach(btn => {

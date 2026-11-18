@@ -478,8 +478,9 @@
       document.getElementById('pdp-scripture-quote').innerHTML = `&ldquo;${sc.quote}&rdquo;`;
       document.getElementById('pdp-scripture-ref').innerHTML = `&mdash; ${sc.ref}`;
 
-      // Show size if apparel
-      if (product.category === 'apparel') {
+      // Show size if product needs size
+      const needsSize = typeof doesProductNeedSize === 'function' ? doesProductNeedSize(product) : (product.category === 'apparel');
+      if (needsSize) {
         document.getElementById('pdp-size-wrap').style.display = 'block';
       }
 
@@ -496,7 +497,7 @@
       addBtn.onclick = () => {
         const qty = parseInt(document.getElementById('pdp-qty-val').textContent) || 1;
         const activeSizeBtn = document.querySelector('#pdp-size-btns .size-pill-btn.active');
-        const selectedSize = product.category === 'apparel' && activeSizeBtn ? activeSizeBtn.getAttribute('data-size') : null;
+        const selectedSize = needsSize && activeSizeBtn ? activeSizeBtn.getAttribute('data-size') : null;
 
         for (let i = 0; i < qty; i++) {
           addToCart(product.id, selectedSize);

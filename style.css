@@ -6164,4 +6164,79 @@ html.is-mobile .product-quick-add {
   }
 }
 
+/* ==========================================================================
+   PRODUCT CARD SIZE SELECTOR (APPAREL ONLY)
+   ========================================================================== */
+.card-size-selector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin: 10px 0 12px;
+  padding: 8px 10px;
+  background: rgba(26, 18, 8, 0.03);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 8px;
+}
+.card-size-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--dark);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.card-size-btns {
+  display: flex;
+  gap: 4px;
+}
+.card-size-btn {
+  width: 26px;
+  height: 24px;
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  background: #FFF;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--dark);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  padding: 0;
+}
+.card-size-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold-dark);
+}
+.card-size-btn.active {
+  background: var(--gold);
+  border-color: var(--gold-dark);
+  color: #FFF;
+}
+.card-size-guide-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 11px;
+  color: var(--gold-dark);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* Cart & Drawer Size Pill */
+.cart-item-size-badge {
+  display: inline-block;
+  background: #F4EAD4;
+  color: #5D3B00;
+  border: 1px solid rgba(201, 168, 76, 0.35);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-left: 6px;
+  vertical-align: 1px;
+  letter-spacing: 0.04em;
+}
+
 

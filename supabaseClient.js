@@ -665,7 +665,7 @@ async function saveOrderToSupabase(orderDetails, paymentResponse) {
       const itemsToInsert = orderDetails.items.map(item => ({
         order_id: orderData.id,
         product_id: (typeof item.id === 'string' && item.id.length === 36) ? item.id : null,
-        product_name: item.name,
+        product_name: item.size ? `${item.name} (Size: ${item.size})` : item.name,
         product_price: item.price,
         quantity: item.qty,
         subtotal: item.price * item.qty
