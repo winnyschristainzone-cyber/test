@@ -7,25 +7,9 @@
 const CROSS_SVG_ICON = `<svg class="cross-icon" viewBox="0 0 20 26" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.5 1C8.5 0.45 8.95 0 9.5 0H10.5C11.05 0 11.5 0.45 11.5 1V7H17.5C18.05 7 18.5 7.45 18.5 8V9C18.5 9.55 18.05 10 17.5 10H11.5V25C11.5 25.55 11.05 26 10.5 26H9.5C8.95 26 8.5 25.55 8.5 25V10H2.5C1.95 10 1.5 9.55 1.5 9V8C1.5 7.45 1.95 7 2.5 7H8.5V1Z"/></svg>`;
 
 // ============================================
-// PRODUCT DATA (prices in INR, no false discounts)
+// PRODUCT DATA (Populated via Supabase Database and Admin Dashboard)
 // ============================================
-const PRODUCTS = [
-  {
-    id: 99,
-    name: 'Faith Seed Prayer Token (Test Item)',
-    category: 'gifts',
-    price: 1,
-    badge: '₹1 Test Pay',
-    badgeType: 'new',
-    rating: 5,
-    reviewCount: 777,
-    image: 'images/category_jewelry.jpg',
-    desc: 'Special ₹1 testing item for verifying Razorpay standard payments, webhooks, and receipts.',
-    returnPolicy: 'Instant Verification',
-    stock: 999,
-    liked: false
-  }
-];
+const PRODUCTS = [];
 
 // ============================================
 // CART STATE
@@ -303,14 +287,8 @@ function initProducts() {
   if (typeof fetchProductsFromDatabase === 'function') {
     fetchProductsFromDatabase().then(dbProducts => {
       if (dbProducts && dbProducts.length > 0) {
-        // Find if test item exists in local PRODUCTS
-        const testItem = PRODUCTS.find(p => p.id === 99);
         PRODUCTS.length = 0;
         PRODUCTS.push(...dbProducts);
-        // Ensure ₹1 Test Item is ALWAYS preserved at the top for testing
-        if (testItem && !PRODUCTS.some(p => p.id === 99)) {
-          PRODUCTS.unshift(testItem);
-        }
         renderProducts(activeTab);
       }
     });
@@ -338,12 +316,11 @@ function renderProducts(tab) {
 
   let filtered = tab === 'all'
     ? [...PRODUCTS]
-    : PRODUCTS.filter(p => p.category === tab || p.id === 99);
+    : PRODUCTS.filter(p => p.category === tab);
 
   // Search filter
   if (currentSearch) {
     filtered = filtered.filter(p =>
-      p.id === 99 ||
       p.name.toLowerCase().includes(currentSearch) ||
       p.category.toLowerCase().includes(currentSearch) ||
       getCategoryLabel(p.category).toLowerCase().includes(currentSearch)
