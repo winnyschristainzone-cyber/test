@@ -833,7 +833,7 @@ function initCart() {
 
           // Save order to Supabase in background
           if (typeof saveOrderToSupabase === 'function') {
-            saveOrderToSupabase(orderDetails, { razorpay_payment_id: 'pay_sim_' + Date.now() });
+            saveOrderToSupabase(orderDetails, { razorpay_payment_id: 'offline_order_' + Date.now() });
           }
 
           // Clear cart
@@ -889,8 +889,8 @@ function displayOrderConfirmation(order) {
   if (methodEl) methodEl.textContent = order.paymentMethod;
 
   const txnEl = document.getElementById('order-confirm-txnid');
-  const simTxn = 'pay_sim_' + Math.floor(100000 + Math.random() * 900000);
-  if (txnEl) txnEl.textContent = simTxn;
+  const actualTxn = order.paymentId || ('pay_' + Math.floor(100000 + Math.random() * 900000));
+  if (txnEl) txnEl.textContent = actualTxn;
 
   const amountEl = document.getElementById('order-confirm-amount');
   if (amountEl) amountEl.textContent = formatPrice(order.amount);
@@ -1110,24 +1110,6 @@ function renderCartPage(subtotal, totalQty) {
 
   if (totalEl) totalEl.textContent = formatPrice(grandTotal);
   if (modalTotalEl) modalTotalEl.textContent = formatPrice(grandTotal);
-
-  // Sync test delivery toggle button on cart page
-  const testDeliveryBtn = document.getElementById('cart-toggle-delivery-btn');
-  if (testDeliveryBtn) {
-    testDeliveryBtn.textContent = isZeroShippingMode ? 'Reset to ₹199' : 'Set Free (₹0)';
-    testDeliveryBtn.style.background = isZeroShippingMode ? '#2E7D32' : '#2C1810';
-    testDeliveryBtn.style.color = '#FFF';
-    testDeliveryBtn.onclick = () => {
-      if (isZeroShippingMode) {
-        localStorage.removeItem('wcz_zero_shipping');
-        if (typeof showToast === 'function') showToast('Standard ₹199 delivery restored');
-      } else {
-        localStorage.setItem('wcz_zero_shipping', 'true');
-        if (typeof showToast === 'function') showToast('⚡ Delivery set to FREE (₹0 Test Mode)');
-      }
-      updateCartUI();
-    };
-  }
 
   // Render items list
   itemsContainer.innerHTML = cart.map(item => {
