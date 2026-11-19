@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS public.admin_config (
   id INT PRIMARY KEY DEFAULT 1,
   admin_email TEXT NOT NULL DEFAULT 'akshithreddyworld2020@gmail.com',
   admin_passkey TEXT NOT NULL DEFAULT 'WinnyAdmin2026!',
-  authorized_phone TEXT NOT NULL DEFAULT '+919281234772',
+  authorized_phone TEXT NOT NULL DEFAULT '+918217598955',
   CONSTRAINT single_admin_config CHECK (id = 1)
 );
 
@@ -97,7 +97,7 @@ ALTER TABLE public.admin_config ENABLE ROW LEVEL SECURITY;
 REVOKE ALL ON public.admin_config FROM anon, authenticated;
 
 INSERT INTO public.admin_config (id, admin_email, admin_passkey, authorized_phone)
-VALUES (1, 'akshithreddyworld2020@gmail.com', 'WinnyAdmin2026!', '+919281234772')
+VALUES (1, 'akshithreddyworld2020@gmail.com', 'WinnyAdmin2026!', '+918217598955')
 ON CONFLICT (id) DO UPDATE 
 SET admin_email = EXCLUDED.admin_email,
     admin_passkey = EXCLUDED.admin_passkey,
@@ -314,7 +314,7 @@ CREATE TABLE IF NOT EXISTS public.whatsapp_config (
   phone_number_id TEXT NOT NULL DEFAULT '1441814635681497',
   messaging_account_id TEXT NOT NULL DEFAULT '914493298415933',
   access_token TEXT NOT NULL DEFAULT 'EAAuOn293yeYBTCXDTCQFpcyqONSPKd7oQbWTAhWSZA20bpjKM9knvMdZCeOc6v0OvP1xRzQVNAQ5mZCV5U5zT0zz4ZBs8pwyDPCPpbuSnhygF8RbLK9kXcw1UirmOXOKKoPFhK24rX06ozkNf0uqRMaIw5M4ZC5oXrlKhwCDh1UbnuKZC3ndwQJheZCjRBHmSOBdHozrKliJ1n4rnIUmKcPwhwnwjMT1i8M9EsJlFxMC8xj86iu8zwfhkSoFePxGgdZC0n04Jxfb1pO0rex4ESjK',
-  verified_admin_phone TEXT NOT NULL DEFAULT '919281234772',
+  verified_admin_phone TEXT NOT NULL DEFAULT '918217598955',
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   CONSTRAINT single_whatsapp_config CHECK (id = 1)
 );
@@ -328,7 +328,7 @@ VALUES (
   '1441814635681497', 
   '914493298415933', 
   'EAAuOn293yeYBTCXDTCQFpcyqONSPKd7oQbWTAhWSZA20bpjKM9knvMdZCeOc6v0OvP1xRzQVNAQ5mZCV5U5zT0zz4ZBs8pwyDPCPpbuSnhygF8RbLK9kXcw1UirmOXOKKoPFhK24rX06ozkNf0uqRMaIw5M4ZC5oXrlKhwCDh1UbnuKZC3ndwQJheZCjRBHmSOBdHozrKliJ1n4rnIUmKcPwhwnwjMT1i8M9EsJlFxMC8xj86iu8zwfhkSoFePxGgdZC0n04Jxfb1pO0rex4ESjK',
-  '919281234772'
+  '918217598955'
 )
 ON CONFLICT (id) DO UPDATE
 SET phone_number_id = EXCLUDED.phone_number_id,

@@ -365,7 +365,7 @@ async function syncCartWithSupabase() {
 // ------------------------------------------------------------------------------
 // WHATSAPP INTEGRATION (PAYMENT RECEIPTS, DELIVERY INFO & ADMIN NOTIFICATIONS)
 // ------------------------------------------------------------------------------
-const WCZ_WHATSAPP_NUMBER = '919281234772'; // Winny's Christian Zone verified admin & support phone
+const WCZ_WHATSAPP_NUMBER = '918217598955'; // Winny's Christian Zone verified official business WhatsApp
 
 /**
  * Send Payment Confirmation Receipt via WhatsApp
