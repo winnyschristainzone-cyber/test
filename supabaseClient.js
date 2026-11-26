@@ -800,6 +800,80 @@ function injectAuthModalAndWidgets() {
         </form>
       </div>
     </div>
+
+    <!-- HELP & CONTACT SUPPORT MODAL -->
+    <div class="wcz-help-backdrop" id="wcz-help-modal" aria-hidden="true">
+      <div class="wcz-help-dialog" role="dialog" aria-labelledby="wcz-help-title">
+        <button class="wcz-modal-close" id="wcz-help-close" aria-label="Close help modal">&times;</button>
+        
+        <div class="wcz-help-header">
+          <span class="wcz-help-badge">&#10022; Dedicated Customer Care</span>
+          <h2 class="wcz-help-title" id="wcz-help-title">How Can We Help You?</h2>
+          <p class="wcz-help-subtitle">Our team at Winny's Christian Zone is here to assist with your orders, products, and blessings.</p>
+        </div>
+
+        <div class="wcz-help-cards">
+          <!-- WhatsApp Card -->
+          <a href="https://wa.me/918217598955?text=Hello%20Winny's%20Christian%20Zone!%20I%20need%20assistance%20with%20an%20inquiry." target="_blank" rel="noopener noreferrer" class="wcz-help-card">
+            <div class="wcz-help-card-left">
+              <div class="wcz-help-card-icon wa">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/></svg>
+              </div>
+              <div class="wcz-help-card-text">
+                <span class="wcz-help-card-label">WhatsApp Support</span>
+                <span class="wcz-help-card-val">+91 82175 98955</span>
+              </div>
+            </div>
+            <span class="wcz-help-card-action">Chat &rarr;</span>
+          </a>
+
+          <!-- Call Support Card -->
+          <a href="tel:+918217598955" class="wcz-help-card">
+            <div class="wcz-help-card-left">
+              <div class="wcz-help-card-icon phone">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              </div>
+              <div class="wcz-help-card-text">
+                <span class="wcz-help-card-label">Phone Call</span>
+                <span class="wcz-help-card-val">+91 82175 98955</span>
+              </div>
+            </div>
+            <span class="wcz-help-card-action">Call &rarr;</span>
+          </a>
+
+          <!-- Email Support Card -->
+          <a href="mailto:winnyschristainzone@gmail.com?subject=Customer%20Support%20Inquiry%20-%20Winny's%20Christian%20Zone" class="wcz-help-card">
+            <div class="wcz-help-card-left">
+              <div class="wcz-help-card-icon email">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <div class="wcz-help-card-text">
+                <span class="wcz-help-card-label">Email Support</span>
+                <span class="wcz-help-card-val">winnyschristainzone@gmail.com</span>
+              </div>
+            </div>
+            <span class="wcz-help-card-action">Email &rarr;</span>
+          </a>
+        </div>
+
+        <div class="wcz-help-info-block">
+          <div class="wcz-help-info-row">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span><strong>Support Hours:</strong> Monday &ndash; Saturday, 9:00 AM &ndash; 6:00 PM IST</span>
+          </div>
+          <div class="wcz-help-info-row">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span><strong>Store:</strong> No 350, 4th Phase Main Rd, Yelahanka New Town, Bengaluru 560064</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FLOATING NEED HELP BUTTON -->
+    <button type="button" class="wcz-floating-help-btn" id="wcz-floating-help-btn" aria-label="Open Customer Help">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <span>Need Help?</span>
+    </button>
   `;
 
   const wrapper = document.createElement('div');
@@ -807,6 +881,7 @@ function injectAuthModalAndWidgets() {
   document.body.appendChild(wrapper);
 
   bindAuthEvents();
+  bindHelpEvents();
 }
 
 function bindAuthEvents() {
@@ -895,6 +970,67 @@ function openAuthModal() {
 function closeAuthModal() {
   const modal = document.getElementById('wcz-auth-modal');
   if (modal) modal.classList.remove('active');
+}
+
+// ------------------------------------------------------------------------------
+// HELP & CONTACT MODAL CONTROLLERS
+// ------------------------------------------------------------------------------
+function openHelpModal() {
+  const modal = document.getElementById('wcz-help-modal');
+  if (modal) {
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeHelpModal() {
+  const modal = document.getElementById('wcz-help-modal');
+  if (modal) {
+    modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+}
+
+function bindHelpEvents() {
+  const modal = document.getElementById('wcz-help-modal');
+  const closeBtn = document.getElementById('wcz-help-close');
+  const floatingBtn = document.getElementById('wcz-floating-help-btn');
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeHelpModal);
+  }
+
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeHelpModal();
+    });
+  }
+
+  // Floating Need Help Button
+  if (floatingBtn) {
+    floatingBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openHelpModal();
+    });
+  }
+
+  // Any button or link with class .open-help-modal or href="#contact" / href="#help"
+  document.querySelectorAll('.open-help-modal, a[href="#contact"], a[href="#help"], .footer-contact-trigger').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      openHelpModal();
+    });
+  });
+
+  // ESC key closes both modals
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeHelpModal();
+      closeAuthModal();
+    }
+  });
 }
 
 function updateAuthUI() {
